@@ -147,9 +147,11 @@ public class SignUpFragment extends AuthFragment {
                     //progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         progressDialog.dismiss();
-                        getActivity().finish();
                         startActivity(new Intent(getActivity(), ProfileActivity.class));
+                        getActivity().finish();
                     } else {
+                        progressDialog.dismiss();
+
                         Toast.makeText(getActivity(), "Could not create account. Please try again", Toast.LENGTH_SHORT).show();
                     }
                 }
