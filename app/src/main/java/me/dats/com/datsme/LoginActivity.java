@@ -1,11 +1,10 @@
 package me.dats.com.datsme;
 
-import android.support.annotation.ColorRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,11 +16,14 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.pager)
     AnimatedViewPager viewPager;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        mAuth = FirebaseAuth.getInstance();
 
         viewPager.post(new Runnable() {
             @Override
@@ -30,9 +32,14 @@ public class LoginActivity extends AppCompatActivity {
                 viewPager.setAdapter(adapter);
             }
         });
-
-
-
-
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser!=null){
+            //updateUI
+        }
     }
 }
