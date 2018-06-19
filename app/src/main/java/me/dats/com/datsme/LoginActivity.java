@@ -1,5 +1,6 @@
 package me.dats.com.datsme;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Adapters.AuthAdapter;
 import me.dats.com.datsme.Widgets.AnimatedViewPager;
 
@@ -39,7 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
-            //updateUI
+            startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+
         }
     }
 }

@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import me.dats.com.datsme.LoginActivity;
 import me.dats.com.datsme.R;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -120,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
 
-                            download_url = task.getResult().getDownloadUrl().toString();
+                            download_url = task.getResult().toString();
                             UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
                             uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override
@@ -128,26 +129,11 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     if (thumb_task.isSuccessful()) {
 
-                                        thumb_downloadurl = thumb_task.getResult().getDownloadUrl().toString();
+                                        thumb_downloadurl = thumb_task.getResult().toString();
 
-//                                        Map<String, Object> imageData = new HashMap<>();
-//                                        imageData.put("image", download_url);
-//                                        imageData.put("thumb_image", thumb_downloadurl);
+                                        mProgessDialog.dismiss();
+                                        userimamge.setImageURI(result.getUri());
 
-//                                        mUserDatabase.updateChildren(imageData).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                if (task.isSuccessful()) {
-//
-                                                    mProgessDialog.dismiss();
-
-                                                    userimamge.setImageURI(result.getUri());
-
-//                                                    Toast.makeText(ProfileActivity.this, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
-//
-//                                                }
-//                                            }
-//                                        });
                                     } else {
                                         mProgessDialog.dismiss();
                                         Toast.makeText(ProfileActivity.this, "Try Again Later", Toast.LENGTH_SHORT).show();
@@ -172,15 +158,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void Savetodatabase(View view) {
 
-        if(user_displayname.getText() != null){
+        if (user_displayname.getText() != null) {
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
-            userMap.put("email",mCurrentUser.getEmail());
-//            userMap.put("status", "Hey there,I am using Chatapp");
+            userMap.put("email", mCurrentUser.getEmail());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
-//            userMap.put("device_token",device_token);
-//            userMap.put("online","true");
 
             mDatabase.setValue(userMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -188,15 +171,13 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 mProgessDialog.dismiss();
-//                                Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
-//                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                startActivity(mainIntent);
+                                startActivity(new Intent(ProfileActivity.this, MapsActivity.class));
                                 finish();
                             }
                         }
                     });
 
-        }else{
+        } else {
             user_displayname.setError("Cannot Be Empty");
         }
     }

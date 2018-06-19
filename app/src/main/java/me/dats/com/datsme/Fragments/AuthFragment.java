@@ -97,7 +97,7 @@ public abstract class AuthFragment extends Fragment {
                 public void run() {
 
                     TransitionManager.beginDelayedTransition(parent, set);
-                    caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40);
+                    caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.unfolded_size));
 //                caption.setTextColor(ContextCom);
                     caption.setTranslationX(0);
                     ConstraintLayout.LayoutParams params = getParams();

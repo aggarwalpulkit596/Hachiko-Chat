@@ -50,49 +50,47 @@ public class LogInFragment extends AuthFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (view != null) {
-            mauth = FirebaseAuth.getInstance();
-            caption.setText(getString(R.string.log_in_label));
-            view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.color_log_in));
-            caption.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    login();
-                }
-            });
-            for (final TextInputEditText editText : views) {
-                if (editText.getId() == R.id.password_input_edit) {
-                    final TextInputLayout inputLayout = ButterKnife.findById(view, R.id.password_input);
-                    Typeface boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD);
-                    inputLayout.setTypeface(boldTypeface);
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            inputLayout.setPasswordVisibilityToggleEnabled(s.length() > 0);
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable editable) {
-                        }
-                    });
-                }
-                editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mauth = FirebaseAuth.getInstance();
+        caption.setText(getString(R.string.log_in_label));
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.color_log_in));
+        caption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+        for (final TextInputEditText editText : views) {
+            if (editText.getId() == R.id.password_input_edit) {
+                final TextInputLayout inputLayout = ButterKnife.findById(view, R.id.password_input);
+                Typeface boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD);
+                inputLayout.setTypeface(boldTypeface);
+                editText.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (!hasFocus) {
-                            boolean isEnabled = editText.getText().length() > 0;
-                            editText.setSelected(isEnabled);
-                        }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        inputLayout.setPasswordVisibilityToggleEnabled(s.length() > 0);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
                     }
                 });
-
             }
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        boolean isEnabled = editText.getText().length() > 0;
+                        editText.setSelected(isEnabled);
+                    }
+                }
+            });
+
         }
     }
 

@@ -99,6 +99,8 @@ public class SignUpFragment extends AuthFragment {
             caption.setVerticalText(true);
             foldStuff();
             caption.setTranslationX(getTextPadding());
+        } else {
+            caption.setOnClickListener(null);
         }
     }
 
@@ -133,7 +135,7 @@ public class SignUpFragment extends AuthFragment {
 
 
         if (!validate()) {
-            Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_LONG).show();
             return;
         } else {
             caption.setEnabled(false);
