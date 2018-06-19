@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
@@ -134,12 +135,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-//
-//                        Intent profileintent = new Intent(UsersActivity.this, ProfileActivity.class);
-//                        profileintent.putExtra("user_id", user_id);
-//                        startActivity(profileintent);
-
+                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+//                        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+                        BottomSheetProfileFragment.newInstance(user_id).show(getSupportFragmentManager(), bottomSheetFragment.getTag());
 
                     }
                 });
