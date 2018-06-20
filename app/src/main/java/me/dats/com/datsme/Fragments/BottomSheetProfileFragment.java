@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
@@ -31,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.R;
 
 public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
@@ -50,11 +52,15 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     Button mProfileReqBtn;
     @BindView(R.id.user_cancelrequest)
     Button mDeclineReqBtn;
+    @BindView(R.id.user_startchat)
+    Button mStartChat;
 
     private String mCurrent_State;
     private String current_uid;
     private ProgressDialog mLoadProcess;
     private String user_id;
+    private String image;
+    private String name;
 
 
     public BottomSheetProfileFragment() {
@@ -141,6 +147,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
                                         mCurrent_State = "friends";
                                         mProfileReqBtn.setText("Unfriend");
+                                        mStartChat.setVisibility(View.VISIBLE);
+
 
                                         mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                         mDeclineReqBtn.setEnabled(false);
@@ -197,8 +205,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private void bindData(DataSnapshot documentSnapshot) {
 
-        String name = documentSnapshot.child("name").getValue().toString();
-        String image = documentSnapshot.child("image").getValue().toString();
+        name = documentSnapshot.child("name").getValue().toString();
+        image = documentSnapshot.child("image").getValue().toString();
 
         mProfileName.setText(name);
 
@@ -307,6 +315,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         // ------------ UNFRIENDS ---------
         if (mCurrent_State.equals("friends")) {
+            mStartChat.setVisibility(View.GONE);
             Map<String, Object> unfriendMap = new HashMap<>();
             unfriendMap.put("Friends/" + current_uid + "/" + user_id, null);
             unfriendMap.put("Friends/" + user_id + "/" + current_uid, null);
@@ -331,5 +340,13 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
             });
         }
 
+    }
+    @OnClick(R.id.user_startchat)
+    public void startchat(){
+        Intent chatintent = new Intent(getContext(), ChatActivity.class);
+        chatintent.putExtra("user_id", user_id);
+        chatintent.putExtra("name", name);
+        chatintent.putExtra("image", image);
+        startActivity(chatintent);
     }
 }
