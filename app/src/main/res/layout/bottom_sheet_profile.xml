@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#00FFFFFF"
+    android:layout_marginStart="50dp"
+    android:layout_marginEnd="50dp"
     android:layout_height="match_parent"
     tools:context=".Activities.ProfileActivity">
 
@@ -29,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:onClick="startchat"
         android:visibility="gone"
         android:layout_below="@id/user_displayname"
         android:layout_centerHorizontal="true"
