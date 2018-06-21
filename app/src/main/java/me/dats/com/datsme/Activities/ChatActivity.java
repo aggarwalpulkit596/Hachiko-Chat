@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -473,15 +474,26 @@ public class ChatActivity extends AppCompatActivity {
             final String push_id = user_message_push.getKey();
 
 
-            StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+//            final StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+            final StorageReference ref = mImageStorage.child("message_images").child(push_id + ".jpg");
+            UploadTask uploadTask = ref.putFile(imageUri);
 
-            filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
 
-                        String download_url = mImageStorage.getDownloadUrl().toString();
+                        String download_url = task.getResult().toString();
 
                         Map messageMap = new HashMap();
                         messageMap.put("message", download_url);

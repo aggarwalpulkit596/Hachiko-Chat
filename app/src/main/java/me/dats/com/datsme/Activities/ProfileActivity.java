@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -114,35 +115,55 @@ public class ProfileActivity extends AppCompatActivity {
                 StorageReference filepath = mStorageRef.child("profile_images").child(current_userid + ".jpg");
                 final StorageReference thumb_filepath = mStorageRef.child("profile_images").child("thumbs").child(current_userid + ".jpg");
 
+                final StorageReference ref = mStorageRef.child("profile_images").child(current_userid + ".jpg");
+                UploadTask uploadTask = ref.putFile(resultUri);
 
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
 
+                        // Continue with the task to get the download URL
+                        return ref.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
 
                             download_url = task.getResult().toString();
                             UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
-                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
-                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> thumb_task) {
-
-                                    if (thumb_task.isSuccessful()) {
-
-                                        thumb_downloadurl = thumb_task.getResult().toString();
-
-                                        mProgessDialog.dismiss();
-                                        userimamge.setImageURI(result.getUri());
-
-                                    } else {
-                                        mProgessDialog.dismiss();
-                                        Toast.makeText(ProfileActivity.this, "Try Again Later", Toast.LENGTH_SHORT).show();
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
                                     }
 
+                                    // Continue with the task to get the download URL
+                                    return ref.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> thumb_task) {
+                                    if (thumb_task.isSuccessful()) {
+                                        if (thumb_task.isSuccessful()) {
+
+                                            thumb_downloadurl = thumb_task.getResult().toString();
+
+                                            mProgessDialog.dismiss();
+                                            userimamge.setImageURI(result.getUri());
+
+                                        } else {
+                                            mProgessDialog.dismiss();
+                                            Toast.makeText(ProfileActivity.this, "Try Again Later", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
                                 }
                             });
-
-
                         } else {
                             mProgessDialog.dismiss();
                             Toast.makeText(ProfileActivity.this, "Try Again Later", Toast.LENGTH_SHORT).show();
