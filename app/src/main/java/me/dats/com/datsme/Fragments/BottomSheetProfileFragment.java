@@ -206,7 +206,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     private void bindData(DataSnapshot documentSnapshot) {
 
         name = documentSnapshot.child("name").getValue().toString();
-        image = documentSnapshot.child("image").getValue().toString();
+        image = documentSnapshot.child("thumb_image").getValue().toString();
 
         mProfileName.setText(name);
 

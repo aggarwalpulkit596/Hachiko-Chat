@@ -3,6 +3,7 @@ package me.dats.com.datsme.Activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -21,10 +22,25 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -48,6 +64,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private boolean doubleBackToExitPressedOnce = false;
 
+    FusedLocationProviderClient mFusedLocationProviderClient;
+    LocationCallback mLocationCallback;
+    LocationRequest mLocationRequest;
+    boolean mRequestingLocationUpdates;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    android.location.Location location, previousLocation = null;
+
+
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +84,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         fetchusers();
+        fetchlocation();
 
+    }
+
+    private void fetchlocation() {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000)
+                .setFastestInterval(5000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                        try {
+                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+
+                        break;
+                }
+            }
+        });
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                location = locationResult.getLastLocation();
+                LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            }
+
+        };
     }
 
     private void fetchusers() {
@@ -75,7 +148,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            return;
         }
+        mFusedLocationProviderClient
+                .requestLocationUpdates(mLocationRequest,
+                        mLocationCallback, null);
+        mRequestingLocationUpdates = true;
+
+        //for changing design of map
         try {
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(this, R.raw.mymapstyle));
@@ -86,6 +170,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Oops, looks like the map style resource couldn't be found!
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mRequestingLocationUpdates) {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            mRequestingLocationUpdates = false;
+        }
     }
 
     @Override
@@ -136,7 +229,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onClick(View view) {
                         BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-//                        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
                         BottomSheetProfileFragment.newInstance(user_id).show(getSupportFragmentManager(), bottomSheetFragment.getTag());
 
                     }
@@ -168,15 +260,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         void bind(Users model, Context applicationContext) {
 
             setName(model.getName());
-//            setStatus(model.getStatus());
             setThumbImage(model.getThumb_image(), applicationContext);
         }
-
-//        void setStatus(String status) {
-//            TextView userStatusView = mView.findViewById(R.id.user_single_status);
-//            userStatusView.setText(status);
-//
-//        }
 
         void setThumbImage(String thumbImage, Context applicationContext) {
             CircleImageView userImageView = mView.findViewById(R.id.image);
