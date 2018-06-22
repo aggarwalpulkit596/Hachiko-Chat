@@ -2,13 +2,13 @@ package me.dats.com.datsme.Activities;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Canvas;
+import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -39,19 +39,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.SpacesItemDecoration;
 import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
+import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
@@ -74,6 +84,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     android.location.Location location, previousLocation = null;
 
 
+    private ClusterManager<MyItem> mClusterManager;
+
+
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     @Override
@@ -87,15 +100,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         fetchusers();
         fetchlocation();
+
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Log.i("TAG", "onCreate: " + mUserRef.toString());
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
-                LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                final LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+                Map<String, Object> locationMap = new HashMap<>();
+                locationMap.put("lattitude", location.getLatitude());
+                locationMap.put("longitude", location.getLongitude());
+                mUserRef.updateChildren(locationMap, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+//                        mMap.addMarker(new MarkerOptions().position(sydney).title("M"));
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                    }
+                });
+
             }
         };
 
@@ -134,6 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
     }
 
     private void fetchusers() {
@@ -150,6 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        setUpClusterer();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -177,15 +203,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (mRequestingLocationUpdates) {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-            mRequestingLocationUpdates = false;
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             finishAffinity();
@@ -209,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Users");
-        FirebaseRecyclerOptions<Users> options =
+        final FirebaseRecyclerOptions<Users> options =
                 new FirebaseRecyclerOptions.Builder<Users>()
                         .setQuery(query, Users.class)
                         .build();
@@ -223,9 +240,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
-                Log.i("TAG", "bind: " + model.getName());
-
                 holder.bind(model, getApplicationContext());
+//                LatLng users = new LatLng(model.getLattitude(), model.getLongitude());
+
+                MyItem offsetItem = new MyItem(model.lattitude, model.longitude,model.getName());
+                mClusterManager.addItem(offsetItem);
+                Log.i("TAG", "onBindViewHolder: " + model.getName());
 
                 final String user_id = getRef(position).getKey();
 
@@ -276,5 +296,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .into(userImageView);
 
         }
+    }
+
+    private void setUpClusterer() {
+        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
     }
 }

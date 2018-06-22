@@ -102,7 +102,6 @@ public class LogInFragment extends AuthFragment {
             Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
             return;
         }
-        caption.setEnabled(false);
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
@@ -113,8 +112,16 @@ public class LogInFragment extends AuthFragment {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success");
-                    startActivity(new Intent(getContext(), MapsActivity.class));
-                    progressDialog.dismiss();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    boolean emailVerified = user.isEmailVerified();
+                    if (!emailVerified) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Your Account has't been verified check your email", Toast.LENGTH_SHORT).show();
+                        user.sendEmailVerification();
+                    } else {
+                        startActivity(new Intent(getContext(), MapsActivity.class));
+
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());

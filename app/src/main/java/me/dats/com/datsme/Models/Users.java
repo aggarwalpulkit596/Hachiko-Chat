@@ -5,6 +5,8 @@ public class Users {
     public String name;
     public String thumb_image;
     public String image;
+    public double lattitude;
+    public double longitude;
 
     public Users() {
         //For Firebase
@@ -15,12 +17,6 @@ public class Users {
     }
 
     public void setThumb_image(String thumb_image) {
-        this.thumb_image = thumb_image;
-    }
-
-    public Users(String name, String image, String thumb_image) {
-        this.name = name;
-        this.image = image;
         this.thumb_image = thumb_image;
     }
 
@@ -39,6 +35,22 @@ public class Users {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public double getLattitude() {
+        return lattitude;
+    }
+
+    public void setLattitude(double lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 }

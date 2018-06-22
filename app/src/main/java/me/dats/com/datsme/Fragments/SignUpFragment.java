@@ -148,7 +148,9 @@ public class SignUpFragment extends AuthFragment {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     //progressDialog.dismiss();
                     if (task.isSuccessful()) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         progressDialog.dismiss();
+                        user.sendEmailVerification();
                         startActivity(new Intent(getActivity(), ProfileActivity.class));
                         getActivity().finish();
                     } else {
