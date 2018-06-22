@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +41,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -50,13 +49,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -67,7 +63,6 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.SpacesItemDecoration;
 import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
-import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
@@ -75,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
+    @BindView(R.id.seekBar)
+    SeekBar seekBar;
     private DatabaseReference mUserRef;
 
 
@@ -89,7 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     android.location.Location location;
 
 
-    private ClusterManager<MyItem> mClusterManager;
     View thumbView;
 
 
@@ -104,6 +100,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         thumbView = LayoutInflater.from(MapsActivity.this).inflate(R.layout.thumb, null, false);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                // You can have your own calculation for progress
+                seekBar.setThumb(getThumb(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(0 + "");
+            }
+        });
         mapFragment.getMapAsync(this);
         fetchusers();
         fetchlocation();
@@ -182,7 +196,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        setUpClusterer();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -246,10 +259,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
                 holder.bind(model, getApplicationContext());
-//                if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-//                    mRecyclerView.
-                MyItem offsetItem = new MyItem(model.lattitude, model.longitude, model.getName());
-                mClusterManager.addItem(offsetItem);
+                mMap.clear();
+                LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
+                MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
+                mMap.addMarker(mo).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
                 Log.i("TAG", "onBindViewHolder: " + model.getName());
 
                 final String user_id = getRef(position).getKey();
@@ -317,17 +330,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .into(userImageView);
 
         }
-    }
-
-    private void setUpClusterer() {
-        mClusterManager = new ClusterManager<>(this, mMap);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
-
-        // Add cluster items (markers) to the cluster manager.
     }
 
     public Drawable getThumb(int progress) {
