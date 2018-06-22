@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -18,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
     private DatabaseReference mUserRef;
-    private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
 
     private GoogleMap mMap;
@@ -81,10 +86,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     boolean mRequestingLocationUpdates;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    android.location.Location location, previousLocation = null;
+    android.location.Location location;
 
 
     private ClusterManager<MyItem> mClusterManager;
+    View thumbView;
 
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -97,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        thumbView = LayoutInflater.from(MapsActivity.this).inflate(R.layout.thumb, null, false);
         mapFragment.getMapAsync(this);
         fetchusers();
         fetchlocation();
@@ -193,9 +200,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(this, R.raw.mymapstyle));
-            if (!success) {
-                // Handle map style load failure
-            }
         } catch (Resources.NotFoundException e) {
             // Oops, looks like the map style resource couldn't be found!
         }
@@ -231,19 +235,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .setQuery(query, Users.class)
                         .build();
 
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
+        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
+            @NonNull
             @Override
-            public UsersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false));
+                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false), getApplicationContext());
             }
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
                 holder.bind(model, getApplicationContext());
-//                LatLng users = new LatLng(model.getLattitude(), model.getLongitude());
-
-                MyItem offsetItem = new MyItem(model.lattitude, model.longitude,model.getName());
+//                if (!model.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+//                    mRecyclerView.
+                MyItem offsetItem = new MyItem(model.lattitude, model.longitude, model.getName());
                 mClusterManager.addItem(offsetItem);
                 Log.i("TAG", "onBindViewHolder: " + model.getName());
 
@@ -271,9 +276,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         View mView;
 
-        UsersViewHolder(View itemView) {
+        UsersViewHolder(final View itemView, final Context applicationContext) {
             super(itemView);
             mView = itemView;
+            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        // run scale animation and make it bigger
+                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_in_tv);
+                        itemView.startAnimation(anim);
+                        anim.setFillAfter(true);
+                    } else {
+                        // run scale animation and make it smaller
+                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_out_tv);
+                        itemView.startAnimation(anim);
+                        anim.setFillAfter(true);
+                    }
+                }
+            });
+
         }
 
         public void setName(String name) {
@@ -281,8 +303,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             userNameView.setText(name);
         }
 
-        void bind(Users model, Context applicationContext) {
-
+        void bind(Users model, final Context applicationContext) {
             setName(model.getName());
             setThumbImage(model.getThumb_image(), applicationContext);
         }
@@ -299,7 +320,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setUpClusterer() {
-        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+        mClusterManager = new ClusterManager<>(this, mMap);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -307,5 +328,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(mClusterManager);
 
         // Add cluster items (markers) to the cluster manager.
+    }
+
+    public Drawable getThumb(int progress) {
+        ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(progress + "");
+
+        thumbView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(thumbView.getMeasuredWidth(), thumbView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        thumbView.layout(0, 0, thumbView.getMeasuredWidth(), thumbView.getMeasuredHeight());
+        thumbView.draw(canvas);
+
+        return new BitmapDrawable(getResources(), bitmap);
     }
 }

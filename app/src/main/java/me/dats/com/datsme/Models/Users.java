@@ -7,6 +7,7 @@ public class Users {
     public String image;
     public double lattitude;
     public double longitude;
+    public String email;
 
     public Users() {
         //For Firebase
@@ -51,6 +52,14 @@ public class Users {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
