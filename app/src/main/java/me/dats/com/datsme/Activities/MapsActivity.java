@@ -41,12 +41,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -55,6 +57,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,9 +87,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean mRequestingLocationUpdates;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     android.location.Location location;
-
-
     View thumbView;
+    HashMap<String, LatLng> userMap;
+    HashMap<String, Marker> markers;
 
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -100,6 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         thumbView = LayoutInflater.from(MapsActivity.this).inflate(R.layout.thumb, null, false);
+        userMap = new HashMap<>();
+        markers = new HashMap<>();
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -137,7 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
 //                        mMap.addMarker(new MarkerOptions().position(sydney).title("M"));
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f));
                     }
                 });
 
@@ -217,6 +222,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Oops, looks like the map style resource couldn't be found!
         }
 
+
     }
 
     @Override
@@ -261,7 +267,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 holder.bind(model, getApplicationContext());
                 LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
                 MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
-                mMap.addMarker(mo).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
+                LatLng name = userMap.get(model.getName());
+                if (name == null) {
+                    userMap.put(model.getName(), latLng1);
+                    Marker marker = mMap.addMarker(mo);
+                    markers.put(model.getName(), marker);
+                } else {
+                    Marker marker = markers.get(model.getName());
+                    marker.remove();
+                    marker.setPosition(latLng1);
+                    marker = mMap.addMarker(mo);
+                    markers.put(model.getName(), marker);
+                }
                 Log.i("TAG", "onBindViewHolder: " + model.getName());
 
                 final String user_id = getRef(position).getKey();
