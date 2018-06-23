@@ -1,14 +1,23 @@
 package me.dats.com.datsme.Fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +72,19 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     private String name;
 
 
+//    @SuppressLint("RestrictedApi")
+//    @Override
+//    public void setupDialog(Dialog dialog, int style) {
+//        super.setupDialog(dialog, style);
+//        View rootView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet_profile,null,false);
+////        unbinder = ButterKnife.bind(this, rootView);
+////        adjustUIComponents();
+//        dialog.setContentView(rootView);
+//        FrameLayout bottomSheet = (FrameLayout) dialog.getWindow().findViewById(android.support.design.R.id.design_bottom_sheet);
+//        bottomSheet.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//    }
+
     public BottomSheetProfileFragment() {
         // Required empty public constructor
     }
@@ -79,6 +101,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+
     }
 
     @Override
@@ -348,5 +372,19 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         chatintent.putExtra("name", name);
         chatintent.putExtra("image", image);
         startActivity(chatintent);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Resize bottom sheet dialog so it doesn't span the entire width past a particular measurement
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int width = metrics.widthPixels-150;
+        int height = -1; // MATCH_PARENT
+
+        getDialog().getWindow().setLayout(width, height);
     }
 }

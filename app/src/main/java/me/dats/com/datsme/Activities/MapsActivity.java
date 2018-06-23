@@ -259,7 +259,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
                 holder.bind(model, getApplicationContext());
-                mMap.clear();
                 LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
                 MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
                 mMap.addMarker(mo).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
