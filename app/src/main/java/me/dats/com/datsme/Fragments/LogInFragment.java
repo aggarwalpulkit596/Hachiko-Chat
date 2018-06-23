@@ -22,10 +22,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.transitionseverywhere.ChangeBounds;
 import com.transitionseverywhere.Transition;
 import com.transitionseverywhere.TransitionManager;
@@ -48,11 +52,14 @@ public class LogInFragment extends AuthFragment {
     @BindViews(value = {R.id.email_input_edit, R.id.password_input_edit})
     protected List<TextInputEditText> views;
     private FirebaseAuth mauth;
+    private DatabaseReference mUserDatabase;
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mauth = FirebaseAuth.getInstance();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         caption.setText(getString(R.string.log_in_label));
         view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.color_log_in));
         caption.setOnClickListener(new View.OnClickListener() {
@@ -113,15 +120,25 @@ public class LogInFragment extends AuthFragment {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success");
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String device_token = FirebaseInstanceId.getInstance().getToken();
+                    String current_uid = mauth.getCurrentUser().getUid();
                     boolean emailVerified = user.isEmailVerified();
                     if (!emailVerified) {
                         progressDialog.dismiss();
                         Toast.makeText(getContext(), "Your Account has't been verified check your email", Toast.LENGTH_SHORT).show();
                         user.sendEmailVerification();
                     } else {
-                        startActivity(new Intent(getContext(), MapsActivity.class));
-
+                        mUserDatabase.child(current_uid).child("device_token").setValue(device_token).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Intent mainIntent = new Intent(getContext(), MapsActivity.class);
+                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(mainIntent);
+                                getActivity().finish();
+                            }
+                        });
                     }
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -132,8 +149,6 @@ public class LogInFragment extends AuthFragment {
                 }
             }
         });
-//        Intent i = new Intent(getActivity(), profileuser.class);
-//        startActivity(i);
 
 
     }
