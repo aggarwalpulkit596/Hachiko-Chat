@@ -9,6 +9,10 @@ public class Users {
     public double longitude;
     public String email;
 
+
+
+    public String gender;
+
     public Users() {
         //For Firebase
     }
@@ -60,6 +64,13 @@ public class Users {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
 }

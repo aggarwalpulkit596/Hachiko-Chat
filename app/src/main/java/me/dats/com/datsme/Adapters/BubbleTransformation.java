@@ -10,7 +10,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 
 public class BubbleTransformation implements com.squareup.picasso.Transformation {
-    private static final int outerMargin = 40;
+    private static final int outerMargin = 20;
     private final int margin;  // dp
 
     // margin is the board in dp
@@ -30,7 +30,7 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
 
         Paint trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        trianglePaint.setStrokeWidth(2);
+        trianglePaint.setStrokeWidth(1);
         trianglePaint.setColor(Color.BLUE);
         trianglePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         trianglePaint.setAntiAlias(true);

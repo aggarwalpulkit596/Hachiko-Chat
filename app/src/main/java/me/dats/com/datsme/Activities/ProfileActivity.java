@@ -241,7 +241,7 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 mProgessDialog.dismiss();
-                                startActivity(new Intent(ProfileActivity.this, MapsActivity.class));
+                                startActivity(new Intent(ProfileActivity.this, TagActivity.class));
                                 finish();
                             }
                         }

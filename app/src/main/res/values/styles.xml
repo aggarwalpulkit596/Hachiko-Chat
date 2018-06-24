@@ -44,5 +44,14 @@
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+    <style name="MyDescriptionTextApperance" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="MyTitleTextApperance">parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
 
 </resources>

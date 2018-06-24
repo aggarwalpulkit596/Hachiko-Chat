@@ -286,60 +286,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     userMap.put(model.getName(), latLng1);
                     final Marker userMarker = mMap.addMarker(mo);
                     markers.put(model.getName(), userMarker);
-                    final Marker finalMarker = userMarker;
-                    Picasso.get()
-                            .load(model.getThumb_image())
-                            .resize(250, 250)
-                            .centerInside()
-                            .transform(new BubbleTransformation(20))
+                    if(model.getGender().equalsIgnoreCase("Male"))
+                    userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
+                    else
+                        userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.girl));
 
-                            .into(new Target() {
-                                @Override
-                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-
-                                }
-
-                                @Override
-                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                                }
-
-                                @Override
-                                public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                }
-                            });
+//                    final Marker finalMarker = userMarker;
+//                    Picasso.get()
+//                            .load(model.getThumb_image())
+//                            .resize(250, 250)
+//                            .centerInside()
+//                            .transform(new BubbleTransformation(10))
+//
+//                            .into(new Target() {
+//                                @Override
+//                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//
+//                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+//
+//                                }
+//
+//                                @Override
+//                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+//                                }
+//                            });
 
                 } else {
                     Marker marker = markers.get(model.getName());
                     marker.remove();
                     marker.setPosition(latLng1);
                     marker = mMap.addMarker(mo);
-                    final Marker finalMarker = marker;
-                    Picasso.get()
-                            .load(model.getThumb_image())
-                            .resize(250, 250)
-                            .transform(new BubbleTransformation(20))
-                            .centerInside()
-                            .into(new Target() {
-                                      @Override
-                                      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                                                  finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-
-                                      }
-
-                                      @Override
-                                      public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                                      }
-
-                                      @Override
-                                      public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                      }
-                                      });
-
+                    if(model.getGender().equalsIgnoreCase("Male"))
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
+                    else
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.girl));
                     markers.put(model.getName(), marker);
                 }
                 Log.i("TAG", "onBindViewHolder: " + model.getName());
