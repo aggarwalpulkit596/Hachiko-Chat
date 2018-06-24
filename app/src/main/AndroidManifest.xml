@@ -44,7 +44,10 @@
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".Activities.ChatActivity" />
-        <activity android:name=".Activities.CompleteProfileActivity"></activity>
+        <activity android:name=".Activities.CompleteProfileActivity" />
+        <activity android:name=".Activities.TagActivity">
+
+        </activity>
     </application>
 
 </manifest>

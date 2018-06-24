@@ -22,7 +22,7 @@
         android:elevation="5dp"
         android:fontFamily="@font/big_john"
         android:text="Top Profiles"
-        android:textColor="#24ca84"
+        android:textColor="#00"
         android:textSize="20sp" />
 
     <android.support.v7.widget.RecyclerView

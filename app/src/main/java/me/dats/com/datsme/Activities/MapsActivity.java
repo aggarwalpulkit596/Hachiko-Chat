@@ -2,13 +2,20 @@ package me.dats.com.datsme.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,11 +48,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -56,7 +65,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +78,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Adapters.BubbleTransformation;
 import me.dats.com.datsme.Adapters.SpacesItemDecoration;
 import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
 import me.dats.com.datsme.Models.Users;
@@ -130,6 +145,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Log.i("TAG", "onCreate: " + mUserRef.toString());
         mLocationCallback = new LocationCallback() {
+            boolean firstlauch = true;
+
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
@@ -139,6 +156,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
                 mUserRef.updateChildren(locationMap);
+                if(firstlauch) {
+                    firstlauch = false;
+                    float zoomLevel = 16.0f; //This goes up to 21
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomLevel));
+                }
             }
         };
 
@@ -214,8 +236,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Resources.NotFoundException e) {
             // Oops, looks like the map style resource couldn't be found!
         }
-
-
     }
 
     @Override
@@ -261,15 +281,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
                 MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
                 LatLng name = userMap.get(model.getName());
+
                 if (name == null) {
                     userMap.put(model.getName(), latLng1);
-                    Marker marker = mMap.addMarker(mo);
-                    markers.put(model.getName(), marker);
+                    final Marker userMarker = mMap.addMarker(mo);
+                    markers.put(model.getName(), userMarker);
+                    final Marker finalMarker = userMarker;
+                    Picasso.get()
+                            .load(model.getThumb_image())
+                            .resize(250, 250)
+                            .centerInside()
+                            .transform(new BubbleTransformation(20))
+
+                            .into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                }
+                            });
+
                 } else {
                     Marker marker = markers.get(model.getName());
                     marker.remove();
                     marker.setPosition(latLng1);
                     marker = mMap.addMarker(mo);
+                    final Marker finalMarker = marker;
+                    Picasso.get()
+                            .load(model.getThumb_image())
+                            .resize(250, 250)
+                            .transform(new BubbleTransformation(20))
+                            .centerInside()
+                            .into(new Target() {
+                                      @Override
+                                      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                                                  finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+                                      }
+
+                                      @Override
+                                      public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                      }
+
+                                      @Override
+                                      public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                      }
+                                      });
+
                     markers.put(model.getName(), marker);
                 }
                 Log.i("TAG", "onBindViewHolder: " + model.getName());
@@ -293,6 +363,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
 
@@ -322,7 +393,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         public void setName(String name) {
             TextView userNameView = mView.findViewById(R.id.name);
-            userNameView.setText(name);
+            String[] firstname = name.split(" ");
+            userNameView.setText(firstname[0]);
         }
 
         void bind(Users model, final Context applicationContext) {
@@ -351,5 +423,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         thumbView.draw(canvas);
 
         return new BitmapDrawable(getResources(), bitmap);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
+            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+
+        }
+
     }
 }

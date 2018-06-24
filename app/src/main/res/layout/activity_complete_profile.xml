@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/slim_Joe"
+        android:fontFamily="@font/slim_joe"
         android:text="College"
         android:textSize="20sp" />
 
@@ -38,7 +38,7 @@
         android:layout_below="@+id/user_college"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/slim_Joe"
+        android:fontFamily="@font/slim_joe"
         android:text="Place"
         android:textSize="20sp" />
 
@@ -63,7 +63,7 @@
         android:layout_below="@+id/user_place"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/slim_Joe"
+        android:fontFamily="@font/slim_joe"
         android:text="ABout You"
         android:textSize="20sp" />
 
