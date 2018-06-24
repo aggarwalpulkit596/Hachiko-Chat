@@ -138,14 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Map<String, Object> locationMap = new HashMap<>();
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
-                mUserRef.updateChildren(locationMap, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                        mMap.addMarker(new MarkerOptions().position(sydney).title("M"));
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f));
-                    }
-                });
-
+                mUserRef.updateChildren(locationMap);
             }
         };
 

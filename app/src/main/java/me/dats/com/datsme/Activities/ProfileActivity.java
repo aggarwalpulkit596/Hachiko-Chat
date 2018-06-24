@@ -3,12 +3,15 @@ package me.dats.com.datsme.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -31,18 +34,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
-import me.dats.com.datsme.LoginActivity;
 import me.dats.com.datsme.R;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    @BindView(R.id.profile_root)
+    RelativeLayout rootlayout;
     @BindView(R.id.user_image)
     CircleImageView userimamge;
-    @BindView(R.id.user_displayname)
+    @BindViews(R.id.user_displayname)
     EditText user_displayname;
+    @BindView(R.id.user_gender)
+    EditText user_gender;
+    @BindView(R.id.user_dob)
+    EditText user_dob;
+
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
     private StorageReference mStorageRef;
@@ -179,13 +189,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void Savetodatabase(View view) {
 
-        if (user_displayname.getText() != null) {
+        if (user_displayname.getText() != null && user_gender.getText() != null && user_dob.getText() != null && download_url != null) {
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
             userMap.put("email", mCurrentUser.getEmail());
+            userMap.put("gender", user_gender.getText().toString());
+            userMap.put("DOB", user_dob.getText().toString());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
-
             mDatabase.setValue(userMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -199,7 +210,26 @@ public class ProfileActivity extends AppCompatActivity {
                     });
 
         } else {
-            user_displayname.setError("Cannot Be Empty");
+            Snackbar snackBar;
+            if (user_displayname.getText() == null) {
+                snackBar = Snackbar.make(rootlayout
+                        , "Username Cannot Be Empty", Snackbar.LENGTH_SHORT);
+                snackBar.show();
+            } else if (user_dob.getText() == null) {
+                snackBar = Snackbar.make(rootlayout
+                        , "DOB Cannot Be Empty", Snackbar.LENGTH_SHORT);
+                snackBar.show();
+            } else if (user_gender.getText() == null) {
+                snackBar = Snackbar.make(rootlayout
+                        , "Gender Cannot Be Empty", Snackbar.LENGTH_SHORT);
+                snackBar.show();
+            } else if (download_url == null) {
+                snackBar = Snackbar.make(rootlayout
+                        , "Image Cannot Be Empty", Snackbar.LENGTH_SHORT);
+                snackBar.show();
+            }
+
+
         }
     }
 }

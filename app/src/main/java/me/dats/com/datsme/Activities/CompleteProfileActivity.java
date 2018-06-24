@@ -1,13 +1,15 @@
-package me.dats.com.datsme;
+package me.dats.com.datsme.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import me.dats.com.datsme.R;
+
+public class CompleteProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_complete_profile);
     }
 }

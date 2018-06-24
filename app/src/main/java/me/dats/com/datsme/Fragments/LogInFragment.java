@@ -39,11 +39,9 @@ import java.util.List;
 
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Animation.Rotate;
 import me.dats.com.datsme.Animation.TextSizeTransition;
-import me.dats.com.datsme.LoginActivity;
 import me.dats.com.datsme.R;
 
 import static android.content.ContentValues.TAG;

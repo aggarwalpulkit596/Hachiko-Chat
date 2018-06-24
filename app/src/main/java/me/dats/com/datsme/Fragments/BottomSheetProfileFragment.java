@@ -71,20 +71,6 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     private String image;
     private String name;
 
-
-//    @SuppressLint("RestrictedApi")
-//    @Override
-//    public void setupDialog(Dialog dialog, int style) {
-//        super.setupDialog(dialog, style);
-//        View rootView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet_profile,null,false);
-////        unbinder = ButterKnife.bind(this, rootView);
-////        adjustUIComponents();
-//        dialog.setContentView(rootView);
-//        FrameLayout bottomSheet = (FrameLayout) dialog.getWindow().findViewById(android.support.design.R.id.design_bottom_sheet);
-//        bottomSheet.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//
-//    }
-
     public BottomSheetProfileFragment() {
         // Required empty public constructor
     }
@@ -243,7 +229,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     }
 
     @OnClick(R.id.user_sendrequest)
-    public void SendFriendRequest() {
+    public void SendFriendRequest()  {
 
         mProfileReqBtn.setEnabled(false);
 
@@ -382,7 +368,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels-150;
+        int width = metrics.widthPixels-100;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);
