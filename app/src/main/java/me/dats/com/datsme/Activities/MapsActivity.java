@@ -77,6 +77,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.BubbleTransformation;
 import me.dats.com.datsme.Adapters.SpacesItemDecoration;
@@ -410,13 +411,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return new BitmapDrawable(getResources(), bitmap);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
-            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-
-        }
-
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if(!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
+//            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+//
+//        }
+//
+//    }
+    @OnClick(R.id.temploguout)
+    void logout(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+        Intent i = new Intent(MapsActivity.this,LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 }

@@ -27,7 +27,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.ProfileActivity" >
+
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -44,7 +46,9 @@
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".Activities.ChatActivity" />
-        <activity android:name=".Activities.CompleteProfileActivity" />
+        <activity android:name=".Activities.CompleteProfileActivity" >
+
+        </activity>
         <activity android:name=".Activities.TagActivity">
 
         </activity>
