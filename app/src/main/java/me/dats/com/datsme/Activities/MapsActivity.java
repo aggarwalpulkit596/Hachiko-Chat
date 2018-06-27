@@ -292,30 +292,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     else
                         userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.girl));
 
-//                    final Marker finalMarker = userMarker;
-//                    Picasso.get()
-//                            .load(model.getThumb_image())
-//                            .resize(250, 250)
-//                            .centerInside()
-//                            .transform(new BubbleTransformation(10))
-//
-//                            .into(new Target() {
-//                                @Override
-//                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//
-//                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-//
-//                                }
-//
-//                                @Override
-//                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-//
-//                                }
-//
-//                                @Override
-//                                public void onPrepareLoad(Drawable placeHolderDrawable) {
-//                                }
-//                            });
+                    final Marker finalMarker = userMarker;
+                    Picasso.get()
+                            .load(model.getThumb_image())
+                            .resize(250, 250)
+                            .centerInside()
+                            .transform(new BubbleTransformation(10))
+
+                            .into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                }
+                            });
 
                 } else {
                     Marker marker = markers.get(model.getName());

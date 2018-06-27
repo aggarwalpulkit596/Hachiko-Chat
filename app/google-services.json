@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "586307073271-21b6sn6rmkodh3s6l6fel48p70nnk697.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.dats.com.datsme",
+            "certificate_hash": "761c07b98cb111fe0a51a809b995ede67bcf22bc"
+          }
+        },
+        {
           "client_id": "586307073271-p006t6lpqdo03uu73shv9ds5d85asblv.apps.googleusercontent.com",
           "client_type": 3
         }
