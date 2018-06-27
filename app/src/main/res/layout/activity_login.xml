@@ -43,7 +43,7 @@
             android:textSize="20dp" />
 
         <EditText
-            android:id="@+id/edit_phone"
+            android:id="@+id/edittext_phoneno"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -85,15 +85,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="29dp" />
 
-    <!--<com.facebook.login.widget.LoginButton-->
-    <!--android:id="@+id/login_button"-->
-    <!--android:layout_width="250dp"-->
-    <!--android:layout_height="53dp"-->
-    <!--android:layout_above="@+id/btn_gSignIn"-->
-    <!--android:layout_alignStart="@+id/btn_gSignIn"-->
-    <!--android:layout_gravity="center_horizontal"-->
-    <!--android:layout_marginBottom="14dp"-->
-    <!--android:padding="10dp" />-->
+    <com.facebook.login.widget.LoginButton
+    android:id="@+id/btn_fbSignIn"
+    android:layout_width="250dp"
+    android:layout_height="53dp"
+    android:layout_above="@+id/btn_gSignIn"
+    android:layout_alignStart="@+id/btn_gSignIn"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="14dp"
+    android:padding="10dp" />
 
 
 </RelativeLayout>
