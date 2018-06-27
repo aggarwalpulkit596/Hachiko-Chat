@@ -262,13 +262,13 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
 
     public void Savetodatabase(View view) {
 
-        if (user_displayname.getText().toString().isEmpty() || user_dob.getText().equals("Date of Birth")) {
+        if (user_displayname.getText().toString().isEmpty() || user_dob.getText().equals("Date Of Birth") || download_url == null) {
             Snackbar snackBar;
             if (user_displayname.getText().toString().isEmpty()) {
                 snackBar = Snackbar.make(rootlayout
                         , "Username Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
-            } else if (user_dob.getText() == null) {
+            } else if (user_dob.getText().equals("Date Of Birth")) {
                 snackBar = Snackbar.make(rootlayout
                         , "DOB Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
