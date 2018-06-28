@@ -39,6 +39,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.MessageAdapter;
+import me.dats.com.datsme.LastSeen;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
@@ -95,7 +97,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         chatUser = getIntent().getStringExtra("user_id");
-        userName = getIntent().getStringExtra("name");
+       // userName = getIntent().getStringExtra("name");
 
         mToolbar = findViewById(R.id.chatAppBar);
         setSupportActionBar(mToolbar);
@@ -326,29 +328,24 @@ public class ChatActivity extends AppCompatActivity {
 
     private void settingview() {
 
-        mUserName.setText(userName);
-        Log.i("TAG", "settingview: " + userName);
+
 
         mRootRef.child("Users").child(chatUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                userName=dataSnapshot.child("name").getValue().toString();
+                mUserName.setText(userName);
+                Log.i("TAG", "settingview: " + userName);
                 userImage = dataSnapshot.child("image").getValue().toString();
-//                userOnline = dataSnapshot.child("online").getValue().toString();
-
-
-//                if (userOnline.equals("true")) {
-//                    mUserSeen.setText("Online");
-//                } else {
-
-//                    GetTime getTime = new GetTime();
-//                    long time = Long.parseLong(userOnline);
-//
-//                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
-//
-//
-//                    mUserSeen.setText("last seen " + lastseen);
-//                }
+                userOnline = dataSnapshot.child("online").getValue().toString();
+                if (userOnline.equals("true")) {
+                    mUserSeen.setText("Online");
+                } else {
+                    LastSeen getTime=new LastSeen();
+                    long last_seen=Long.parseLong(userOnline);
+                    String lastSeenTime=getTime.getTimeAgo(last_seen,getApplicationContext()).toString();
+                    mUserSeen.setText(lastSeenTime);
+                }
                 if (!userImage.equals("default"))
                     Picasso.get()
                             .load(userImage)

@@ -43,16 +43,17 @@
             android:textSize="20dp" />
 
         <EditText
-            android:id="@+id/edit_phone"
+            android:id="@+id/edittext_phoneno"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="Enter your number"
+            android:textColor="#fff"
             android:textColorHint="#fff"
             android:textSize="20dp" />
     </LinearLayout>
     <Button
-        android:id="@+id/btn_verify"
+        android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
@@ -62,14 +63,14 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/big_john"
         android:background="@drawable/button_background_blue"
-        android:text="Verify"
+        android:text="Submit"
         android:textColor="#fff"/>
 
     <TextView
         android:id="@+id/text_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_verify"
+        android:layout_below="@+id/btn_submit"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:text="OR"
@@ -85,15 +86,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="29dp" />
 
-    <!--<com.facebook.login.widget.LoginButton-->
-        <!--android:id="@+id/login_button"-->
-        <!--android:layout_width="250dp"-->
-        <!--android:layout_height="53dp"-->
-        <!--android:layout_above="@+id/btn_gSignIn"-->
-        <!--android:layout_alignStart="@+id/btn_gSignIn"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_marginBottom="14dp"-->
-        <!--android:padding="10dp" />-->
-
+   <com.facebook.login.widget.LoginButton
+        android:id="@+id/btn_fbSignIn"
+        android:layout_width="250dp"
+        android:layout_height="53dp"
+        android:layout_above="@+id/btn_gSignIn"
+        android:layout_alignStart="@+id/btn_gSignIn"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:padding="10dp" />
 
 </RelativeLayout>

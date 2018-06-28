@@ -10,10 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -33,8 +38,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -45,7 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.R;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     @BindView(R.id.profile_root)
     RelativeLayout rootlayout;
@@ -54,9 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.user_displayname)
     EditText user_displayname;
     @BindView(R.id.user_gender)
-    EditText user_gender;
+    Spinner user_gender;
     @BindView(R.id.user_dob)
-    EditText user_dob;
+    TextView user_dob;
 
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
@@ -90,6 +97,34 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+        setupcalendar();
+        setupspinner();
+
+
+    }
+
+    private void setupspinner() {
+        // Spinner click listener
+        user_gender.setOnItemSelectedListener(this);
+        user_gender.setPrompt("Gender");
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Male");
+        categories.add("Female");
+        categories.add("Others");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        user_gender.setAdapter(dataAdapter);
+    }
+
+    private void setupcalendar() {
         myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -118,7 +153,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
+        String myFormat = "dd/MM/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         user_dob.setText(sdf.format(myCalendar.getTime()));
@@ -227,37 +262,17 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void Savetodatabase(View view) {
 
-        if (user_displayname.getText() != null && user_gender.getText() != null && user_dob.getText() != null && download_url != null) {
-            Map<String, String> userMap = new HashMap<>();
-            userMap.put("name", user_displayname.getText().toString());
-            userMap.put("email", mCurrentUser.getEmail());
-            userMap.put("gender", user_gender.getText().toString());
-            userMap.put("DOB", user_dob.getText().toString());
-            userMap.put("image", download_url);
-            userMap.put("thumb_image", thumb_downloadurl);
-            mDatabase.setValue(userMap)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                mProgessDialog.dismiss();
-                                startActivity(new Intent(ProfileActivity.this, TagActivity.class));
-                                finish();
-                            }
-                        }
-                    });
-
-        } else {
+        if (user_displayname.getText().toString().isEmpty() || user_dob.getText().equals("Date Of Birth") || download_url == null) {
             Snackbar snackBar;
-            if (user_displayname.getText() == null) {
+            if (user_displayname.getText().toString().isEmpty()) {
                 snackBar = Snackbar.make(rootlayout
                         , "Username Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
-            } else if (user_dob.getText() == null) {
+            } else if (user_dob.getText().equals("Date Of Birth")) {
                 snackBar = Snackbar.make(rootlayout
                         , "DOB Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
-            } else if (user_gender.getText() == null) {
+            } else if (user_gender.getSelectedItem() == null) {
                 snackBar = Snackbar.make(rootlayout
                         , "Gender Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
@@ -266,8 +281,35 @@ public class ProfileActivity extends AppCompatActivity {
                         , "Image Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
             }
+        } else {
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("name", user_displayname.getText().toString());
+            userMap.put("gender", user_gender.getSelectedItem().toString());
+            userMap.put("DOB", user_dob.getText().toString());
+            userMap.put("image", download_url);
+            userMap.put("thumb_image", thumb_downloadurl);
+            Log.i("TAG", "Savetodatabase: " + userMap.toString());
+            mDatabase.setValue(userMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                mProgessDialog.dismiss();
+                                startActivity(new Intent(ProfileActivity.this, CompleteProfileActivity.class));
 
-
+                            }
+                        }
+                    });
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
