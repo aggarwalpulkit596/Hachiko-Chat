@@ -77,14 +77,10 @@ public class TagActivity extends AppCompatActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> userMap = new HashMap<>();
-                Map<String,String> tags = new HashMap<>();
-                userMap.put("Tags", tags);
-                tags.put("Worldview", "Lets have a meaningful life");
-                tags.put("Communication", "Texting");
-                tags.put("Spirituality", "Atheist");
-                tags.put("Professional Attitude", "Easy Going");
-                mDatabase.updateChildren(userMap)
+
+                Map<String,Object> tags = new HashMap<>();
+                tags.put("Worldview", "1");
+                mDatabase.updateChildren(tags)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

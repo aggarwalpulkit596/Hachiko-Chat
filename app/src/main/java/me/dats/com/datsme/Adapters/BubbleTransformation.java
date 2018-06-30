@@ -26,7 +26,7 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
         Paint paintBorder = new Paint();
         paintBorder.setColor(Color.BLUE);
         paintBorder.setStrokeWidth(margin);
-        canvas.drawRoundRect(new RectF(outerMargin, outerMargin, source.getWidth() - outerMargin, source.getHeight() - outerMargin), 0, 0, paintBorder);
+        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 110, paintBorder);
 
         Paint trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -47,7 +47,7 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
         final Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-        canvas.drawRoundRect(new RectF(margin+outerMargin, margin+outerMargin, source.getWidth() - (margin + outerMargin), source.getHeight() - (margin + outerMargin)), 0, 0, paint);
+        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 100, paint);
 
         if (source != output) {
             source.recycle();
