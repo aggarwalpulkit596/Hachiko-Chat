@@ -1,16 +1,25 @@
 package me.dats.com.datsme.Activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -49,13 +58,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.R;
 
 public class LoginActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, View.OnKeyListener {
 
     private FirebaseAuth mAuth;
+    Dialog dialog1;
     @BindView(R.id.btn_gSignIn)
     SignInButton signInButton;
     @BindView(R.id.btn_fbSignIn)
@@ -64,6 +75,19 @@ public class LoginActivity extends AppCompatActivity implements
     Button phoneSignIn;
     @BindView(R.id.edittext_phoneno)
     EditText mPhoneNumberField;
+
+    EditText otp1 ,otp2, otp3, otp4, otp5, otp6;
+
+    TextView timer;
+
+    TextView resend;
+
+    Button cancel,otp_submit;
+
+    ProgressBar otp_progressbar;
+
+    CountDownTimer cdt;
+
     private CallbackManager mCallbackManager;
     //    private SignInButton signInButton;
     private static final int RC_SIGN_IN = 9001;
@@ -223,6 +247,9 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
                             updateUI();
+                            dialog1.dismiss();
+                            cdt.cancel();
+                            otp_progressbar.setVisibility(View.GONE);
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
@@ -231,6 +258,15 @@ public class LoginActivity extends AppCompatActivity implements
                                 // [START_EXCLUDE silent]
 //                                mVerificationField.setError("Invalid code.");
                                 // [END_EXCLUDE]
+                                Toast.makeText(LoginActivity.this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                                otp1.setText("");
+                                otp2.setText("");
+                                otp3.setText("");
+                                otp4.setText("");
+                                otp5.setText("");
+                                otp6.setText("");
+                                otp1.requestFocus();
+                                otp_progressbar.setVisibility(View.GONE);
                             }
                             // [START_EXCLUDE silent]
                             // Update UI
@@ -278,16 +314,14 @@ public class LoginActivity extends AppCompatActivity implements
         mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(userId)) {
-                    dialog.dismiss();
-                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    dialog.dismiss();
+                if (dataSnapshot.hasChild(userId)) {
                     Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                     startActivity(intent);
                     finish();
+                }
+                else{
+                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 }
             }
 
@@ -367,11 +401,194 @@ public class LoginActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                dialog.show();
                 phoneAuth("+91" + mPhoneNumberField.getText().toString());
+                enterOTP();
                 break;
+            case R.id.text_resend:
+                cdt.start();
+                resendVerificationCode("+91" + mPhoneNumberField.getText().toString(), mResendToken);
+                resend.setVisibility(View.GONE);
+                break;
+            case R.id.btn_cancel:
+                cdt.cancel();
+                dialog1.hide();
+                break;
+            case R.id.otp_submit:
+                otp_progressbar.setVisibility(View.VISIBLE);
+
+                String otp = otp1.getText().toString() + otp2.getText().toString() + otp3.getText().toString() +
+                        otp4.getText().toString() + otp5.getText().toString() + otp6.getText().toString();
+                if (otp.length() == 6) {
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+                    signInWithPhoneAuthCredential(credential);
+                } else {
+                    otp_progressbar.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
 
+    }
+
+    public void enterOTP() {
+        // dialog.show();
+
+
+        dialog1 = new Dialog(this);
+        dialog1.setContentView(R.layout.otpdialog);
+        dialog1.setCancelable(false);
+        dialog1.show();
+        dialog1.setCanceledOnTouchOutside(false);
+        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        resend = dialog1.findViewById(R.id.text_resend);
+        resend.setVisibility(View.GONE);
+        cancel = dialog1.findViewById(R.id.btn_cancel);
+
+        cancel.setOnClickListener(this);
+        resend.setOnClickListener(this);
+
+        otp1 = dialog1.findViewById(R.id.edit_otp1);
+        otp2 = dialog1.findViewById(R.id.edit_otp2);
+        otp3 = dialog1.findViewById(R.id.edit_otp3);
+        otp4 = dialog1.findViewById(R.id.edit_otp4);
+        otp5 = dialog1.findViewById(R.id.edit_otp5);
+        otp6 = dialog1.findViewById(R.id.edit_otp6);
+        timer = dialog1.findViewById(R.id.text_timer);
+        otp_progressbar=dialog1.findViewById(R.id.otp_progressBar);
+        otp_submit = dialog1.findViewById(R.id.otp_submit);
+
+        otp_submit.setOnClickListener(this);
+        otp1.setOnKeyListener(this);
+        otp2.setOnKeyListener(this);
+        otp3.setOnKeyListener(this);
+        otp4.setOnKeyListener(this);
+        otp5.setOnKeyListener(this);
+        otp6.setOnKeyListener(this);
+
+        cdt = new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timer.setText("00:" + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                timer.setText("00:00");
+                resend.setVisibility(View.VISIBLE);
+            }
+        }.start();
+        otp1.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 1) {
+                    otp2.requestFocus();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+        otp2.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 1) {
+                    otp3.requestFocus();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+        otp3.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 1) {
+                    otp4.requestFocus();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+        otp4.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 1) {
+                    otp5.requestFocus();
+                }
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+        otp5.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() == 1) {
+                    otp6.requestFocus();
+                }
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+
+
+
+        dialog1.show();
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if (i == keyEvent.KEYCODE_DEL) {
+            switch (view.getId()) {
+                case R.id.edit_otp2:
+                    otp1.requestFocus();
+                    break;
+                case R.id.edit_otp3:
+                    otp2.requestFocus();
+                    break;
+                case R.id.edit_otp4:
+                    otp3.requestFocus();
+                    break;
+                case R.id.edit_otp5:
+                    otp4.requestFocus();
+                    break;
+                case R.id.edit_otp6:
+                    otp5.requestFocus();
+                    break;
+
+            }
+        }
+        return false;
     }
 
 
@@ -411,6 +628,7 @@ public class LoginActivity extends AppCompatActivity implements
     // [START resend_verification]
     private void resendVerificationCode(String phoneNumber,
                                         PhoneAuthProvider.ForceResendingToken token) {
+        Toast.makeText(this, "OTP Request sent", Toast.LENGTH_SHORT).show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify
                 60,                 // Timeout duration
@@ -419,6 +637,8 @@ public class LoginActivity extends AppCompatActivity implements
                 mCallbacks,         // OnVerificationStateChangedCallbacks
                 token);             // ForceResendingToken from callbacks
     }
+
+
     // [END resend_verification]
 
 }

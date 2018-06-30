@@ -16,4 +16,5 @@
     <string name="gender">GENDER</string>
     <string name="facebook_app_id">209447589680098</string>
     <string name="fb_login_protocol_scheme">fb209447589680098</string>
+    <integer-array name="worldview"></integer-array>
 </resources>

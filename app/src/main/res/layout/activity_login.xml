@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="Enter your number"
+            android:textColor="#fff"
             android:textColorHint="#fff"
             android:textSize="20dp" />
     </LinearLayout>

@@ -7,18 +7,11 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -48,30 +41,22 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,7 +64,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Adapters.BubbleTransformation;
 import me.dats.com.datsme.Adapters.SpacesItemDecoration;
 import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
 import me.dats.com.datsme.Models.Users;
@@ -93,7 +77,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SeekBar seekBar;
     private DatabaseReference mUserRef;
 
-
     private GoogleMap mMap;
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -106,7 +89,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     View thumbView;
     HashMap<String, LatLng> userMap;
     HashMap<String, Marker> markers;
-
+    int[][] worldview = new int[][]{
+            { 100, 50, 25, 50, 75 },
+            { 50, 100, 25, 50, 75},
+            { 25, 25, 100, 50, 50 },
+            { 30, 50, 50, 100, 50 },
+            { 75, 75, 50, 50, 100 }
+    };
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
@@ -152,7 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
-                final LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
                 Map<String, Object> locationMap = new HashMap<>();
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
@@ -182,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
             @Override
-            public void onResult(LocationSettingsResult result) {
+            public void onResult(@NonNull LocationSettingsResult result) {
                 final Status status = result.getStatus();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
@@ -278,7 +266,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
-                holder.bind(model, getApplicationContext());
+                holder.bind(model);
                 LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
                 MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
                 LatLng name = userMap.get(model.getName());
@@ -378,16 +366,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         public void setName(String name) {
             TextView userNameView = mView.findViewById(R.id.name);
-            String[] firstname = name.split(" ");
-            userNameView.setText(firstname[0]);
+            userNameView.setText(name);
         }
 
-        void bind(Users model, final Context applicationContext) {
+        void bind(Users model) {
             setName(model.getName());
-            setThumbImage(model.getThumb_image(), applicationContext);
+            setThumbImage(model.getThumb_image());
         }
 
-        void setThumbImage(String thumbImage, Context applicationContext) {
+        void setThumbImage(String thumbImage) {
             CircleImageView userImageView = mView.findViewById(R.id.image);
             if (!thumbImage.equals("default"))
                 Picasso.get()
@@ -413,7 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-//        if(!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
+//        if(!FirebaseAuth.getInstance().getCurrentUser()){
 //            startActivity(new Intent(MapsActivity.this, LoginActivity.class));
 //
 //        }
@@ -423,6 +410,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void logout(){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
+        mAuth = null;
         Intent i = new Intent(MapsActivity.this,LoginActivity.class);
         startActivity(i);
         finish();
