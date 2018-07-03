@@ -340,7 +340,8 @@ public class ChatActivity extends AppCompatActivity {
                 userOnline = dataSnapshot.child("online").getValue().toString();
                 if (userOnline.equals("true")) {
                     mUserSeen.setText("Online");
-                } else {
+                }
+                else {
                     LastSeen getTime=new LastSeen();
                     long last_seen=Long.parseLong(userOnline);
                     String lastSeenTime=getTime.getTimeAgo(last_seen,getApplicationContext()).toString();

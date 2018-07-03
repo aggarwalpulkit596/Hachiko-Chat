@@ -2,7 +2,6 @@ package me.dats.com.datsme.Activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,9 +14,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,24 +58,35 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.R;
 
 public class LoginActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, View.OnKeyListener {
 
     private FirebaseAuth mAuth;
+    Dialog dialog1;
     @BindView(R.id.btn_gSignIn)
     SignInButton signInButton;
     @BindView(R.id.btn_fbSignIn)
     LoginButton fbSignInBtn;
-    @BindView(R.id.btn_submit)
+    @BindView(R.id.btn_verify)
     Button phoneSignIn;
     @BindView(R.id.edittext_phoneno)
     EditText mPhoneNumberField;
+
+    EditText otp1 ,otp2, otp3, otp4, otp5, otp6;
+
+    TextView timer;
+
     TextView resend;
-    Button cancel;
-    EditText otp1,otp2,otp3,otp4,otp5,otp6;
+
+    Button cancel,otp_submit;
+
+    ProgressBar otp_progressbar;
+
+    CountDownTimer cdt;
 
     private CallbackManager mCallbackManager;
     //    private SignInButton signInButton;
@@ -85,16 +97,10 @@ public class LoginActivity extends AppCompatActivity implements
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
-    String otp;
-    final Context context = this;
-    TextView timer;
 
 
     private DatabaseReference mDatabase;
     public ProgressDialog dialog;
-    public Dialog dialog1;
-
-    private static final String FORMAT = "%02d";
 
 
     @Override
@@ -106,28 +112,36 @@ public class LoginActivity extends AppCompatActivity implements
         mDatabase = FirebaseDatabase.getInstance().getReference();
         signInButton.setOnClickListener(this);
         phoneSignIn.setOnClickListener(this);
+
+
         //Dialog Setup
         dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Please Wait....");
         dialog.setTitle("Loading");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         //PhoneAuth Reciever
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically detect the incoming verification SMS and perform verification without user action.
+                // 1 - Instant verification. In some cases the phone number can be instantly
+                //     verified without needing to send or enter a verification code.
+                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                //     detect the incoming verification SMS and perform verification without
+                //     user action.
                 Log.d("TAG", "onVerificationCompleted:" + credential);
                 // [START_EXCLUDE silent]
                 mVerificationInProgress = false;
                 // [END_EXCLUDE]
+
                 // [START_EXCLUDE silent]
                 // Update the UI and attempt sign in with the phone credential
 //                updateUI(STATE_VERIFY_SUCCESS, credential);
                 // [END_EXCLUDE]
-               signInWithPhoneAuthCredential(credential);
+                signInWithPhoneAuthCredential(credential);
             }
 
             @Override
@@ -170,8 +184,6 @@ public class LoginActivity extends AppCompatActivity implements
                 mVerificationId = verificationId;
                 mResendToken = token;
 
-                Toast.makeText(LoginActivity.this,"Code sent",Toast.LENGTH_SHORT).show();
-
                 // [START_EXCLUDE]
                 // Update UI
 //                updateUI(STATE_CODE_SENT);
@@ -209,34 +221,6 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     }
-    // [START sign_in_with_phone]
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            updateUI();
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                                // [START_EXCLUDE silent]
-//                                mVerificationField.setError("Invalid code.");
-                                // [END_EXCLUDE]
-                            }
-                            // [START_EXCLUDE silent]
-                            // Update UI
-//                            updateUI(STATE_SIGNIN_FAILED);
-                            // [END_EXCLUDE]
-                        }
-                    }
-                });
-    }
-    // [END sign_in_with_phone]
 
     public void gSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -253,7 +237,46 @@ public class LoginActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
+    // [START sign_in_with_phone]
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("TAG", "signInWithCredential:success");
+                            updateUI();
+                            dialog1.dismiss();
+                            cdt.cancel();
+                            otp_progressbar.setVisibility(View.GONE);
+                        } else {
+                            // Sign in failed, display a message and update the UI
+                            Log.w("TAG", "signInWithCredential:failure", task.getException());
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                // The verification code entered was invalid
+                                // [START_EXCLUDE silent]
+//                                mVerificationField.setError("Invalid code.");
+                                // [END_EXCLUDE]
+                                Toast.makeText(LoginActivity.this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                                otp1.setText("");
+                                otp2.setText("");
+                                otp3.setText("");
+                                otp4.setText("");
+                                otp5.setText("");
+                                otp6.setText("");
+                                otp1.requestFocus();
+                                otp_progressbar.setVisibility(View.GONE);
+                            }
+                            // [START_EXCLUDE silent]
+                            // Update UI
+//                            updateUI(STATE_SIGNIN_FAILED);
+                            // [END_EXCLUDE]
+                        }
+                    }
+                });
+    }
+    // [END sign_in_with_phone]
 
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken token) {
@@ -280,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                         // [START_EXCLUDE]
                         dialog.dismiss();
-                        // [END_EXC333LUDE]
+                        // [END_EXCLUDE]
                     }
                 });
     }
@@ -291,18 +314,14 @@ public class LoginActivity extends AppCompatActivity implements
         mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(userId)) {
-                    dialog.dismiss();
-
-                    Log.i("TAG", "onActivity2 " );
-                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    dialog.dismiss();
+                if (dataSnapshot.hasChild(userId)) {
                     Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                     startActivity(intent);
                     finish();
+                }
+                else{
+                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 }
             }
 
@@ -318,7 +337,7 @@ public class LoginActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("TAG", "gSignIn:" + requestCode);
 
-
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
@@ -378,66 +397,99 @@ public class LoginActivity extends AppCompatActivity implements
             case R.id.btn_gSignIn:
                 gSignIn();
                 break;
-            case R.id.btn_submit:
+            case R.id.btn_verify:
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                dialog.show();
-                phoneAuth("+91" + mPhoneNumberField.getText().toString());dialog.dismiss();
+                phoneAuth("+91" + mPhoneNumberField.getText().toString());
                 enterOTP();
                 break;
             case R.id.text_resend:
-                resendVerificationCode("+91" + mPhoneNumberField.getText().toString(),mResendToken);
+                cdt.start();
+                resendVerificationCode("+91" + mPhoneNumberField.getText().toString(), mResendToken);
+                resend.setVisibility(View.GONE);
                 break;
             case R.id.btn_cancel:
+                cdt.cancel();
                 dialog1.hide();
+                break;
+            case R.id.otp_submit:
+                otp_progressbar.setVisibility(View.VISIBLE);
+
+                String otp = otp1.getText().toString() + otp2.getText().toString() + otp3.getText().toString() +
+                        otp4.getText().toString() + otp5.getText().toString() + otp6.getText().toString();
+                if (otp.length() == 6) {
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+                    signInWithPhoneAuthCredential(credential);
+                } else {
+                    otp_progressbar.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                }
+                break;
 
         }
 
     }
-    public void enterOTP()
-    {
+
+    public void enterOTP() {
         // dialog.show();
-        dialog1= new Dialog(context);
-        dialog1.setContentView(R.layout.otp_dialog);
-        dialog1.setTitle("Enter OTP");
+
+
+        dialog1 = new Dialog(this);
+        dialog1.setContentView(R.layout.otpdialog);
+        dialog1.setCancelable(false);
         dialog1.show();
         dialog1.setCanceledOnTouchOutside(false);
         dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        resend=(TextView)dialog1.findViewById(R.id.text_resend);
-        cancel=(Button)dialog1.findViewById(R.id.btn_cancel);
-        resend.setVisibility(View.INVISIBLE);
+
+        resend = dialog1.findViewById(R.id.text_resend);
+        resend.setVisibility(View.GONE);
+        cancel = dialog1.findViewById(R.id.btn_cancel);
+
         cancel.setOnClickListener(this);
         resend.setOnClickListener(this);
-        otp1=(EditText)dialog1.findViewById(R.id.edit_otp1);
-        otp2=(EditText)dialog1.findViewById(R.id.edit_otp2);
-        otp3=(EditText)dialog1.findViewById(R.id.edit_otp3);
-        otp4=(EditText)dialog1.findViewById(R.id.edit_otp4);
-        otp5=(EditText)dialog1.findViewById(R.id.edit_otp5);
-        otp6=(EditText)dialog1.findViewById(R.id.edit_otp6);
-        timer=(TextView)dialog1.findViewById(R.id.text_timer);
-        new CountDownTimer(60000, 1000) {
+
+        otp1 = dialog1.findViewById(R.id.edit_otp1);
+        otp2 = dialog1.findViewById(R.id.edit_otp2);
+        otp3 = dialog1.findViewById(R.id.edit_otp3);
+        otp4 = dialog1.findViewById(R.id.edit_otp4);
+        otp5 = dialog1.findViewById(R.id.edit_otp5);
+        otp6 = dialog1.findViewById(R.id.edit_otp6);
+        timer = dialog1.findViewById(R.id.text_timer);
+        otp_progressbar=dialog1.findViewById(R.id.otp_progressBar);
+        otp_submit = dialog1.findViewById(R.id.otp_submit);
+
+        otp_submit.setOnClickListener(this);
+        otp1.setOnKeyListener(this);
+        otp2.setOnKeyListener(this);
+        otp3.setOnKeyListener(this);
+        otp4.setOnKeyListener(this);
+        otp5.setOnKeyListener(this);
+        otp6.setOnKeyListener(this);
+
+        cdt = new CountDownTimer(60000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                timer.setText("Time remaining: " + millisUntilFinished / 1000);
+                timer.setText("00:" + millisUntilFinished / 1000);
             }
 
             public void onFinish() {
-                timer.setText("Time exceeded");
+                timer.setText("00:00");
                 resend.setVisibility(View.VISIBLE);
             }
         }.start();
         otp1.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
 
-                if (s.length() ==1) {
+                if (s.length() == 1) {
                     otp2.requestFocus();
                 }
-
             }
+
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
             }
+
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
             }
@@ -445,81 +497,98 @@ public class LoginActivity extends AppCompatActivity implements
         otp2.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
 
-                if (s.length() ==1) {
+                if (s.length() == 1) {
                     otp3.requestFocus();
                 }
             }
+
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
             }
+
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
             }
         });
         otp3.addTextChangedListener(new TextWatcher() {
-        public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {
 
-            if (s.length() ==1) {
-                otp4.requestFocus();
+                if (s.length() == 1) {
+                    otp4.requestFocus();
+                }
             }
-        }
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-        }
 
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-        }
-    });
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
         otp4.addTextChangedListener(new TextWatcher() {
-        public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {
 
-            if (s.length() ==1) {
-                otp5.requestFocus();
+                if (s.length() == 1) {
+                    otp5.requestFocus();
+                }
+
             }
 
-        }
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-        }
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
 
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-        }
-    });
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
         otp5.addTextChangedListener(new TextWatcher() {
-        public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {
 
-            if (s.length() ==1) {
-                otp6.requestFocus();
+                if (s.length() == 1) {
+                    otp6.requestFocus();
+                }
+
             }
 
-        }
-
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-        }
-
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-        }
-    });
-
-        Button dialogButton = (Button) dialog1.findViewById(R.id.btn_verify);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                otp=otp1.getText().toString()+otp2.getText().toString()+otp3.getText().toString()+
-                        otp4.getText().toString()+otp5.getText().toString()+otp6.getText().toString();
-                Toast.makeText(LoginActivity.this,otp,Toast.LENGTH_SHORT).show();
-
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
-                signInWithPhoneAuthCredential(credential);
-                dialog1.dismiss();
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
             }
 
-        });dialog1.show();
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+
+
+
+        dialog1.show();
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if (i == keyEvent.KEYCODE_DEL) {
+            switch (view.getId()) {
+                case R.id.edit_otp2:
+                    otp1.requestFocus();
+                    break;
+                case R.id.edit_otp3:
+                    otp2.requestFocus();
+                    break;
+                case R.id.edit_otp4:
+                    otp3.requestFocus();
+                    break;
+                case R.id.edit_otp5:
+                    otp4.requestFocus();
+                    break;
+                case R.id.edit_otp6:
+                    otp5.requestFocus();
+                    break;
+
+            }
+        }
+        return false;
     }
 
 
@@ -529,7 +598,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+            updateUI();
         }
     }
 
@@ -559,6 +628,7 @@ public class LoginActivity extends AppCompatActivity implements
     // [START resend_verification]
     private void resendVerificationCode(String phoneNumber,
                                         PhoneAuthProvider.ForceResendingToken token) {
+        Toast.makeText(this, "OTP Request sent", Toast.LENGTH_SHORT).show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify
                 60,                 // Timeout duration
@@ -567,6 +637,8 @@ public class LoginActivity extends AppCompatActivity implements
                 mCallbacks,         // OnVerificationStateChangedCallbacks
                 token);             // ForceResendingToken from callbacks
     }
+
+
     // [END resend_verification]
 
 }

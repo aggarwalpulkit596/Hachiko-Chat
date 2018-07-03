@@ -50,6 +50,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import me.dats.com.datsme.Models.Zodiac;
 import me.dats.com.datsme.R;
 
 public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -72,6 +73,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     String thumb_downloadurl = null;
     String download_url = null;
     Calendar myCalendar;
+    String userzodiac;
+    String elements;
+    int Numerlogy;
 
 
     @Override
@@ -136,6 +140,31 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                Numerlogy = getNumerlogy(year,monthOfYear+1,dayOfMonth);
+                Zodiac zodiac = new Zodiac();
+                userzodiac = zodiac.zodiac_sign(dayOfMonth,monthOfYear+1);
+                switch (userzodiac) {
+                    case "Sagittarius":
+                    case "Leo":
+                    case "Aries":
+                        elements = "Fire";
+                        break;
+                    case "Gemini":
+                    case "Libra":
+                    case "Aquarius":
+                        elements = "Air";
+                        break;
+                    case "Taurus":
+                    case "Virgo":
+                    case "Capricorn":
+                        elements = "Earth";
+                        break;
+                    case "Cancer":
+                    case "Scorpio":
+                    case "Pisces":
+                        elements = "Water";
+                        break;
+                }
                 updateLabel();
             }
 
@@ -150,6 +179,23 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+    }
+
+    private int getNumerlogy(int year, int monthOfYear, int dayOfMonth) {
+        int number=0;
+        while(year>0){
+            number += year%10;
+            year=year/10;
+        }
+        while(monthOfYear>0){
+            number += monthOfYear%10;
+            monthOfYear=monthOfYear/10;
+        }
+        while(dayOfMonth>0){
+            number += dayOfMonth%10;
+            dayOfMonth=dayOfMonth/10;
+        }
+        return number;
     }
 
     private void updateLabel() {
@@ -288,6 +334,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             userMap.put("DOB", user_dob.getText().toString());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
+            userMap.put("Zodiac",userzodiac);
+            userMap.put("Numerlogy",""+Numerlogy);
+            userMap.put("Element",elements);
             Log.i("TAG", "Savetodatabase: " + userMap.toString());
             mDatabase.setValue(userMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

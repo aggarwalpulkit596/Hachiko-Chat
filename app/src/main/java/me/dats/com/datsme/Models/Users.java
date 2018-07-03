@@ -8,9 +8,8 @@ public class Users {
     public double lattitude;
     public double longitude;
     public String email;
-
-
-
+    public String Worldview;
+    public Integer Compatibility;
     public String gender;
 
     public Users() {
@@ -65,6 +64,7 @@ public class Users {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getGender() {
         return gender;
     }
@@ -72,5 +72,8 @@ public class Users {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+
+
 
 }

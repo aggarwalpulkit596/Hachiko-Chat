@@ -75,7 +75,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private String mCurrent_State;
     private String current_uid;
-    private ProgressDialog mLoadProcess;
+//    private ProgressDialog mLoadProcess;
     private String user_id;
     private String image;
     private String name,about,place,college,age,age_yrs;
@@ -111,11 +111,11 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         mDeclineReqBtn.setVisibility(View.INVISIBLE);
         mDeclineReqBtn.setEnabled(false);
 
-        mLoadProcess = new ProgressDialog(getContext());
-        mLoadProcess.setTitle("Getting Info");
-        mLoadProcess.setMessage("PLease Wait...");
-        mLoadProcess.setCanceledOnTouchOutside(false);
-        mLoadProcess.show();
+//        mLoadProcess = new ProgressDialog(getContext());
+//        mLoadProcess.setTitle("Getting Info");
+//        mLoadProcess.setMessage("PLease Wait...");
+//        mLoadProcess.setCanceledOnTouchOutside(false);
+//        mLoadProcess.show();
 
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -159,7 +159,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
                                 mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                 mDeclineReqBtn.setEnabled(false);
                             }
-                            mLoadProcess.dismiss();
+//                            mLoadProcess.dismiss();
 
                         } else {
 
@@ -177,14 +177,14 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
                                         mDeclineReqBtn.setEnabled(false);
 
                                     }
-                                    mLoadProcess.dismiss();
+//                                    mLoadProcess.dismiss();
 
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
 
-                                    mLoadProcess.dismiss();
+//                                    mLoadProcess.dismiss();
 
 
                                 }
