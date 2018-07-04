@@ -50,15 +50,10 @@ dependencies {
     implementation 'com.roughike:swipe-selector:1.0.6'
     implementation 'com.github.clans:fab:1.6.4'
 
-
-
-
     //Location
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
-
-
 
 
 }

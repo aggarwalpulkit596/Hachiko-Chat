@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,8 +58,16 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     CircleImageView mProfileImage;
     @BindView(R.id.user_displayname)
     TextView mProfileName;
+    @BindView(R.id.user_aboutyou)
+    TextView mProfileAbout;
+    @BindView(R.id.userplace)
+    TextView mProfilePlace;
+    @BindView(R.id.usercollege)
+    TextView mProfileCollege;
     @BindView(R.id.user_sendrequest)
     Button mProfileReqBtn;
+    @BindView(R.id.user_age)
+    TextView mProfileAge;
     @BindView(R.id.user_cancelrequest)
     Button mDeclineReqBtn;
     @BindView(R.id.user_startchat)
@@ -66,10 +75,10 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private String mCurrent_State;
     private String current_uid;
-    private ProgressDialog mLoadProcess;
+    //    private ProgressDialog mLoadProcess;
     private String user_id;
     private String image;
-    private String name;
+    private String name,about,place,college,age,age_yrs;
 
     public BottomSheetProfileFragment() {
         // Required empty public constructor
@@ -102,17 +111,21 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         mDeclineReqBtn.setVisibility(View.INVISIBLE);
         mDeclineReqBtn.setEnabled(false);
 
-        mLoadProcess = new ProgressDialog(getContext());
-        mLoadProcess.setTitle("Getting Info");
-        mLoadProcess.setMessage("PLease Wait...");
-        mLoadProcess.setCanceledOnTouchOutside(false);
-        mLoadProcess.show();
+//        mLoadProcess = new ProgressDialog(getContext());
+//        mLoadProcess.setTitle("Getting Info");
+//        mLoadProcess.setMessage("PLease Wait...");
+//        mLoadProcess.setCanceledOnTouchOutside(false);
+//        mLoadProcess.show();
 
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                bindData(dataSnapshot);
+            public void onDataChange(DataSnapshot dataSnapshot)  {
+                try {
+                    bindData(dataSnapshot);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 if (mCurrentUser.getUid().equals(user_id)) {
 
@@ -146,7 +159,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
                                 mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                 mDeclineReqBtn.setEnabled(false);
                             }
-                            mLoadProcess.dismiss();
+//                            mLoadProcess.dismiss();
 
                         } else {
 
@@ -164,14 +177,14 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
                                         mDeclineReqBtn.setEnabled(false);
 
                                     }
-                                    mLoadProcess.dismiss();
+//                                    mLoadProcess.dismiss();
 
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
 
-                                    mLoadProcess.dismiss();
+//                                    mLoadProcess.dismiss();
 
 
                                 }
@@ -213,12 +226,25 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         mCurrent_State = "not friends";
     }
 
-    private void bindData(DataSnapshot documentSnapshot) {
+    private void bindData(DataSnapshot documentSnapshot) throws Exception {
 
         name = documentSnapshot.child("name").getValue().toString();
         image = documentSnapshot.child("thumb_image").getValue().toString();
-
+        about=documentSnapshot.child("about").getValue().toString();
+        place=documentSnapshot.child("place").getValue().toString();
+        college=documentSnapshot.child("college").getValue().toString();
+        age=documentSnapshot.child("DOB").getValue().toString();
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(age);
+        Date now = new Date();
+        long timeBetween = now.getTime() - date1.getTime();
+        double yearsBetween = timeBetween / 3.15576e+10;
+        int age1 = (int) Math.floor(yearsBetween);
+        age_yrs=Integer.toString(age1);
         mProfileName.setText(name);
+        mProfileAbout.setText(about);
+        mProfilePlace.setText(place);
+        mProfileCollege.setText(college);
+        mProfileAge.setText(", "+age_yrs);
 
         if (!image.equals("default"))
             Picasso.get()

@@ -1,51 +1,96 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="32dp"
-        android:elevation="5dp"
-        android:fontFamily="@font/big_john"
-        android:text="Top Profiles"
-        android:textColor="#000"
-        android:textSize="20sp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-
-        android:layout_below="@id/textView2"
+    <ImageButton
+        android:layout_width="40dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        tools:listitem="@layout/user_layout" />
+        android:layout_marginLeft="10dp"
+        android:layout_height="40dp"
+        android:background="#00ffffff"
+        android:id="@+id/toggle_profile_button"
+        android:src="@drawable/ic_expand_more_black_24dp">
+    </ImageButton>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout7"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_marginTop="450dp">
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_below="@+id/toggle_profile_button"
+        android:id="@+id/profile_box">
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/big_john"
+            android:text="Top Profiles"
+            android:textColor="#000"
+            android:textSize="20dp" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_below="@id/textView2"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            tools:listitem="@layout/user_layout" />
 
     </RelativeLayout>
 
+    <com.github.clans.fab.FloatingActionMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_above="@+id/cardview"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_people_outline_black_24dp"
+            fab:fab_label="Friends"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_settings_black_24dp"
+            fab:fab_label="Settings"
+            fab:fab_size="mini" />
+
+        />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            fab:fab_label="Logout"
+            fab:fab_size="mini" />
+
+        />
+    </com.github.clans.fab.FloatingActionMenu>
+
+
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -60,14 +105,14 @@
             android:background="#00FFFFFF">
 
 
-            <ImageView
-                android:layout_width="80dp"
-                android:id="@+id/temploguout"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="11dp"
-                android:src="@drawable/menu" />
+            <!--<ImageView-->
+            <!--android:layout_width="80dp"-->
+            <!--android:id="@+id/temploguout"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginTop="11dp"-->
+            <!--android:src="@drawable/menu" />-->
 
             <SeekBar
                 android:maxHeight="5dp"
@@ -77,11 +122,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:thumb="@drawable/seek_thumb"
-                android:layout_marginStart="78dp"
                 android:progressDrawable="@drawable/seek_style" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
+
+
 
 
 </RelativeLayout>

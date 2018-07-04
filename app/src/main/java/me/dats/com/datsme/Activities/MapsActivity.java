@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,9 +60,10 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.lang.reflect.Array;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,6 +76,18 @@ import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    @BindView(R.id.toggle_profile_button)
+    ImageButton toggle_profile_button;
+
+    @BindView(R.id.profile_box)
+    RelativeLayout Profile_box;
+
+    public float Timer = 0;
+    public CountDownTimer countDownTimer;
+    private Animation animShow, animHide;
+
+    boolean IsProfileVisible = false;
 
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
@@ -92,11 +108,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     HashMap<String, LatLng> userMap;
     HashMap<String, Marker> markers;
     int[][] worldview = new int[][]{
-            { 100, 50, 25, 50, 75 },
-            { 50, 100, 25, 50, 75},
-            { 25, 25, 100, 50, 50 },
-            { 30, 50, 50, 100, 50 },
-            { 75, 75, 50, 50, 100 }
+            {100, 50, 25, 50, 75},
+            {50, 100, 25, 50, 75},
+            {25, 25, 100, 50, 50},
+            {30, 50, 50, 100, 50},
+            {75, 75, 50, 50, 100}
     };
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -132,9 +148,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         mapFragment.getMapAsync(this);
         fetchusers();
+        initAnimation();
         fetchlocation();
+        toggle_profile_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (IsProfileVisible) {
+                    IsProfileVisible = false;
+                    Profile_box.startAnimation(animHide);
+                    toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                    Profile_box.setVisibility(View.INVISIBLE);
+                } else {
+                    if (Timer > 0) {
+                        countDownTimer.cancel();
+                    }
+                    IsProfileVisible = true;
+                    toggle_profile_button.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                    Profile_box.setVisibility(View.VISIBLE);
+                    Profile_box.startAnimation(animShow);
+                }
+            }
+        });
 
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        mUserRef.keepSynced(true);
         Log.i("TAG", "onCreate: " + mUserRef.toString());
         mLocationCallback = new LocationCallback() {
             boolean firstlauch = true;
@@ -147,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
                 mUserRef.updateChildren(locationMap);
-                if(firstlauch) {
+                if (firstlauch) {
                     firstlauch = false;
                     float zoomLevel = 16.0f; //This goes up to 21
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomLevel));
@@ -155,6 +192,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
+    }
+
+    private void initAnimation() {
+        animShow = AnimationUtils.loadAnimation(this, R.anim.show_from_side);
+        animHide = AnimationUtils.loadAnimation(this, R.anim.hide_from_side);
     }
 
     private void fetchlocation() {
@@ -207,14 +249,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            locateMe();
+        }
+
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                if (Timer > 0) {
+                    countDownTimer.cancel();
+                }
+                if (IsProfileVisible) {
+                    IsProfileVisible = false;
+                    Profile_box.startAnimation(animHide);
+                    toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                    Profile_box.setVisibility(View.INVISIBLE);
+                }
+            }
+
+        });
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+
+                if (Timer > 0) {
+                    countDownTimer.cancel();
+                }
+                countDownTimer = new CountDownTimer(2000, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        Timer = l / 1000;
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        IsProfileVisible = true;
+                        toggle_profile_button.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                        Profile_box.setVisibility(View.VISIBLE);
+                        Profile_box.startAnimation(animShow);
+                    }
+                }.start();
+            }
+        });
+    }
+
+    public void locateMe() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        mMap.setMyLocationEnabled(true);
+
+
         mFusedLocationProviderClient
                 .requestLocationUpdates(mLocationRequest,
                         mLocationCallback, null);
@@ -226,6 +318,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     MapStyleOptions.loadRawResourceStyle(this, R.raw.mymapstyle));
         } catch (Resources.NotFoundException e) {
             // Oops, looks like the map style resource couldn't be found!
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                    }
+                    locateMe();
+                }
+                break;
         }
     }
 
@@ -269,18 +377,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
                 holder.bind(model);
+                final String user_id = getRef(position).getKey();
                 LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
-                MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName());
+                MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName()).snippet(user_id);
+                ;
                 LatLng name = userMap.get(model.getName());
-
                 if (name == null) {
                     userMap.put(model.getName(), latLng1);
                     final Marker userMarker = mMap.addMarker(mo);
                     markers.put(model.getName(), userMarker);
-//                    if(model.getGender().equalsIgnoreCase("Male"))
-//                    userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.boy));
-//                    else
-//                        userMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.girl));
                     Picasso.get()
                             .load(model.getThumb_image())
                             .resize(250, 250)
@@ -304,6 +409,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 public void onPrepareLoad(Drawable placeHolderDrawable) {
                                 }
                             });
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Log.i("TAG", "onMarkerClick: " + marker.getTitle());
+                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+                            return true;
+                        }
+                    });
 
                 } else {
                     Marker marker = markers.get(model.getName());
@@ -320,14 +434,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
                                     finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-
                                 }
 
                                 @Override
                                 public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
                                 }
 
                                 @Override
@@ -335,9 +446,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
                             });
                     markers.put(model.getName(), marker);
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+                            return true;
+                        }
+                    });
                 }
 
-                final String user_id = getRef(position).getKey();
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -389,7 +507,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         void bind(Users model) {
-            setName(model.getName());
+            String name1 = model.getName();
+            String[] arr = name1.split(" ");
+            String fname = arr[0];
+            setName(fname);
             setThumbImage(model.getThumb_image());
         }
 
@@ -416,7 +537,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return new BitmapDrawable(getResources(), bitmap);
     }
 
-//    @Override
+    //    @Override
 //    protected void onStart() {
 //        super.onStart();
 //        if(!FirebaseAuth.getInstance().getCurrentUser()){
@@ -425,13 +546,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        }
 //
 //    }
-    @OnClick(R.id.temploguout)
-    void logout(){
+    @OnClick(R.id.fab_logout)
+    void logout() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         mAuth = null;
-        Intent i = new Intent(MapsActivity.this,LoginActivity.class);
+        Intent i = new Intent(MapsActivity.this, LoginActivity.class);
         startActivity(i);
         finish();
+    }
+
+    @OnClick(R.id.fab_settings)
+    void settings() {
+        Intent i = new Intent(MapsActivity.this, Setting.class);
+        startActivity(i);
+    }
+    @OnClick(R.id.fab_friends)
+    void friends() {
+        Intent i = new Intent(MapsActivity.this, FriendsAcitivity.class);
+        startActivity(i);
     }
 }

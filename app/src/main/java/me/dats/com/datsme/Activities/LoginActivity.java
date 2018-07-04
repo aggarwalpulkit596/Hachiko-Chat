@@ -63,7 +63,7 @@ import butterknife.ButterKnife;
 import me.dats.com.datsme.R;
 
 public class LoginActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, View.OnKeyListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private FirebaseAuth mAuth;
     Dialog dialog1;
@@ -316,6 +316,7 @@ public class LoginActivity extends AppCompatActivity implements
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userId)) {
                     Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+                    dialog.dismiss();
                     startActivity(intent);
                     finish();
                 }
@@ -460,12 +461,6 @@ public class LoginActivity extends AppCompatActivity implements
         otp_submit = dialog1.findViewById(R.id.otp_submit);
 
         otp_submit.setOnClickListener(this);
-        otp1.setOnKeyListener(this);
-        otp2.setOnKeyListener(this);
-        otp3.setOnKeyListener(this);
-        otp4.setOnKeyListener(this);
-        otp5.setOnKeyListener(this);
-        otp6.setOnKeyListener(this);
 
         cdt = new CountDownTimer(60000, 1000) {
 
@@ -484,6 +479,10 @@ public class LoginActivity extends AppCompatActivity implements
                 if (s.length() == 1) {
                     otp2.requestFocus();
                 }
+                else if(s.length()==0)
+                {
+                    otp1.requestFocus();
+                }
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -500,6 +499,10 @@ public class LoginActivity extends AppCompatActivity implements
                 if (s.length() == 1) {
                     otp3.requestFocus();
                 }
+                else if(s.length()==0)
+                {
+                    otp1.requestFocus();
+                }
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -515,6 +518,10 @@ public class LoginActivity extends AppCompatActivity implements
 
                 if (s.length() == 1) {
                     otp4.requestFocus();
+                }
+                else if(s.length()==0)
+                {
+                    otp2.requestFocus();
                 }
             }
 
@@ -533,21 +540,9 @@ public class LoginActivity extends AppCompatActivity implements
                     otp5.requestFocus();
                 }
 
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-            }
-        });
-        otp5.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-                if (s.length() == 1) {
-                    otp6.requestFocus();
+                else if(s.length()==0)
+                {
+                    otp3.requestFocus();
                 }
 
             }
@@ -560,35 +555,50 @@ public class LoginActivity extends AppCompatActivity implements
                                       int count) {
             }
         });
+        otp5.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 1) {
+                    otp6.requestFocus();
+                }
+                else if(s.length()==0){
+                    otp4.requestFocus();
+                }
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+        });
+        otp6.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 1) {
+                    otp6.requestFocus();
+                }
+                else if(s.length()==0){
+                    otp5.requestFocus();
+                }
+            }
+        });
 
 
 
         dialog1.show();
-    }
-
-    @Override
-    public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        if (i == keyEvent.KEYCODE_DEL) {
-            switch (view.getId()) {
-                case R.id.edit_otp2:
-                    otp1.requestFocus();
-                    break;
-                case R.id.edit_otp3:
-                    otp2.requestFocus();
-                    break;
-                case R.id.edit_otp4:
-                    otp3.requestFocus();
-                    break;
-                case R.id.edit_otp5:
-                    otp4.requestFocus();
-                    break;
-                case R.id.edit_otp6:
-                    otp5.requestFocus();
-                    break;
-
-            }
-        }
-        return false;
     }
 
 
@@ -598,6 +608,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
+            dialog.show();
             updateUI();
         }
     }

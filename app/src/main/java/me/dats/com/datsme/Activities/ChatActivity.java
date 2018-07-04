@@ -46,6 +46,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.MessageAdapter;
+import me.dats.com.datsme.Models.LastSeen;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
@@ -334,21 +335,21 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 userImage = dataSnapshot.child("image").getValue().toString();
-//                userOnline = dataSnapshot.child("online").getValue().toString();
+                userOnline = dataSnapshot.child("online").getValue().toString();
 
 
-//                if (userOnline.equals("true")) {
-//                    mUserSeen.setText("Online");
-//                } else {
+                if (userOnline.equals("true")) {
+                    mUserSeen.setText("Online");
+                } else {
 
-//                    GetTime getTime = new GetTime();
-//                    long time = Long.parseLong(userOnline);
-//
-//                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
-//
-//
-//                    mUserSeen.setText("last seen " + lastseen);
-//                }
+                    LastSeen getTime = new LastSeen();
+                    long time = Long.parseLong(userOnline);
+
+                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
+
+
+                    mUserSeen.setText("last seen " + lastseen);
+                }
                 if (!userImage.equals("default"))
                     Picasso.get()
                             .load(userImage)

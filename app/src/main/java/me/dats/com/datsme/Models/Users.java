@@ -1,6 +1,8 @@
 package me.dats.com.datsme.Models;
 
-public class Users {
+import android.support.annotation.NonNull;
+
+public class Users implements Comparable<Users> {
 
     public String name;
     public String thumb_image;
@@ -74,6 +76,9 @@ public class Users {
     }
 
 
+    @Override
+    public int compareTo(@NonNull Users o) {
 
-
+        return 0;
+    }
 }
