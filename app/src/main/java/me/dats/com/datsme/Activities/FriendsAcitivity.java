@@ -3,10 +3,12 @@ package me.dats.com.datsme.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,9 @@ public class FriendsAcitivity extends AppCompatActivity {
 
     @BindView(R.id.friends_list)
     RecyclerView mFriendlist;
+    @BindView(R.id.main_app_bar)
+    Toolbar mToolbar;
+
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private FirebaseAuth mAuth;
@@ -47,6 +52,15 @@ public class FriendsAcitivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         ButterKnife.bind(this);
+
+
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        setTitle("Matches");
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);

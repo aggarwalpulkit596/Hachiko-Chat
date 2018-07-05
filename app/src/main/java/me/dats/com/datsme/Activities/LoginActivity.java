@@ -54,6 +54,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.TimeUnit;
 
@@ -310,11 +311,13 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void updateUI() {
         final String userId = mAuth.getCurrentUser().getUid();
+        final String device_token = FirebaseInstanceId.getInstance().getToken();
         // Users user = new Users();
         mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userId)) {
+                    mDatabase.child("Users").child(userId).child("device_token").setValue(device_token);
                     Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                     dialog.dismiss();
                     startActivity(intent);
