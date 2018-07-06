@@ -1,14 +1,19 @@
 package me.dats.com.datsme.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +32,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Messages> mMessageList;
     private DatabaseReference mUserDatabase;
     private Context mContext;
+    private FirebaseAuth mAuth;
 
     public MessageAdapter(List<Messages> mMessageList, Context applicationContext) {
         this.mMessageList = mMessageList;
@@ -36,6 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mAuth = FirebaseAuth.getInstance();
         return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout2, parent, false));
     }
 
@@ -43,24 +50,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(final MessageViewHolder holder, int position) {
 
         Messages message = mMessageList.get(position);
-
+        String meesage_sender_id = mAuth.getCurrentUser().getUid();
         String from_user = message.getFrom();
         String message_type = message.getType();
         long time = message.getTime();
-
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String name = dataSnapshot.child("name").getValue().toString();
                 String image = dataSnapshot.child("thumb_image").getValue().toString();
 
-                holder.displayName.setText(name);
-
-                Picasso.get().load(image)
-                        .placeholder(R.drawable.default_avatar).into(holder.profileImage);
+//                holder.displayName.setText(name);
+//
 
             }
 
@@ -73,21 +77,36 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if (message_type.equals("text")) {
 
-            holder.messageText.setText(message.getMessage());
             holder.messageImage.setVisibility(View.GONE);
+            if (from_user.equals(meesage_sender_id)) {
 
+                holder.messageText.setBackgroundResource(R.drawable.message_text_background2);
+                holder.messageText.setTextColor(Color.BLACK);
+                holder.messagebackground.setGravity(Gravity.RIGHT);
+
+            } else {
+
+                holder.messageText.setBackgroundResource(R.drawable.message_text_background);
+                holder.messagebackground.setGravity(Gravity.LEFT);
+                holder.messageText.setTextColor(Color.WHITE);
+
+            }
+
+            holder.messageText.setText(message.getMessage());
 
         } else {
 
             holder.messageText.setVisibility(View.INVISIBLE);
-            Picasso.get().load(message.getMessage())
-                    .placeholder(R.drawable.default_avatar).into(holder.messageImage);
+            holder.messageText.setPadding(0,0,0,0);
+            if (from_user.equals(meesage_sender_id)) {
+                holder.messageImage.setPadding(5,0,0,0);
+                Picasso.get().load(message.getMessage())
+                        .placeholder(R.drawable.default_avatar).into(holder.messageImage);
+            }
 
         }
-        String msgtime = DateUtils.formatDateTime(mContext, time, DateUtils.FORMAT_SHOW_TIME);
-
-
-        holder.timeText.setText(msgtime);
+//        String msgtime = DateUtils.formatDateTime(mContext, time, DateUtils.FORMAT_SHOW_TIME);
+//        holder.timeText.setText(msgtime);
 
     }
 
@@ -98,19 +117,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView messageText, displayName, timeText;
-        public CircleImageView profileImage;
+        public TextView messageText;
+        //        public CircleImageView profileImage;
         public ImageView messageImage;
+        public RelativeLayout messagebackground;
 
 
         public MessageViewHolder(View itemView) {
             super(itemView);
 
-            profileImage = itemView.findViewById(R.id.message_image);
+//            profileImage = itemView.findViewById(R.id.message_image);
             messageText = itemView.findViewById(R.id.message_text);
+            messagebackground = itemView.findViewById(R.id.message_root_layout);
             messageImage = itemView.findViewById(R.id.message_image_layout);
-            displayName = itemView.findViewById(R.id.name_text_layout);
-            timeText = itemView.findViewById(R.id.time_text_layout);
+//            displayName = itemView.findViewById(R.id.name_text_layout);
+//            timeText = itemView.findViewById(R.id.time_text_layout);
         }
     }
 }

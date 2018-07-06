@@ -1,5 +1,6 @@
 package me.dats.com.datsme.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.MessageAdapter;
 import me.dats.com.datsme.Models.LastSeen;
@@ -53,22 +56,29 @@ import me.dats.com.datsme.R;
 public class ChatActivity extends AppCompatActivity {
 
     private String chatUser, userName, userImage, userOnline;
-    private Toolbar mToolbar;
+
+    @BindView(R.id.chatAppBar)
+    Toolbar mToolbar;
     private FirebaseAuth mAuth;
 
     private DatabaseReference mRootRef;
     private FirebaseUser currentUser;
-
-    private TextView mUserName, mUserSeen;
-    private CircleImageView mUserImage;
+    TextView mUserName;
+    TextView mUserSeen;
+    CircleImageView mUserImage;
 
     private String uid;
+    @BindView(R.id.chat_sendbtn)
+    ImageButton mSendBtn;
+    @BindView(R.id.chat_addbtn)
+    ImageButton mAddbtn;
+    @BindView(R.id.chat_msgview)
+    EditText mMsgView;
+    @BindView(R.id.messageslist)
+    RecyclerView mMessagesList;
+    @BindView(R.id.swipe_message_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ImageButton mSendBtn, mAddbtn;
-    private EditText mMsgView;
-
-    private RecyclerView mMessagesList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private final List<Messages> MessageList = new ArrayList<>();
     private MessageAdapter mAdapter;
     private LinearLayoutManager mLinearLayout;
@@ -84,9 +94,8 @@ public class ChatActivity extends AppCompatActivity {
 
     // Storage Firebase
     private StorageReference mImageStorage;
-
-
     private static final int GALLERY_PICK = 1;
+    private ProgressDialog loadingBar;
 
 
     @Override
@@ -94,11 +103,10 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        ButterKnife.bind(this);
 
         chatUser = getIntent().getStringExtra("user_id");
         userName = getIntent().getStringExtra("name");
-
-        mToolbar = findViewById(R.id.chatAppBar);
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -140,25 +148,20 @@ public class ChatActivity extends AppCompatActivity {
 
         uid = currentUser.getUid();
 
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        mImageStorage = FirebaseStorage.getInstance().getReference();
-
-
         mUserImage = findViewById(R.id.chatBarImageView);
         mUserName = findViewById(R.id.chatBarUserName);
         mUserSeen = findViewById(R.id.chatBarUserOnline);
-        mAddbtn = findViewById(R.id.chat_addbtn);
-        mSendBtn = findViewById(R.id.chat_sendbtn);
-        mMsgView = findViewById(R.id.chat_msgview);
-        mMessagesList = findViewById(R.id.messageslist);
-        mSwipeRefreshLayout = findViewById(R.id.swipe_message_layout);
 
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mImageStorage = FirebaseStorage.getInstance().getReference();
         mAdapter = new MessageAdapter(MessageList, getApplicationContext());
 
         mMessagesList.setHasFixedSize(true);
         mLinearLayout = new LinearLayoutManager(this);
         mMessagesList.setLayoutManager(mLinearLayout);
         mMessagesList.setAdapter(mAdapter);
+
+        loadingBar = new ProgressDialog(this);
 
 
     }
@@ -408,7 +411,7 @@ public class ChatActivity extends AppCompatActivity {
         getMessage();
     }
 
-    private void getMessage() {
+    private void getMessage()  {
 
         String message = mMsgView.getText().toString();
 
@@ -464,6 +467,10 @@ public class ChatActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
 
+            loadingBar.setTitle("Sending Chat Image");
+            loadingBar.setMessage("Please wait, while your image is sending ");
+            loadingBar.show();
+
             Uri imageUri = data.getData();
 
             final String current_user_ref = "messages/" + uid + "/" + chatUser;
@@ -496,18 +503,18 @@ public class ChatActivity extends AppCompatActivity {
 
                         String download_url = task.getResult().toString();
 
-                        Map messageMap = new HashMap();
+                        Map<String,Object> messageMap = new HashMap<>();
                         messageMap.put("message", download_url);
                         messageMap.put("seen", false);
                         messageMap.put("type", "image");
                         messageMap.put("time", ServerValue.TIMESTAMP);
                         messageMap.put("from", uid);
 
-                        Map messageUserMap = new HashMap();
+                        Map<String,Object> messageUserMap = new HashMap<>();
                         messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
                         messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
-                        mMsgView.setText("");
+
 
                         mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                             @Override
@@ -516,9 +523,11 @@ public class ChatActivity extends AppCompatActivity {
                                 if (databaseError != null) {
 
                                     Log.d("CHAT_LOG", databaseError.getMessage().toString());
+                                    loadingBar.dismiss();
 
                                 }
-
+                                mMsgView.setText("");
+                                loadingBar.dismiss();
                             }
                         });
 
