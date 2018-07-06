@@ -133,6 +133,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -157,6 +158,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(0 + "");
             }
         });
+
         mapFragment.getMapAsync(this);
         fetchusers();
         initAnimation();
@@ -210,15 +212,31 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        } else {
-            locateMe();
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        mMap.setMyLocationEnabled(true);
+        mFusedLocationProviderClient
+                .requestLocationUpdates(mLocationRequest,
+                        mLocationCallback, null);
+        mRequestingLocationUpdates = true;
+
+        //for changing design of map
+        try {
+            Calendar calendar = Calendar.getInstance();
+            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+            if (hourOfDay > 5 && hourOfDay < 21) {
+                boolean success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
+            } else {
+                boolean success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapsnight));
+            }
+        } catch(Resources.NotFoundException e)
+        {
+            // Oops, looks like the map style resource couldn't be found!
+        }
+
 
         mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
@@ -258,39 +276,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 }.start();
             }
         });
-    }
-
-    public void locateMe() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-
-
-        mFusedLocationProviderClient
-                .requestLocationUpdates(mLocationRequest,
-                        mLocationCallback, null);
-        mRequestingLocationUpdates = true;
-
-        //for changing design of map
-        try {
-
-            Calendar calendar = Calendar.getInstance();
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-
-            if (hourOfDay > 5 || hourOfDay < 21) {
-                boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
-//            } else {
-//                boolean success = mMap.setMapStyle(
-//                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstylenight));
-            }
-        } catch(
-                Resources.NotFoundException e)
-
-        {
-            // Oops, looks like the map style resource couldn't be found!
-        }
     }
 
     private void initAnimation() {
@@ -343,22 +328,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         attachRecyclerViewAdapter();
 
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-                    }
-                    locateMe();
-                }
-                break;
-        }
     }
 
 //    @Override
@@ -506,22 +475,22 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         UsersViewHolder(final View itemView, final Context applicationContext) {
             super(itemView);
             mView = itemView;
-            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        // run scale animation and make it bigger
-                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_in_tv);
-                        itemView.startAnimation(anim);
-                        anim.setFillAfter(true);
-                    } else {
-                        // run scale animation and make it smaller
-                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_out_tv);
-                        itemView.startAnimation(anim);
-                        anim.setFillAfter(true);
-                    }
-                }
-            });
+//            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                @Override
+//                public void onFocusChange(View v, boolean hasFocus) {
+//                    if (hasFocus) {
+//                        // run scale animation and make it bigger
+//                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_in_tv);
+//                        itemView.startAnimation(anim);
+//                        anim.setFillAfter(true);
+//                    } else {
+//                        // run scale animation and make it smaller
+//                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_out_tv);
+//                        itemView.startAnimation(anim);
+//                        anim.setFillAfter(true);
+//                    }
+//                }
+//            });
 
         }
 
@@ -547,6 +516,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                         .into(userImageView);
 
         }
+
     }
+
 
 }

@@ -4,6 +4,7 @@ package me.dats.com.datsme.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -37,10 +40,16 @@ import me.dats.com.datsme.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Messages extends Fragment {
+public class Messages extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.friends_list)
     RecyclerView mFriendlist;
+
+    @BindView(R.id.no_friend_view)
+    LinearLayout no_friend_view;
+
+    @BindView(R.id.no_friends_button)
+    Button no_friend_button;
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private FirebaseAuth mAuth;
@@ -95,6 +104,16 @@ public class Messages extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
 
+                        if(firebaseRecyclerAdapter.getItemCount()<1)
+                        {
+                            no_friend_view.setVisibility(View.VISIBLE);
+                            mFriendlist.setVisibility(View.GONE);
+                        }
+                        else {
+                            no_friend_view.setVisibility(View.GONE);
+                            mFriendlist.setVisibility(View.VISIBLE);
+                        }
+
                         name[0] = documentSnapshot.child("name").getValue().toString();
                         image[0] = documentSnapshot.child("thumb_image").getValue().toString();
 
@@ -131,7 +150,16 @@ public class Messages extends Fragment {
         mFriendlist.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
+    }
 
+    @Override
+    public void onClick(View view) {
+        switch(view.getId())
+        {
+            case R.id.no_friends_button:
+
+                break;
+        }
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {

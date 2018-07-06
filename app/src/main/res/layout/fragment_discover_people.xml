@@ -65,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_above="@+id/cardview"
+            android:visibility="gone"
             fab:menu_labels_ellipsize="end"
             fab:menu_labels_singleLine="true">
             <com.github.clans.fab.FloatingActionButton
@@ -103,6 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             app:cardCornerRadius="10dp">
 
@@ -134,8 +136,6 @@
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
-
-
 
 
     </RelativeLayout>

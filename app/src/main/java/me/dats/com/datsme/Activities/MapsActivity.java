@@ -1,18 +1,33 @@
 package me.dats.com.datsme.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.Adapters.PagerViewAdapter;
+import me.dats.com.datsme.Fragments.Discover_people;
 import me.dats.com.datsme.R;
 
 public class MapsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     @BindView(R.id.messages)
     LinearLayout messages;
     @BindView(R.id.discover)
@@ -21,7 +36,15 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout myprofile;
     @BindView(R.id.map_view_pager)
     ViewPager viewPager;
+
+    @BindView(R.id.myprofile_icon)
+    ImageView myProfile_icon;
+    @BindView(R.id.message_icon)
+    ImageView message_icon;
+
     PagerViewAdapter mPagerViewdapter;
+    private boolean doubleBackToExitPressedOnce = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +59,16 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager());
 
-        viewPager.setAdapter(mPagerViewdapter);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            viewPager.setAdapter(mPagerViewdapter);
+            viewPager.setCurrentItem(1);
+        }
 
         messages.setOnClickListener(this);
         discover.setOnClickListener(this);
@@ -45,18 +77,156 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.messages:
+                //setsize(1);
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.discover:
-                viewPager.setCurrentItem(1);
+                //setsize(2);
+                setAnimations();
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+                } else {
+                    viewPager.setCurrentItem(1);
+                }
                 break;
             case R.id.myprofile:
+                // setsize(3);
                 viewPager.setCurrentItem(2);
                 break;
 
         }
     }
+
+    private void setAnimations() {
+        AnimationSet animationSet;
+        animationSet = new AnimationSet(true);
+//
+//        TranslateAnimation mAnimation = new TranslateAnimation(
+//                TranslateAnimation.ABSOLUTE, 0f,
+//                TranslateAnimation.ABSOLUTE, 0f,
+//                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+//                TranslateAnimation.RELATIVE_TO_PARENT, -0.2f);
+//        mAnimation.setDuration(500);
+//        mAnimation.setRepeatCount(1);
+//        mAnimation.setFillAfter(true);
+//        mAnimation.setInterpolator(new LinearInterpolator());
+
+        ScaleAnimation a = new ScaleAnimation(
+                1f, 1.2f, // Start and end values for the X axis scaling
+                1f, 1.2f, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+        a.setDuration(500);
+        a.setRepeatCount(1);
+        a.setRepeatMode(ScaleAnimation.REVERSE);
+
+        RotateAnimation r = new RotateAnimation(0f, 720f, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        r.setRepeatCount(1);
+        r.setRepeatMode(RotateAnimation.REVERSE);
+        r.setDuration(500);
+
+        animationSet.addAnimation(a);
+        animationSet.addAnimation(r);
+
+        //  animationSet.addAnimation(mAnimation);
+        discover.startAnimation(animationSet);
+
+    }
+
+    //public void setsize(int num)
+//{
+//    switch(num)
+//    {
+//        case 1:
+//           if(message_icon.getLayoutParams().width==60 && message_icon.getLayoutParams().height==50)
+//           {
+//               message_icon.getLayoutParams().height+=10;
+//               message_icon.getLayoutParams().width+=10;
+//               message_icon.requestLayout();
+//           }
+//           if(myProfile_icon.getLayoutParams().width==70 && myProfile_icon.getLayoutParams().height==60)
+//           {
+//               myProfile_icon.getLayoutParams().height-=10;
+//               myProfile_icon.getLayoutParams().width-=10;
+//               myProfile_icon.requestLayout();
+//           }
+//            break;
+//        case 2:
+//            if(message_icon.getLayoutParams().width==70 && message_icon.getLayoutParams().height==60)
+//            {
+//                message_icon.getLayoutParams().height-=10;
+//                message_icon.getLayoutParams().width-=10;
+//                message_icon.requestLayout();
+//            }
+//            if(myProfile_icon.getLayoutParams().width==70 && myProfile_icon.getLayoutParams().height==60)
+//            {
+//                myProfile_icon.getLayoutParams().height-=10;
+//                myProfile_icon.getLayoutParams().width-=10;
+//                myProfile_icon.requestLayout();
+//            }
+//            break;
+//        case 3:
+//            if(message_icon.getLayoutParams().width==70 && message_icon.getLayoutParams().height==60)
+//            {
+//                message_icon.getLayoutParams().height-=10;
+//                message_icon.getLayoutParams().width-=10;
+//                message_icon.requestLayout();
+//            }
+//            if(myProfile_icon.getLayoutParams().width==60 && myProfile_icon.getLayoutParams().height==50)
+//            {
+//                myProfile_icon.getLayoutParams().height+=10;
+//                myProfile_icon.getLayoutParams().width+=10;
+//                myProfile_icon.requestLayout();
+//            }
+//            break;
+//
+//
+//    }
+//}
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
+
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            viewPager.setAdapter(mPagerViewdapter);
+                            viewPager.setCurrentItem(0);
+                        } else {
+                            viewPager.setAdapter(mPagerViewdapter);
+                            viewPager.setCurrentItem(1);
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
 }

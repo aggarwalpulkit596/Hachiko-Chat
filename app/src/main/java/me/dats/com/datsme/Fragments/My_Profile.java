@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -36,6 +37,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import me.dats.com.datsme.Activities.LoginActivity;
+import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.Setting;
 import me.dats.com.datsme.R;
 
@@ -207,5 +211,13 @@ public class My_Profile extends Fragment {
         });
 
     }
-
+    @OnClick(R.id.settings_logout)
+    void logout() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+        mAuth = null;
+        Intent i = new Intent(getActivity(), LoginActivity.class);
+        startActivity(i);
+        getActivity().finish();
+    }
 }
