@@ -17,4 +17,7 @@
     <string name="facebook_app_id">209447589680098</string>
     <string name="fb_login_protocol_scheme">fb209447589680098</string>
     <integer-array name="worldview"></integer-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

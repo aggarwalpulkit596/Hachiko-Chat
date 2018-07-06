@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -328,6 +329,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 snackBar.show();
             }
         } else {
+            final String device_token = FirebaseInstanceId.getInstance().getToken();
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
             userMap.put("gender", user_gender.getSelectedItem().toString());
@@ -337,6 +339,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             userMap.put("Zodiac",userzodiac);
             userMap.put("Numerlogy",""+Numerlogy);
             userMap.put("Element",elements);
+            userMap.put("device_token",device_token);
             Log.i("TAG", "Savetodatabase: " + userMap.toString());
             mDatabase.setValue(userMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
