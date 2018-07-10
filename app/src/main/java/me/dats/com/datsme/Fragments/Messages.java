@@ -66,8 +66,8 @@ public class Messages extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_messages, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_messages, container, false);
+        ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
@@ -75,6 +75,7 @@ public class Messages extends Fragment implements View.OnClickListener {
         mFriendlist.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -86,10 +87,24 @@ public class Messages extends Fragment implements View.OnClickListener {
                 new FirebaseRecyclerOptions.Builder<Friends>()
                         .setQuery(query, Friends.class)
                         .build();
-        Log.i("TAG", "onCreateView: "+options+query);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    no_friend_view.setVisibility(View.VISIBLE);
+                    mFriendlist.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(options) {
             @Override
             public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                Log.i("TAG", "onCreateViewHolder: " + firebaseRecyclerAdapter.getItemCount());
                 return new FriendsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout2, parent, false));
             }
 
@@ -103,13 +118,11 @@ public class Messages extends Fragment implements View.OnClickListener {
                 mUsersDatabase.child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
-
-                        if(firebaseRecyclerAdapter.getItemCount()<1)
-                        {
+                        Log.i("TAG", "onCreateViewHolder: " + firebaseRecyclerAdapter.getItemCount());
+                        if (firebaseRecyclerAdapter.getItemCount() < 1) {
                             no_friend_view.setVisibility(View.VISIBLE);
                             mFriendlist.setVisibility(View.GONE);
-                        }
-                        else {
+                        } else {
                             no_friend_view.setVisibility(View.GONE);
                             mFriendlist.setVisibility(View.VISIBLE);
                         }
@@ -118,7 +131,7 @@ public class Messages extends Fragment implements View.OnClickListener {
                         image[0] = documentSnapshot.child("thumb_image").getValue().toString();
 
                         if (documentSnapshot.hasChild("online")) {
-                            String userOnline =  documentSnapshot.child("online").getValue().toString();
+                            String userOnline = documentSnapshot.child("online").getValue().toString();
                             holder.setUserOnline(userOnline);
                         }
                         holder.bind(name[0], image[0]);
@@ -149,13 +162,11 @@ public class Messages extends Fragment implements View.OnClickListener {
         };
         mFriendlist.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
-
     }
 
     @Override
     public void onClick(View view) {
-        switch(view.getId())
-        {
+        switch (view.getId()) {
             case R.id.no_friends_button:
 
                 break;

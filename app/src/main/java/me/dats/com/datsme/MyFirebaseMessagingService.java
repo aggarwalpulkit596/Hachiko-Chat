@@ -22,23 +22,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        String notificationTitle = null, notificationBody = null;
+        String notificationTitle = null, notificationBody = null,notficationData = null;
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody()+remoteMessage.getData());
             notificationTitle = remoteMessage.getNotification().getTitle();
             notificationBody = remoteMessage.getNotification().getBody();
+            notficationData =remoteMessage.getData().get("from_user_id");
+
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(notificationTitle, notificationBody);
+        sendNotification(notificationTitle, notificationBody,notficationData);
     }
 
 
-    private void sendNotification(String notificationTitle, String notificationBody) {
+    private void sendNotification(String notificationTitle, String notificationBody, String notficationData) {
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("From", notficationData);
+        Log.i("Notification", "PagerViewAdapter: "+notficationData);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);

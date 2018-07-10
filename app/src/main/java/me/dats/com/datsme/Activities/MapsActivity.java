@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -55,9 +56,12 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     private void SetmyviewPager() {
 
+        String user_id = getIntent().getStringExtra("From");
+
         viewPager.setOffscreenPageLimit(2);
 
-        mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager());
+        mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(),user_id);
+        Log.i("Notification", "PagerViewAdapter: "+user_id);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -14,6 +14,7 @@ public class Users implements Comparable<Users> {
     public Integer Compatibility;
     public String gender;
 
+
     public Users() {
         //For Firebase
     }

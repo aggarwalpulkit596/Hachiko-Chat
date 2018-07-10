@@ -68,7 +68,13 @@
         </activity>
         <activity
             android:name=".Activities.MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps" >
+            <intent-filter>
+                <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.MapsActivity" />
