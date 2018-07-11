@@ -64,8 +64,10 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference mRootRef;
     private FirebaseUser currentUser;
     TextView mUserName;
-    //TextView mUserSeen;
+    TextView mUserSeen;
     CircleImageView mUserImage;
+
+    ImageButton chat_back_button;
 
     private String uid;
     @BindView(R.id.chat_sendbtn)
@@ -78,8 +80,7 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mMessagesList;
     @BindView(R.id.swipe_message_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-//    @BindView(R.id.text_message_time)
-//    TextView time;
+
 
     private final List<Messages> MessageList = new ArrayList<>();
     private MessageAdapter mAdapter;
@@ -113,9 +114,10 @@ public class ChatActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
+
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar = layoutInflater.inflate(R.layout.chat_bar, null);
@@ -151,7 +153,15 @@ public class ChatActivity extends AppCompatActivity {
 
         mUserImage = findViewById(R.id.chatBarImageView);
         mUserName = findViewById(R.id.chatBarUserName);
-        //mUserSeen = findViewById(R.id.chatBarUserOnline);
+        mUserSeen = findViewById(R.id.chatBarUserOnline);
+        chat_back_button=findViewById(R.id.chat_back_button);
+
+        chat_back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
@@ -227,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadMessages() {
 
 
-        final DatabaseReference messageRef = mRootRef.child("messages").child(uid).child(chatUser);
+        DatabaseReference messageRef = mRootRef.child("messages").child(uid).child(chatUser);
 
         Query messagequery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEM_LOAD);
 
@@ -235,11 +245,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages messages = dataSnapshot.getValue(Messages.class);
-
-                Map<String,Object> user=new HashMap<>();
-                final DatabaseReference msgRef=messageRef.child(dataSnapshot.getKey());
-                user.put("seen",true);
-                msgRef.updateChildren(user);
 
                 itemPos++;
 
@@ -285,11 +290,11 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-//        if (currentUser != null) {
-//
-//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
-//
-//        }
+        if (currentUser != null) {
+
+            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
+
+        }
         settingview();
 
         chatFuctions();
@@ -344,21 +349,21 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 userImage = dataSnapshot.child("image").getValue().toString();
-//                userOnline = dataSnapshot.child("online").getValue().toString();
-//
-//
-//                if (userOnline.equals("true")) {
-//                    mUserSeen.setText("Online");
-//                } else {
-//
-//                    LastSeen getTime = new LastSeen();
-//                    long time = Long.parseLong(userOnline);
-//
-//                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
-//
-//
-//                    mUserSeen.setText("last seen " + lastseen);
-//                }
+                userOnline = dataSnapshot.child("online").getValue().toString();
+
+
+                if (userOnline.equals("true")) {
+                    mUserSeen.setText("Online");
+                } else {
+
+                    LastSeen getTime = new LastSeen();
+                    long time = Long.parseLong(userOnline);
+
+                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
+
+
+                    mUserSeen.setText("last seen " + lastseen);
+                }
                 if (!userImage.equals("default"))
                     Picasso.get()
                             .load(userImage)
@@ -390,27 +395,27 @@ public class ChatActivity extends AppCompatActivity {
         });
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-//        if (currentUser != null) {
-//
-//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
-//
-//        }
+        if (currentUser != null) {
+
+            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
+
+        }
 
 
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//
-//        if (currentUser != null) {
-//
-//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
-//
-//        }
-//
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+
+            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+
+        }
+
+    }
 
     public void SendMessage(View view) {
 
