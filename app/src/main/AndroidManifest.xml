@@ -81,7 +81,13 @@
         <activity
             android:name=".Activities.ChatActivity"
             android:theme="@style/mytheme"
-            android:parentActivityName=".Activities.MapsActivity" />
+            android:parentActivityName=".Activities.MapsActivity" >
+        <intent-filter>
+            <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION1" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+        </activity>
         <activity android:name=".Activities.CompleteProfileActivity" />
         <activity android:name=".Activities.TagActivity" />
         <activity android:name=".Activities.Setting"

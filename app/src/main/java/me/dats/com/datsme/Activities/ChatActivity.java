@@ -154,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
         mUserImage = findViewById(R.id.chatBarImageView);
         mUserName = findViewById(R.id.chatBarUserName);
         mUserSeen = findViewById(R.id.chatBarUserOnline);
-        chat_back_button=findViewById(R.id.chat_back_button);
+        chat_back_button = findViewById(R.id.chat_back_button);
 
         chat_back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -422,7 +422,7 @@ public class ChatActivity extends AppCompatActivity {
         getMessage();
     }
 
-    private void getMessage()  {
+    private void getMessage() {
 
         String message = mMsgView.getText().toString();
 
@@ -514,17 +514,16 @@ public class ChatActivity extends AppCompatActivity {
 
                         String download_url = task.getResult().toString();
 
-                        Map<String,Object> messageMap = new HashMap<>();
+                        Map<String, Object> messageMap = new HashMap<>();
                         messageMap.put("message", download_url);
                         messageMap.put("seen", false);
                         messageMap.put("type", "image");
                         messageMap.put("time", ServerValue.TIMESTAMP);
                         messageMap.put("from", uid);
 
-                        Map<String,Object> messageUserMap = new HashMap<>();
+                        Map<String, Object> messageUserMap = new HashMap<>();
                         messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
                         messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
-
 
 
                         mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
