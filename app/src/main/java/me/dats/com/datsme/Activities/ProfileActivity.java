@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -38,9 +39,11 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +69,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     Spinner user_gender;
     @BindView(R.id.user_dob)
     TextView user_dob;
+    @BindView(R.id.button2)
+    Button cont;
 
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
@@ -76,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     Calendar myCalendar;
     String userzodiac;
     String elements;
-    int Numerlogy;
+    int Numerlogy,age1;
 
 
     @Override
@@ -138,6 +143,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
                 // TODO Auto-generated method stub
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -166,7 +172,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         elements = "Water";
                         break;
                 }
-                updateLabel();
+                try {
+                    updateLabel();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
         };
@@ -175,9 +185,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(ProfileActivity.this, date, myCalendar
+                DatePickerDialog d=new DatePickerDialog(ProfileActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                d.getDatePicker().setMaxDate(System.currentTimeMillis());
+                d.show();
             }
         });
     }
@@ -199,11 +211,27 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         return number;
     }
 
-    private void updateLabel() {
+    private void updateLabel() throws ParseException {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
         user_dob.setText(sdf.format(myCalendar.getTime()));
+        String formatted =sdf.format(myCalendar.getTime());
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(formatted);
+        Date now = new Date();
+        long timeBetween = now.getTime() - date1.getTime();
+        double yearsBetween = timeBetween / 3.15576e+10;
+        age1 = (int) Math.floor(yearsBetween);
+        if(age1<18)
+        {
+            Snackbar  snackBar = Snackbar.make(rootlayout
+                    , "Age should be more than 18 years", Snackbar.LENGTH_LONG);
+            snackBar.show();
+
+        }
+        else
+        {
+            cont.setEnabled(true);
+        }
     }
 
     @Override
