@@ -3,6 +3,7 @@ package me.dats.com.datsme.Adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private DatabaseReference mUserDatabase;
     private Context mContext;
     private FirebaseAuth mAuth;
+    String messagetime;
 
     public MessageAdapter(List<Messages> mMessageList, Context applicationContext) {
         this.mMessageList = mMessageList;
@@ -48,12 +51,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(final MessageViewHolder holder, int position) {
-
         Messages message = mMessageList.get(position);
         String meesage_sender_id = mAuth.getCurrentUser().getUid();
         String from_user = message.getFrom();
         String message_type = message.getType();
         long time = message.getTime();
+        if(from_user.equals(meesage_sender_id))
+        {
+
+        }
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -62,9 +68,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
                 String name = dataSnapshot.child("name").getValue().toString();
                 String image = dataSnapshot.child("thumb_image").getValue().toString();
-
-//                holder.displayName.setText(name);
-//
 
             }
 
@@ -83,12 +86,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 holder.messageText.setBackgroundResource(R.drawable.message_text_background2);
                 holder.messageText.setTextColor(Color.BLACK);
                 holder.messagebackground.setGravity(Gravity.RIGHT);
+                holder.time1.setGravity(Gravity.RIGHT);
+                holder.msg.setBackgroundResource(R.drawable.message_text_background2);
 
             } else {
 
                 holder.messageText.setBackgroundResource(R.drawable.message_text_background);
                 holder.messagebackground.setGravity(Gravity.LEFT);
-                holder.messageText.setTextColor(Color.WHITE);
+                holder.time1.setGravity(Gravity.LEFT);
+                holder.messageText.setTextColor(Color.BLACK);
+                holder.msg.setBackgroundResource(R.drawable.message_text_background);
 
             }
 
@@ -105,8 +112,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
 
         }
-//        String msgtime = DateUtils.formatDateTime(mContext, time, DateUtils.FORMAT_SHOW_TIME);
-//        holder.timeText.setText(msgtime);
+        messagetime = DateUtils.formatDateTime(mContext, time, DateUtils.FORMAT_SHOW_TIME);
+        holder.time1.setText(messagetime);
 
     }
 
@@ -121,6 +128,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         //        public CircleImageView profileImage;
         public ImageView messageImage;
         public RelativeLayout messagebackground;
+        public TextView time1;
+        public LinearLayout msg;
 
 
         public MessageViewHolder(View itemView) {
@@ -130,9 +139,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageText = itemView.findViewById(R.id.message_text);
             messagebackground = itemView.findViewById(R.id.message_root_layout);
             messageImage = itemView.findViewById(R.id.message_image_layout);
-//            displayName = itemView.findViewById(R.id.name_text_layout);
-//            timeText = itemView.findViewById(R.id.time_text_layout);
+            time1 = itemView.findViewById(R.id.text_message_time);
+            msg=itemView.findViewById(R.id.message_layout);
         }
     }
 }
-

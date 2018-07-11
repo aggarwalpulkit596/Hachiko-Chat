@@ -44,8 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
             android:alpha="0.5"
-            android:background="@android:color/white"
+            android:background="#DCDCDC"
             android:onClick="sendImage"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:padding="10dp"
             app:srcCompat="@drawable/ic_add_black_24dp" />
 
@@ -54,26 +56,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:background="@android:color/white"
+            android:background="@drawable/enter_message"
             android:ems="10"
             android:hint="Enter Message..."
             android:inputType="textLongMessage"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="12dp"
             android:paddingTop="14dp"
             android:textSize="15sp" />
-
         <ImageButton
             android:id="@+id/chat_sendbtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:alpha="0.5"
-            android:background="@android:color/white"
+            android:background="@drawable/send_bg"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:onClick="SendMessage"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_send_black_24dp" />
+            app:srcCompat="@drawable/send_icon" />
 
     </LinearLayout>
 

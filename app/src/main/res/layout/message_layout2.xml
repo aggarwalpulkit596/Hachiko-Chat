@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/message_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
 
     <!--<de.hdodenhof.circleimageview.CircleImageView-->
-        <!--android:id="@+id/message_image"-->
-        <!--android:layout_width="36dp"-->
-        <!--android:layout_height="36dp"-->
-        <!--android:layout_weight="0"-->
-        <!--android:src="@drawable/default_avatar" />-->
-
-    <TextView
-        android:id="@+id/message_text"
+    <!--android:id="@+id/message_image"-->
+    <!--android:layout_width="36dp"-->
+    <!--android:layout_height="36dp"-->
+    <!--android:layout_weight="0"-->
+    <!--android:src="@drawable/default_avatar" />-->
+    <LinearLayout
+        android:id="@+id/message_layout"
         android:layout_width="wrap_content"
-        android:background="@drawable/message_text_background"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:padding="20dp"
-        android:text="Message Text"
-        android:textColor="#fff"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:padding="3dp">
 
-    <!--<TextView-->
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_text_background"
+            android:minWidth="100dp"
+            android:padding="7dp"
+            android:text="Message Text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_gravity="right"
+            android:text="11:40"
+            android:textSize="10sp" />
+
+        <!--<TextView-->
         <!--android:id="@+id/name_text_layout"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -34,7 +49,7 @@
         <!--android:textSize="15sp"-->
         <!--android:textStyle="bold" />-->
 
-    <!--<TextView-->
+        <!--<TextView-->
         <!--android:id="@+id/time_text_layout"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -45,14 +60,15 @@
         <!--android:text="00:00"-->
         <!--android:textSize="12sp" />-->
 
-    <ImageView
-        android:id="@+id/message_image_layout"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/message_text"
-        android:layout_alignTop="@+id/message_text"  />
+        <ImageView
+            android:id="@+id/message_image_layout"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/message_text"
+            android:layout_alignTop="@+id/message_text"  />
 
+    </LinearLayout>
 
 
 </RelativeLayout>
