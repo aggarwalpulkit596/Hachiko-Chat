@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -54,6 +55,9 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -116,6 +120,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             {30, 50, 50, 100, 50},
             {75, 75, 50, 50, 100}
     };
+    Users mUser;
+
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
@@ -234,8 +240,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 boolean success = mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapsnight));
             }
-        } catch(Resources.NotFoundException e)
-        {
+        } catch (Resources.NotFoundException e) {
             // Oops, looks like the map style resource couldn't be found!
         }
 
@@ -278,6 +283,102 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 }.start();
             }
         });
+        setMarkers();
+    }
+
+    private void setMarkers() {
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Users");
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                mUser = dataSnapshot.getValue(Users.class);
+                final String user_id = dataSnapshot.getKey();
+                final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
+                MarkerOptions mo = new MarkerOptions().position(latLng1).title(mUser.getName()).snippet(user_id);
+                final Marker userMarker = mMap.addMarker(mo);
+                Log.i("TAG", "onChildAdded: " + dataSnapshot.getValue(Users.class).getName() + userMarker);
+//                Picasso.get()
+//                        .load(mUser.getThumb_image())
+//                        .resize(100, 100)
+//                        .centerInside()
+//                        .transform(new BubbleTransformation(10))
+//                        .into(new Target() {
+//                            @Override
+//                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                                Log.i("TAG", "onBitmapLoaded: " + mUser.getName());
+//                                bitmap1 = BitmapDescriptorFactory.fromBitmap(bitmap);
+//                                MarkerOptions mo = new MarkerOptions().position(latLng1).title(mUser.getName()).snippet(user_id).icon(bitmap1);
+//                                LatLng name = userMap.get(mUser.getName());
+//                                if (name == null) {
+//                                    userMap.put(mUser.getName(), latLng1);
+//                                    final Marker userMarker = mMap.addMarker(mo);
+//                                    markers.put(mUser.getName(), userMarker);
+//                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                                        @Override
+//                                        public boolean onMarkerClick(Marker marker) {
+//                                            Log.i("TAG", "onMarkerClick: " + marker.getTitle());
+//                                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+//                                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+//                                            return true;
+//                                        }
+//                                    });
+
+//                                } else {
+//                                    Marker marker = markers.get(mUser.getName());
+//                                    marker.remove();
+//                                    marker.setPosition(latLng1);
+//                                    marker = mMap.addMarker(mo);
+//                                    markers.put(mUser.getName(), marker);
+//                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                                        @Override
+//                                        public boolean onMarkerClick(Marker marker) {
+//                                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+//                                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+//                                            return true;
+//                                        }
+//                                    });
+            }
+
+
+//            @Override
+//            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//                Log.i("TAG", "onBitmapLoaded2: " + mUser.getName());
+//
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//                Log.i("TAG", "onBitmapLoaded3: " + mUser.getName());
+//            }
+//        });
+//
+//        Log.i("TAG", "onBitmapLoaded4: " + mUser.getName());
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void initAnimation() {
@@ -327,31 +428,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setItemViewCacheSize(10);
-        attachRecyclerViewAdapter();
 
-
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        if (doubleBackToExitPressedOnce) {
-//            finishAffinity();
-//            return;
-//        }
-//
-//        this.doubleBackToExitPressedOnce = true;
-//        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                doubleBackToExitPressedOnce = false;
-//            }
-//        }, 2000);
-//    }
-
-    private void attachRecyclerViewAdapter() {
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -366,136 +443,46 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             @Override
             public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false), getContext());
+                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false));
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final UsersViewHolder holder, int position, @NonNull final Users model) {
+            protected void onBindViewHolder(@NonNull final UsersViewHolder holder, final int position, @NonNull final Users model) {
                 holder.bind(model);
-                final String user_id = getRef(position).getKey();
-                final LatLng latLng1 = new LatLng(model.getLattitude(), model.getLongitude());
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                        BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
-                Picasso.get()
-                        .load(model.getThumb_image())
-                        .resize(250, 250)
-                        .centerInside()
-                        .transform(new BubbleTransformation(10))
+                    }
+                });
 
-                        .into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                Log.i("TAG", "onBitmapLoaded: "+model.getName());
-                               bitmap1 =  BitmapDescriptorFactory.fromBitmap(bitmap);
-                                MarkerOptions mo = new MarkerOptions().position(latLng1).title(model.getName()).snippet(user_id).icon(bitmap1);
-                                LatLng name = userMap.get(model.getName());
-                                if (name == null) {
-                                    userMap.put(model.getName(), latLng1);
-                                    final Marker userMarker = mMap.addMarker(mo);
-                                    markers.put(model.getName(), userMarker);
-                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                        @Override
-                                        public boolean onMarkerClick(Marker marker) {
-                                            Log.i("TAG", "onMarkerClick: " + marker.getTitle());
-                                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                                            return true;
-                                        }
-                                    });
-
-                                } else {
-                                    Marker marker = markers.get(model.getName());
-                                    marker.remove();
-                                    marker.setPosition(latLng1);
-                                    marker = mMap.addMarker(mo);
-//                    final Marker finalMarker = marker;
-//                    Picasso.get()
-//                            .load(model.getThumb_image())
-//                            .resize(250, 250)
-//                            .centerInside()
-//                            .transform(new BubbleTransformation(10))
-//
-//                            .into(new Target() {
-//                                @Override
-//                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                                    finalMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-//                                }
-//
-//                                @Override
-//                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-//                                }
-//
-//                                @Override
-//                                public void onPrepareLoad(Drawable placeHolderDrawable) {
-//                                }
-//                            });
-                                    markers.put(model.getName(), marker);
-                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                        @Override
-                                        public boolean onMarkerClick(Marker marker) {
-                                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                                            return true;
-                                        }
-                                    });
-                                }
-
-                                holder.mView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                                        BottomSheetProfileFragment.newInstance(user_id).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-
-                                    }
-                                });
-
-
-                            }
-
-                            @Override
-                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                Log.i("TAG", "onBitmapLoaded2: "+model.getName());
-
-                            }
-
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                Log.i("TAG", "onBitmapLoaded3: "+model.getName());
-                            }
-                        });
-
-                Log.i("TAG", "onBitmapLoaded4: "+model.getName());
             }
         };
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
-
     }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(60, 60, Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, 60, 60);
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+
+}
 
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
 
-        UsersViewHolder(final View itemView, final Context applicationContext) {
+        UsersViewHolder(final View itemView) {
             super(itemView);
             mView = itemView;
-//            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//                @Override
-//                public void onFocusChange(View v, boolean hasFocus) {
-//                    if (hasFocus) {
-//                        // run scale animation and make it bigger
-//                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_in_tv);
-//                        itemView.startAnimation(anim);
-//                        anim.setFillAfter(true);
-//                    } else {
-//                        // run scale animation and make it smaller
-//                        Animation anim = AnimationUtils.loadAnimation(applicationContext, R.anim.scale_out_tv);
-//                        itemView.startAnimation(anim);
-//                        anim.setFillAfter(true);
-//                    }
-//                }
-//            });
 
         }
 
