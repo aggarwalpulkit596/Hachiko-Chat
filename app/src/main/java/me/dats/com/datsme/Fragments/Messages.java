@@ -10,11 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -34,6 +37,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.FriendsAcitivity;
+import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 
@@ -44,6 +48,9 @@ public class Messages extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.friends_list)
     RecyclerView mFriendlist;
+
+    @BindView(R.id.toolbar_messages)
+    android.support.v7.widget.Toolbar toolbar;
 
     @BindView(R.id.no_friend_view)
     LinearLayout no_friend_view;
@@ -73,6 +80,13 @@ public class Messages extends Fragment implements View.OnClickListener {
         mUsersDatabase.keepSynced(true);
         current_uid = mAuth.getCurrentUser().getUid();
         mFriendlist.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        no_friend_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MapsActivity)getActivity()).getDiscoverFragment();
+            }
+        });
         return view;
     }
 
@@ -87,12 +101,18 @@ public class Messages extends Fragment implements View.OnClickListener {
                 new FirebaseRecyclerOptions.Builder<Friends>()
                         .setQuery(query, Friends.class)
                         .build();
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() == null) {
-                    no_friend_view.setVisibility(View.VISIBLE);
-                    mFriendlist.setVisibility(View.GONE);
+                if(dataSnapshot.getChildrenCount()<1){
+
+                        no_friend_view.setVisibility(View.VISIBLE);
+                        mFriendlist.setVisibility(View.GONE);
+                }
+                else{
+                    no_friend_view.setVisibility(View.GONE);
+                    mFriendlist.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -118,14 +138,6 @@ public class Messages extends Fragment implements View.OnClickListener {
                 mUsersDatabase.child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
-                        Log.i("TAG", "onCreateViewHolder: " + firebaseRecyclerAdapter.getItemCount());
-                        if (firebaseRecyclerAdapter.getItemCount() < 1) {
-                            no_friend_view.setVisibility(View.VISIBLE);
-                            mFriendlist.setVisibility(View.GONE);
-                        } else {
-                            no_friend_view.setVisibility(View.GONE);
-                            mFriendlist.setVisibility(View.VISIBLE);
-                        }
 
                         name[0] = documentSnapshot.child("name").getValue().toString();
                         image[0] = documentSnapshot.child("thumb_image").getValue().toString();

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -106,7 +107,19 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+    public void getDiscoverFragment()
+    {
+        setAnimations();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            viewPager.setCurrentItem(1);
+        }
+    }
     private void setAnimations() {
         AnimationSet animationSet;
         animationSet = new AnimationSet(true);
@@ -213,7 +226,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {

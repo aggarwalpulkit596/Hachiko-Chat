@@ -1,90 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.My_Profile">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Fragments.My_Profile"
+    android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_myprofile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:fitsSystemWindows="true"
+            android:background="@color/datsme_color"
+            android:layout_gravity="center_vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Profile"
+                    style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/cancel"
+                    android:visibility="gone"
+                    android:text="Cancel"
+                    android:textSize="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/save"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="Save"
+                    android:id="@+id/save"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:textSize="15dp"
+                    android:layout_alignParentEnd="true"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/setting"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00ffffff"
+                    android:src="@drawable/ic_settings_black_24dp"/>
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".Activities.Setting">
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:paddingBottom="100dp"
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/toolbar_layout"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:contentScrim="@color/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="180dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/logo" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/MYPROFILE_TOP_VIEW"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:id="@+id/above_backdrop"
+                        app:civ_border_width="5dp"
+                        android:src="@drawable/logo"
+                        app:civ_border_color="#fff">
+                    </de.hdodenhof.circleimageview.CircleImageView>
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:text="Edit"
+                        android:id="@+id/edit_image"
+                        android:visibility="gone"
+                        android:textSize="20dp"
+                        android:textColor="#0000ff"
+                        android:gravity="center_vertical|center_horizontal"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/settings_edit"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#fff"
+                        android:layout_alignBottom="@+id/above_backdrop"
+                        android:layout_alignRight="@+id/above_backdrop"
+                        android:src="@drawable/ic_mode_edit_black_24dp"/>
+
+                </RelativeLayout>
+                <TextView
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
-
-                <ImageButton
-                    android:id="@+id/edit_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right|bottom"
-                    android:background="#00ffffff"
-                    android:src="@drawable/ic_mode_edit_black_24dp" />
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/app_bar"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:textSize="25dp"
+                    android:text="User Name"
+                    android:id="@+id/user_name"
+                    android:layout_below="@+id/MYPROFILE_TOP_VIEW"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/about"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:text="ABOUT" />
+                    android:layout_marginTop="10dp"
+                    android:text="ABOUT"
+                    android:textColor="@color/datsme_color"/>
 
                 <EditText
                     android:id="@+id/edit_abt_u"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
                     android:layout_marginLeft="20dp"
+                    android:inputType="none"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="#d3d3d3"
-                    android:gravity="top|left"
-                    android:hint="About you"
+                    android:background="#fff"
+                    android:gravity="left|top"
                     android:maxLength="140"
+                    android:singleLine="false"
                     android:padding="8dp"
                     android:scrollbars="vertical" />
 
@@ -93,6 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:textColor="@color/datsme_color"
                     android:layout_marginTop="10dp"
                     android:text="COLLEGE" />
 
@@ -103,8 +175,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="#d3d3d3"
-                    android:hint="Your college"
+                    android:background="#fff"
                     android:padding="8dp" />
 
                 <TextView
@@ -112,8 +183,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:textColor="@color/datsme_color"
                     android:layout_marginTop="10dp"
-                    android:text="Gender" />
+                    android:text="GENDER" />
 
                 <RadioGroup
                     android:id="@+id/radio_gender"
@@ -121,7 +193,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:orientation="vertical"
                     android:layout_marginTop="10dp">
+
 
                     <RadioButton
                         android:layout_width="wrap_content"
@@ -146,54 +220,18 @@
                 </RadioGroup>
 
                 <Button
-                    android:id="@+id/settings_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginRight="70dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/button_background_blue"
-                    android:text="Edit"
-                    android:textColor="#fff" />
-
-                <Button
-                    android:id="@+id/settings_save"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginRight="70dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/button_background_blue"
-                    android:text="Save"
-                    android:textColor="#fff"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/settings_cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginRight="70dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/button_background_blue"
-                    android:text="Cancel"
-                    android:textColor="#fff"
-                    android:visibility="gone" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginRight="70dp"
-                    android:layout_marginTop="10dp"
                     android:id="@+id/settings_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/button_background_blue"
                     android:text="Log Out"
                     android:textColor="#fff" />
 
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.design.widget.CoordinatorLayout>
 
-
-</FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
