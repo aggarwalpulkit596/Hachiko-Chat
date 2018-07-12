@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     Calendar myCalendar;
     String userzodiac;
     String elements;
-    int Numerlogy,age1;
+    int Numerlogy, age1;
 
 
     @Override
@@ -148,9 +148,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                Numerlogy = getNumerlogy(year,monthOfYear+1,dayOfMonth);
+                Numerlogy = getNumerlogy(year, monthOfYear + 1, dayOfMonth);
                 Zodiac zodiac = new Zodiac();
-                userzodiac = zodiac.zodiac_sign(dayOfMonth,monthOfYear+1);
+                userzodiac = zodiac.zodiac_sign(dayOfMonth, monthOfYear + 1);
                 switch (userzodiac) {
                     case "Sagittarius":
                     case "Leo":
@@ -186,7 +186,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                DatePickerDialog d=new DatePickerDialog(ProfileActivity.this, date, myCalendar
+                DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
                 d.getDatePicker().setMaxDate(System.currentTimeMillis());
@@ -196,18 +196,18 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private int getNumerlogy(int year, int monthOfYear, int dayOfMonth) {
-        int number=0;
-        while(year>0){
-            number += year%10;
-            year=year/10;
+        int number = 0;
+        while (year > 0) {
+            number += year % 10;
+            year = year / 10;
         }
-        while(monthOfYear>0){
-            number += monthOfYear%10;
-            monthOfYear=monthOfYear/10;
+        while (monthOfYear > 0) {
+            number += monthOfYear % 10;
+            monthOfYear = monthOfYear / 10;
         }
-        while(dayOfMonth>0){
-            number += dayOfMonth%10;
-            dayOfMonth=dayOfMonth/10;
+        while (dayOfMonth > 0) {
+            number += dayOfMonth % 10;
+            dayOfMonth = dayOfMonth / 10;
         }
         return number;
     }
@@ -216,21 +216,18 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         user_dob.setText(sdf.format(myCalendar.getTime()));
-        String formatted =sdf.format(myCalendar.getTime());
-        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(formatted);
+        String formatted = sdf.format(myCalendar.getTime());
+        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(formatted);
         Date now = new Date();
         long timeBetween = now.getTime() - date1.getTime();
         double yearsBetween = timeBetween / 3.15576e+10;
         age1 = (int) Math.floor(yearsBetween);
-        if(age1<18)
-        {
-            Snackbar  snackBar = Snackbar.make(rootlayout
+        if (age1 < 18) {
+            Snackbar snackBar = Snackbar.make(rootlayout
                     , "Age should be more than 18 years", Snackbar.LENGTH_LONG);
             snackBar.show();
 
-        }
-        else
-        {
+        } else {
             cont.setEnabled(true);
         }
     }
@@ -358,7 +355,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 snackBar.show();
             }
         } else {
-            Datsme.getPreferenceManager().putString(MyPreference.USERNAME,"true");
+            Datsme.getPreferenceManager().putString(MyPreference.USERNAME, "true");
             final String device_token = FirebaseInstanceId.getInstance().getToken();
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
@@ -366,10 +363,10 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             userMap.put("DOB", user_dob.getText().toString());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
-            userMap.put("Zodiac",userzodiac);
-            userMap.put("Numerlogy",""+Numerlogy);
-            userMap.put("Element",elements);
-            userMap.put("device_token",device_token);
+            userMap.put("Zodiac", userzodiac);
+            userMap.put("Numerlogy", "" + Numerlogy);
+            userMap.put("Element", elements);
+            userMap.put("device_token", device_token);
             Log.i("TAG", "Savetodatabase: " + userMap.toString());
             mDatabase.setValue(userMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

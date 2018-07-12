@@ -2,7 +2,6 @@ package me.dats.com.datsme.Fragments;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -11,7 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -65,7 +62,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,24 +92,18 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
 
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
-    @BindView(R.id.seekBar)
-    SeekBar seekBar;
     private DatabaseReference mUserRef;
 
     private GoogleMap mMap;
-    private boolean doubleBackToExitPressedOnce = false;
 
     FusedLocationProviderClient mFusedLocationProviderClient;
     LocationCallback mLocationCallback;
     LocationRequest mLocationRequest;
     boolean mRequestingLocationUpdates;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     android.location.Location location;
-    View thumbView;
-    HashMap<String, LatLng> userMap;
-    HashMap<String, Marker> markers;
-    HashMap<String,Target> targets=new HashMap<>();
-    BitmapDescriptor bitmap1;
+    HashMap<String, LatLng> userMap = new HashMap<>();
+    HashMap<String, Marker> markers = new HashMap<>();
+    HashMap<String, Target> targets = new HashMap<>();
     int[][] worldview = new int[][]{
             {100, 50, 25, 50, 75},
             {50, 100, 25, 50, 75},
@@ -146,27 +136,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        thumbView = LayoutInflater.from(getActivity()).inflate(R.layout.thumb, null, false);
-        userMap = new HashMap<>();
-        markers = new HashMap<>();
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                // You can have your own calculation for progress
-//                seekBar.setThumb(getThumb(progress));progress
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(0 + "");
-            }
-        });
 
         mapFragment.getMapAsync(this);
         fetchusers();
@@ -194,7 +164,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
 
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         mUserRef.keepSynced(true);
-        Log.i("TAG", "onCreate: " + mUserRef.toString());
         mLocationCallback = new LocationCallback() {
             boolean firstlauch = true;
 
@@ -220,6 +189,13 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        //to set max zoom and remove navigation button
+        mMap.setMaxZoomPreference(15.0f);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -294,21 +270,34 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 .child("Users");
         query.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
 
                 mUser = dataSnapshot.getValue(Users.class);
 
-               final String user_id = dataSnapshot.getKey();
+                final String user_id = dataSnapshot.getKey();
                 final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
 
                 targets.put(user_id, new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                .position(latLng1)
-                                .title(user_id).snippet(user_id));
-                        markers.put(mUser.getName(),marker);
+                        LatLng uid = userMap.get(dataSnapshot.getKey());
+                        if (uid == null) {
+                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                    .position(latLng1)
+                                    .title(user_id).snippet(user_id));
+                            markers.put(dataSnapshot.getKey(), marker);
+                            userMap.put(dataSnapshot.getKey(), latLng1);
+                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker) {
+                                    BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                                    BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                                    return true;
+                                }
+                            });
+
+                        }
                     }
 
                     @Override
@@ -322,75 +311,56 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                     }
                 });
 
-                Picasso.get().load(mUser.getThumb_image()).resize(150,150)
+                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
                         .centerInside()
                         .transform(new BubbleTransformation(10))
                         .into(targets.get(user_id));
 
-                Log.i("TAG", "onChildAdded: " + dataSnapshot.getValue(Users.class).getName() + targets.get(user_id));
-//                Picasso.get()
-//                        .load(mUser.getThumb_image())
-//                        .resize(100, 100)
-//                        .centerInside()
-//                        .transform(new BubbleTransformation(10))
-//                        .into(new Target() {
-//                            @Override
-//                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                                Log.i("TAG", "onBitmapLoaded: " + mUser.getName());
-//                                bitmap1 = BitmapDescriptorFactory.fromBitmap(bitmap);
-//                               // MarkerOptions mo = new MarkerOptions().position(latLng1).title(mUser.getName()).snippet(user_id).icon(bitmap1);
-//                                LatLng name = userMap.get(mUser.getName());
-//                                if (name == null) {
-//                                    userMap.put(mUser.getName(), latLng1);
-//                                    final Marker userMarker = mMap.addMarker(mo);
-//                                    markers.put(mUser.getName(), userMarker);
-//                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                                        @Override
-//                                        public boolean onMarkerClick(Marker marker) {
-//                                            Log.i("TAG", "onMarkerClick: " + marker.getTitle());
-//                                            BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-//                                            BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-//                                            return true;
-//                                        }
-//                                    });
-//
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-//                                Log.i("TAG", "onBitmapLoaded2: " + mUser.getName());
-//
-//                            }
-//
-//                            @Override
-//                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-//                                Log.i("TAG", "onBitmapLoaded3: " + mUser.getName());
-//                            }
-//                        });
-
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                mUser = dataSnapshot.getValue(Users.class);
-//                final String user_id = dataSnapshot.getKey();
-//                final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
-//                MarkerOptions mo = new MarkerOptions().position(latLng1).title(mUser.getName()).snippet(user_id).icon(bitmap1);
-//                Marker marker = markers.get(mUser.getName());
-//                marker.remove();
-//                marker.setPosition(latLng1);
-//                marker = mMap.addMarker(mo);
-//                markers.put(mUser.getName(), marker);
-//                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                    @Override
-//                    public boolean onMarkerClick(Marker marker) {
-//                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-//                        BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-//                        return true;
-//                    }
-//                });
+            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                mUser = dataSnapshot.getValue(Users.class);
+                final String user_id = dataSnapshot.getKey();
+                final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
+                targets.put(user_id, new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        LatLng uid = userMap.get(dataSnapshot.getKey());
+                        Marker marker = markers.get(dataSnapshot.getKey());
+                        if (marker != null) marker.remove();
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                .position(latLng1)
+                                .title(user_id).snippet(user_id));
+                        markers.put(dataSnapshot.getKey(), marker);
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                                BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                                return true;
+                            }
+                        });
 
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+
+                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+                        .centerInside()
+                        .transform(new BubbleTransformation(10))
+                        .into(targets.get(user_id));
             }
 
             @Override

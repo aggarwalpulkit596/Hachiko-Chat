@@ -9,14 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.Adapters.PagerViewAdapter;
-import me.dats.com.datsme.Fragments.Discover_people;
 import me.dats.com.datsme.R;
 
 public class MapsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,8 +64,8 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         viewPager.setOffscreenPageLimit(2);
 
-        mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(),user_id);
-        Log.i("Notification", "PagerViewAdapter: "+user_id);
+        mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(), user_id);
+        Log.i("Notification", "PagerViewAdapter: " + user_id);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -113,8 +110,8 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
-    public void getDiscoverFragment()
-    {
+
+    public void getDiscoverFragment() {
         setAnimations();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -126,19 +123,10 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
             viewPager.setCurrentItem(1);
         }
     }
+
     private void setAnimations() {
         AnimationSet animationSet;
         animationSet = new AnimationSet(true);
-//
-//        TranslateAnimation mAnimation = new TranslateAnimation(
-//                TranslateAnimation.ABSOLUTE, 0f,
-//                TranslateAnimation.ABSOLUTE, 0f,
-//                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-//                TranslateAnimation.RELATIVE_TO_PARENT, -0.2f);
-//        mAnimation.setDuration(500);
-//        mAnimation.setRepeatCount(1);
-//        mAnimation.setFillAfter(true);
-//        mAnimation.setInterpolator(new LinearInterpolator());
 
         ScaleAnimation a = new ScaleAnimation(
                 1f, 1.2f, // Start and end values for the X axis scaling
@@ -162,56 +150,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    //public void setsize(int num)
-//{
-//    switch(num)
-//    {
-//        case 1:
-//           if(message_icon.getLayoutParams().width==60 && message_icon.getLayoutParams().height==50)
-//           {
-//               message_icon.getLayoutParams().height+=10;
-//               message_icon.getLayoutParams().width+=10;
-//               message_icon.requestLayout();
-//           }
-//           if(myProfile_icon.getLayoutParams().width==70 && myProfile_icon.getLayoutParams().height==60)
-//           {
-//               myProfile_icon.getLayoutParams().height-=10;
-//               myProfile_icon.getLayoutParams().width-=10;
-//               myProfile_icon.requestLayout();
-//           }
-//            break;
-//        case 2:
-//            if(message_icon.getLayoutParams().width==70 && message_icon.getLayoutParams().height==60)
-//            {
-//                message_icon.getLayoutParams().height-=10;
-//                message_icon.getLayoutParams().width-=10;
-//                message_icon.requestLayout();
-//            }
-//            if(myProfile_icon.getLayoutParams().width==70 && myProfile_icon.getLayoutParams().height==60)
-//            {
-//                myProfile_icon.getLayoutParams().height-=10;
-//                myProfile_icon.getLayoutParams().width-=10;
-//                myProfile_icon.requestLayout();
-//            }
-//            break;
-//        case 3:
-//            if(message_icon.getLayoutParams().width==70 && message_icon.getLayoutParams().height==60)
-//            {
-//                message_icon.getLayoutParams().height-=10;
-//                message_icon.getLayoutParams().width-=10;
-//                message_icon.requestLayout();
-//            }
-//            if(myProfile_icon.getLayoutParams().width==60 && myProfile_icon.getLayoutParams().height==50)
-//            {
-//                myProfile_icon.getLayoutParams().height+=10;
-//                myProfile_icon.getLayoutParams().width+=10;
-//                myProfile_icon.requestLayout();
-//            }
-//            break;
-//
-//
-//    }
-//}
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -232,6 +171,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {

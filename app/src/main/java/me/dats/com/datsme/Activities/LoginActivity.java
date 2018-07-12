@@ -79,12 +79,12 @@ public class LoginActivity extends AppCompatActivity implements
     @BindView(R.id.edittext_phoneno)
     EditText mPhoneNumberField;
 
-    EditText otp1 ,otp2, otp3, otp4, otp5, otp6;
+    EditText otp1, otp2, otp3, otp4, otp5, otp6;
 
     TextView timer;
 
     TextView resend;
-    Button cancel,otp_submit;
+    Button cancel, otp_submit;
     ProgressBar otp_progressbar;
     CountDownTimer cdt;
 
@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("TAG", "handleFacebookAccessToken:" + token);
         // [START_EXCLUDE silent]
-       // dialog.show();
+        // dialog.show();
         // [END_EXCLUDE]
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -300,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements
                         }
 
                         // [START_EXCLUDE]
-                   //     dialog.dismiss();
+                        //     dialog.dismiss();
                         // [END_EXCLUDE]
                     }
                 });
@@ -309,30 +309,21 @@ public class LoginActivity extends AppCompatActivity implements
     private void updateUI() {
         final String userId = mAuth.getCurrentUser().getUid();
         final String device_token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("TAG","update");
         // Users user = new Users();
         mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userId)) {
                     mDatabase.child("Users").child(userId).child("device_token").setValue(device_token);
-//                    if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
-//                    {
-//                        Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
-//                        startActivity(intent);
-//                    }
-//                    else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
-//                    {
-//                        Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
-//                        startActivity(intent);
-//                    }
-//                    else{
-                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                   // dialog.dismiss();
-                    startActivity(intent);}
+                    Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+                    dialog.dismiss();
+                    startActivity(intent);
                     finish();
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 }
-            //}
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -357,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In was successful, authenticate with Firebase
                 Log.i("TAG", "onActivityResult: ");
                 GoogleSignInAccount account = result.getSignInAccount();
-               // dialog.show();
+                // dialog.show();
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
@@ -465,7 +456,7 @@ public class LoginActivity extends AppCompatActivity implements
         otp5 = dialog1.findViewById(R.id.edit_otp5);
         otp6 = dialog1.findViewById(R.id.edit_otp6);
         timer = dialog1.findViewById(R.id.text_timer);
-        otp_progressbar=dialog1.findViewById(R.id.otp_progressBar);
+        otp_progressbar = dialog1.findViewById(R.id.otp_progressBar);
         otp_submit = dialog1.findViewById(R.id.otp_submit);
 
         otp_submit.setOnClickListener(this);
@@ -486,9 +477,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                 if (s.length() == 1) {
                     otp2.requestFocus();
-                }
-                else if(s.length()==0)
-                {
+                } else if (s.length() == 0) {
                     otp1.requestFocus();
                 }
             }
@@ -506,9 +495,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                 if (s.length() == 1) {
                     otp3.requestFocus();
-                }
-                else if(s.length()==0)
-                {
+                } else if (s.length() == 0) {
                     otp1.requestFocus();
                 }
             }
@@ -526,9 +513,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                 if (s.length() == 1) {
                     otp4.requestFocus();
-                }
-                else if(s.length()==0)
-                {
+                } else if (s.length() == 0) {
                     otp2.requestFocus();
                 }
             }
@@ -546,10 +531,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                 if (s.length() == 1) {
                     otp5.requestFocus();
-                }
-
-                else if(s.length()==0)
-                {
+                } else if (s.length() == 0) {
                     otp3.requestFocus();
                 }
 
@@ -567,8 +549,7 @@ public class LoginActivity extends AppCompatActivity implements
             public void afterTextChanged(Editable s) {
                 if (s.length() == 1) {
                     otp6.requestFocus();
-                }
-                else if(s.length()==0){
+                } else if (s.length() == 0) {
                     otp4.requestFocus();
                 }
 
@@ -597,13 +578,11 @@ public class LoginActivity extends AppCompatActivity implements
             public void afterTextChanged(Editable s) {
                 if (s.length() == 1) {
                     otp6.requestFocus();
-                }
-                else if(s.length()==0){
+                } else if (s.length() == 0) {
                     otp5.requestFocus();
                 }
             }
         });
-
 
 
         dialog1.show();
@@ -615,28 +594,28 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.i("TAG","onStart");
+        Log.i("TAG", "onStart");
         if (currentUser != null) {
-          //  dialog.show();
-           // updateUI();
-            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
-            {
-                Log.i("TAG","Maps");
-                Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
-                startActivity(intent);
-            }
-            else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
-            {
-                Log.i("TAG","Complete");
-                Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
-                startActivity(intent);
-            }
-//            else{
-//                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-//                dialog.dismiss();
-//                startActivity(intent);}
-//            else
-//                updateUI();
+            //  dialog.show();
+            updateUI();
+//            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
+//            {
+//                Log.i("TAG","Maps");
+//                Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
+//                startActivity(intent);
+//            }
+//            else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
+//            {
+//                Log.i("TAG","Complete");
+//                Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
+//                startActivity(intent);
+//            }
+////            else{
+////                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+////                dialog.dismiss();
+////                startActivity(intent);}
+////            else
+////                updateUI();
         }
     }
 
