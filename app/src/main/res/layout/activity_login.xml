@@ -4,7 +4,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="#fff">
 
     <ImageView
         android:id="@+id/logo"
@@ -24,7 +24,7 @@
         android:layout_marginTop="11dp"
         android:fontFamily="@font/big_john"
         android:text="datsme"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textSize="40sp"
         android:layout_centerHorizontal="true"/>
     <LinearLayout
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+91"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:textSize="20dp" />
 
         <EditText
@@ -48,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="Enter your number"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
+            android:textColor="#000"
+            android:textColorHint="#000"
             android:textSize="20dp" />
     </LinearLayout>
     <Button
@@ -75,7 +75,7 @@
         android:layout_marginTop="31dp"
         android:text="OR"
         android:fontFamily="@font/big_john"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textSize="25dp" />
 
     <com.google.android.gms.common.SignInButton
