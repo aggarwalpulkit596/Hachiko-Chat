@@ -327,7 +327,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                         .transform(new BubbleTransformation(10))
                         .into(targets.get(user_id));
 
-//                Log.i("TAG", "onChildAdded: " + dataSnapshot.getValue(Users.class).getName() + userMarker);
+                Log.i("TAG", "onChildAdded: " + dataSnapshot.getValue(Users.class).getName() + targets.get(user_id));
 //                Picasso.get()
 //                        .load(mUser.getThumb_image())
 //                        .resize(100, 100)
