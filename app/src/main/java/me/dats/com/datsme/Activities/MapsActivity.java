@@ -30,17 +30,22 @@ import me.dats.com.datsme.R;
 public class MapsActivity extends AppCompatActivity implements View.OnClickListener {
 
     public final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
     @BindView(R.id.messages)
     LinearLayout messages;
+
     @BindView(R.id.discover)
     LinearLayout discover;
+
     @BindView(R.id.myprofile)
     LinearLayout myprofile;
+
     @BindView(R.id.map_view_pager)
     ViewPager viewPager;
 
     @BindView(R.id.myprofile_icon)
     ImageView myProfile_icon;
+
     @BindView(R.id.message_icon)
     ImageView message_icon;
 
