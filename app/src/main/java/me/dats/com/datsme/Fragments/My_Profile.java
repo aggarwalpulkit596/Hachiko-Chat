@@ -58,7 +58,7 @@ import utils.BlurImage;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class My_Profile extends Fragment {
+public class My_Profile extends Fragment  {
 
     @BindView(R.id.toolbar_myprofile)
     Toolbar toolbar;

@@ -10,7 +10,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 
 public class BubbleTransformation implements com.squareup.picasso.Transformation {
-    private static final int outerMargin = 20;
+    private static final int outerMargin = 13;
     private final int margin;  // dp
 
     // margin is the board in dp
@@ -26,7 +26,7 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
         Paint paintBorder = new Paint();
         paintBorder.setColor(Color.BLUE);
         paintBorder.setStrokeWidth(margin);
-        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 110, paintBorder);
+        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 70, paintBorder);
 
         Paint trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -37,9 +37,9 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
 
         Path triangle = new Path();
         triangle.setFillType(Path.FillType.EVEN_ODD);
-        triangle.moveTo(outerMargin, source.getHeight() / 2);
-        triangle.lineTo(source.getWidth()/2,source.getHeight());
-        triangle.lineTo(source.getWidth()-outerMargin,source.getHeight()/2);
+        triangle.moveTo(outerMargin, source.getHeight() / 2+2);
+        triangle.lineTo(source.getWidth()/2,source.getHeight()+3);
+        triangle.lineTo(source.getWidth()-outerMargin,source.getHeight()/2+3);
         triangle.close();
 
         canvas.drawPath(triangle, trianglePaint);
@@ -47,7 +47,7 @@ public class BubbleTransformation implements com.squareup.picasso.Transformation
         final Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 100, paint);
+        canvas.drawCircle(source.getHeight()/2, source.getHeight()/2, 65, paint);
 
         if (source != output) {
             source.recycle();
