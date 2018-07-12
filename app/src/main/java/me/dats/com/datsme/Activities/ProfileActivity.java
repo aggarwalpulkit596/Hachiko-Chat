@@ -55,6 +55,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Models.Zodiac;
+import me.dats.com.datsme.MyPreference;
 import me.dats.com.datsme.R;
 
 public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -357,6 +358,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 snackBar.show();
             }
         } else {
+            Datsme.getPreferenceManager().putString(MyPreference.USERNAME,"true");
             final String device_token = FirebaseInstanceId.getInstance().getToken();
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());

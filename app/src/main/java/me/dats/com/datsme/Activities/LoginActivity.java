@@ -2,6 +2,7 @@ package me.dats.com.datsme.Activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -61,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.MyPreference;
 import me.dats.com.datsme.R;
 
 public class LoginActivity extends AppCompatActivity implements
@@ -82,11 +84,8 @@ public class LoginActivity extends AppCompatActivity implements
     TextView timer;
 
     TextView resend;
-
     Button cancel,otp_submit;
-
     ProgressBar otp_progressbar;
-
     CountDownTimer cdt;
 
     private CallbackManager mCallbackManager;
@@ -113,8 +112,6 @@ public class LoginActivity extends AppCompatActivity implements
         mDatabase = FirebaseDatabase.getInstance().getReference();
         signInButton.setOnClickListener(this);
         phoneSignIn.setOnClickListener(this);
-
-
         //Dialog Setup
         dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
@@ -283,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("TAG", "handleFacebookAccessToken:" + token);
         // [START_EXCLUDE silent]
-        dialog.show();
+       // dialog.show();
         // [END_EXCLUDE]
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -303,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements
                         }
 
                         // [START_EXCLUDE]
-                        dialog.dismiss();
+                   //     dialog.dismiss();
                         // [END_EXCLUDE]
                     }
                 });
@@ -312,22 +309,30 @@ public class LoginActivity extends AppCompatActivity implements
     private void updateUI() {
         final String userId = mAuth.getCurrentUser().getUid();
         final String device_token = FirebaseInstanceId.getInstance().getToken();
+        Log.i("TAG","update");
         // Users user = new Users();
         mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userId)) {
                     mDatabase.child("Users").child(userId).child("device_token").setValue(device_token);
-                    Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-                    dialog.dismiss();
-                    startActivity(intent);
+//                    if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
+//                    {
+//                        Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
+//                        startActivity(intent);
+//                    }
+//                    else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
+//                    {
+//                        Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
+//                        startActivity(intent);
+//                    }
+//                    else{
+                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                   // dialog.dismiss();
+                    startActivity(intent);}
                     finish();
                 }
-                else{
-                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                }
-            }
+            //}
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -352,7 +357,7 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In was successful, authenticate with Firebase
                 Log.i("TAG", "onActivityResult: ");
                 GoogleSignInAccount account = result.getSignInAccount();
-                dialog.show();
+               // dialog.show();
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
@@ -374,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             updateUI();
                         } else {
-                            dialog.hide();
+                            //dialog.hide();
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                 Toast.makeText(LoginActivity.this, "Email id Exist.Try using any other method", Toast.LENGTH_SHORT).show();
                             } else
@@ -610,9 +615,28 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.i("TAG","onStart");
         if (currentUser != null) {
-            dialog.show();
-            updateUI();
+          //  dialog.show();
+           // updateUI();
+            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
+            {
+                Log.i("TAG","Maps");
+                Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
+                startActivity(intent);
+            }
+            else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
+            {
+                Log.i("TAG","Complete");
+                Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
+                startActivity(intent);
+            }
+//            else{
+//                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+//                dialog.dismiss();
+//                startActivity(intent);}
+//            else
+//                updateUI();
         }
     }
 

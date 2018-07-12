@@ -48,6 +48,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.message_icon)
     ImageView message_icon;
+    String cont1;
 
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
