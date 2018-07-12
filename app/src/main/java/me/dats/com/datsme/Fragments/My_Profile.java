@@ -7,21 +7,27 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Scroller;
@@ -60,6 +66,9 @@ import utils.BlurImage;
  */
 public class My_Profile extends Fragment {
 
+
+    Menu Mymenu;
+    Boolean checkMenu;
     @BindView(R.id.toolbar_myprofile)
     Toolbar toolbar;
 
@@ -70,9 +79,6 @@ public class My_Profile extends Fragment {
 
     @BindView(R.id.above_backdrop)
     CircleImageView above_backdrop;
-
-    @BindView(R.id.edit_image)
-    TextView edit_img;
 
     @BindView(R.id.edit_abt_u)
     EditText abtU;
@@ -87,13 +93,14 @@ public class My_Profile extends Fragment {
     RadioGroup gender;
 
     @BindView(R.id.settings_edit)
-    CircleImageView edit;
+    CircleImageView edit_image;
 
     @BindView(R.id.save)
     TextView save;
 
     @BindView(R.id.cancel)
     TextView cancel;
+    View view;
 
     String name,about_u,ur_clg,ur_gender,ur_image;
     private FirebaseUser mUser;
@@ -104,13 +111,19 @@ public class My_Profile extends Fragment {
     public DatabaseReference newRef;
     private int BLUR_PRECENTAGE = 95;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_my__profile, container, false);
+        view =  inflater.inflate(R.layout.fragment_my__profile, container, false);
         ButterKnife.bind(this,view);
 
+
+        MapsActivity mapsActivity=(MapsActivity)getActivity();
+        mapsActivity.setSupportActionBar(toolbar);
+
+        setHasOptionsMenu(true);
         //Dialog Setup
         dialog = new ProgressDialog(getActivity());
         dialog.setCancelable(false);
@@ -118,8 +131,6 @@ public class My_Profile extends Fragment {
         dialog.setTitle("Loading");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-
-//           context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
@@ -193,32 +204,6 @@ public class My_Profile extends Fragment {
             }
         });
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setting.setVisibility(View.GONE);
-                save.setVisibility(View.VISIBLE);
-
-                abtU.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                abtU.setLines(4);
-                abtU.setMaxLines(4);
-                abtU.setScroller(new Scroller(getActivity()));
-                abtU.setVerticalScrollBarEnabled(true);
-                abtU.setSingleLine(false);
-
-                college.setInputType(InputType.TYPE_CLASS_TEXT);
-
-                cancel.setVisibility(View.VISIBLE);
-
-                edit.setEnabled(false);
-                edit.setVisibility(View.GONE);
-
-                edit_img.setVisibility(View.VISIBLE);
-
-                SelectRadioForSetting(true);
-            }
-        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,10 +212,9 @@ public class My_Profile extends Fragment {
                 cancel.setVisibility(View.GONE);
 
                 setting.setVisibility(View.VISIBLE);
-                edit.setEnabled(true);
-                edit.setVisibility(View.VISIBLE);
 
-                edit_img.setVisibility(View.GONE);
+                edit_image.setVisibility(View.GONE);
+
 
                 abtU.setInputType(InputType.TYPE_NULL);
                 college.setInputType(InputType.TYPE_NULL);
@@ -273,19 +257,16 @@ public class My_Profile extends Fragment {
 
                     setting.setVisibility(View.VISIBLE);
 
-                    edit.setEnabled(true);
-                    edit.setVisibility(View.VISIBLE);
+                    edit_image.setVisibility(View.GONE);
 
                     abtU.setInputType(InputType.TYPE_NULL);
                     college.setInputType(InputType.TYPE_NULL);
-
-                    edit_img.setVisibility(View.GONE);
 
                     SelectRadioForSetting(false);
                 }
             }
         });
-        edit_img.setOnClickListener(new View.OnClickListener() {
+        edit_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -300,6 +281,53 @@ public class My_Profile extends Fragment {
         });
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+          inflater.inflate(R.menu.myprofile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getTitle().toString())
+        {
+            case "Settings":
+                break;
+            case "Edit":
+                item.setVisible(false);
+                setting.setVisibility(View.GONE);
+                save.setVisibility(View.VISIBLE);
+
+                abtU.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                abtU.setLines(4);
+                abtU.setMaxLines(4);
+                abtU.setScroller(new Scroller(getActivity()));
+                abtU.setVerticalScrollBarEnabled(true);
+                abtU.setSingleLine(false);
+
+                college.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                cancel.setVisibility(View.VISIBLE);
+
+                edit_image.setVisibility(View.VISIBLE);
+
+                SelectRadioForSetting(true);
+
+                break;
+            case "Log Out":
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                mAuth = null;
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     public void SelectRadioForSetting(boolean y)
     {
         if(!y) {
@@ -315,13 +343,7 @@ public class My_Profile extends Fragment {
             }
         }
     }
-    @OnClick(R.id.settings_logout)
-    void logout() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
-        mAuth = null;
-        Intent i = new Intent(getActivity(), LoginActivity.class);
-        startActivity(i);
-        getActivity().finish();
-    }
+
+
+
 }
