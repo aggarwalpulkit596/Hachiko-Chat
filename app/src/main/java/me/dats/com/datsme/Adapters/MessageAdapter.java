@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,10 +59,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String from_user = message.getFrom();
         String message_type = message.getType();
         long time = message.getTime();
-        if(from_user.equals(meesage_sender_id))
-        {
-
-        }
+//        java.sql.Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+//        java.sql.Date date = new java.sql.Date(timeStamp.getTime());
+//        Log.i("TAG:",""+date);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {

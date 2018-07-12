@@ -24,6 +24,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.MyPreference;
 import me.dats.com.datsme.R;
 
 public class CompleteProfileActivity extends AppCompatActivity {
@@ -66,6 +67,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 snackBar.show();
             }
         } else {
+
+            Datsme.getPreferenceManager().putString(MyPreference.COMPPRO,"true");
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("about", userAbout.getText().toString());
             userMap.put("place", userPlace.getText().toString());

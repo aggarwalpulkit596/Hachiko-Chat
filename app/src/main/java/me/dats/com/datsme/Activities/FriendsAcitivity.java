@@ -101,10 +101,10 @@ public class FriendsAcitivity extends AppCompatActivity {
                         name[0] = documentSnapshot.child("name").getValue().toString();
                         image[0] = documentSnapshot.child("thumb_image").getValue().toString();
 
-                        if (documentSnapshot.hasChild("online")) {
-                            String userOnline =  documentSnapshot.child("online").getValue().toString();
-                            holder.setUserOnline(userOnline);
-                        }
+//                        if (documentSnapshot.hasChild("online")) {
+//                            String userOnline =  documentSnapshot.child("online").getValue().toString();
+//                            holder.setUserOnline(userOnline);
+//                        }
                         holder.bind(name[0], image[0]);
 
                     }
@@ -184,15 +184,15 @@ public class FriendsAcitivity extends AppCompatActivity {
 
         }
 
-        public void setUserOnline(String userOnline) {
-
-            CircleImageView userOnlineView = mView.findViewById(R.id.user_single_online);
-            if (userOnline.equals("true")) {
-                userOnlineView.setVisibility(View.VISIBLE);
-            } else {
-                userOnlineView.setVisibility(View.INVISIBLE);
-            }
-        }
+//        public void setUserOnline(String userOnline) {
+//
+//            CircleImageView userOnlineView = mView.findViewById(R.id.user_single_online);
+//            if (userOnline.equals("true")) {
+//                userOnlineView.setVisibility(View.VISIBLE);
+//            } else {
+//                userOnlineView.setVisibility(View.INVISIBLE);
+//            }
+//        }
     }
 }
 
