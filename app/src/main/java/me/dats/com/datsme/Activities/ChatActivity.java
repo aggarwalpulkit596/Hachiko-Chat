@@ -153,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mUserImage = findViewById(R.id.chatBarImageView);
         mUserName = findViewById(R.id.chatBarUserName);
-        mUserSeen = findViewById(R.id.chatBarUserOnline);
+       // mUserSeen = findViewById(R.id.chatBarUserOnline);
         chat_back_button = findViewById(R.id.chat_back_button);
 
         chat_back_button.setOnClickListener(new View.OnClickListener() {
@@ -290,11 +290,11 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-
-            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
-
-        }
+//        if (currentUser != null) {
+//
+//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
+//
+//        }
         settingview();
 
         chatFuctions();
@@ -349,21 +349,21 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 userImage = dataSnapshot.child("image").getValue().toString();
-                userOnline = dataSnapshot.child("online").getValue().toString();
-
-
-                if (userOnline.equals("true")) {
-                    mUserSeen.setText("Online");
-                } else {
-
-                    LastSeen getTime = new LastSeen();
-                    long time = Long.parseLong(userOnline);
-
-                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
-
-
-                    mUserSeen.setText("last seen " + lastseen);
-                }
+//                userOnline = dataSnapshot.child("online").getValue().toString();
+//
+//
+//                if (userOnline.equals("true")) {
+//                    mUserSeen.setText("Online");
+//                } else {
+//
+//                    LastSeen getTime = new LastSeen();
+//                    long time = Long.parseLong(userOnline);
+//
+//                    String lastseen = getTime.getTimeAgo(time, getApplicationContext());
+//
+//
+//                    mUserSeen.setText("last seen " + lastseen);
+//                }
                 if (!userImage.equals("default"))
                     Picasso.get()
                             .load(userImage)
@@ -395,11 +395,11 @@ public class ChatActivity extends AppCompatActivity {
         });
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-
-            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
-
-        }
+//        if (currentUser != null) {
+//
+//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue("true");
+//
+//        }
 
 
     }
@@ -409,11 +409,11 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-
-            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
-
-        }
+//        if (currentUser != null) {
+//
+//            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+//
+//        }
 
     }
 
