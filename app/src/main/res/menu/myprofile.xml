@@ -4,4 +4,5 @@
     android:title="Setting"></item>
     <item android:title="Edit"></item>
     <item android:title="Log Out"></item>
+    <item android:title="Delete Account"></item>
 </menu>
