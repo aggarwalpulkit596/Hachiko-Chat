@@ -1,12 +1,7 @@
 package me.dats.com.datsme.Fragments;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.DisplayMetrics;
@@ -17,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +40,6 @@ import me.dats.com.datsme.R;
 
 public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
-    private DatabaseReference mUserDatabase, mFriendReqDatabse, mFriendsDatabase;
-    private DatabaseReference mRootRef;
-    private DatabaseReference mUserRef;
-    private FirebaseUser mCurrentUser;
-
-
     //Views
     @BindView(R.id.user_image)
     CircleImageView mProfileImage;
@@ -72,13 +59,16 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     Button mDeclineReqBtn;
     @BindView(R.id.user_startchat)
     Button mStartChat;
-
+    private DatabaseReference mUserDatabase, mFriendReqDatabse, mFriendsDatabase;
+    private DatabaseReference mRootRef;
+    private DatabaseReference mUserRef;
+    private FirebaseUser mCurrentUser;
     private String mCurrent_State;
     private String current_uid;
     //    private ProgressDialog mLoadProcess;
     private String user_id;
     private String image;
-    private String name,about,place,college,age,age_yrs;
+    private String name, about, place, college, age, age_yrs;
 
     public BottomSheetProfileFragment() {
         // Required empty public constructor
@@ -120,7 +110,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)  {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     bindData(dataSnapshot);
                 } catch (Exception e) {
@@ -230,21 +220,21 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         name = documentSnapshot.child("name").getValue().toString();
         image = documentSnapshot.child("thumb_image").getValue().toString();
-        about=documentSnapshot.child("about").getValue().toString();
-        place=documentSnapshot.child("place").getValue().toString();
-        college=documentSnapshot.child("college").getValue().toString();
-        age=documentSnapshot.child("DOB").getValue().toString();
-        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(age);
+        about = documentSnapshot.child("about").getValue().toString();
+        place = documentSnapshot.child("place").getValue().toString();
+        college = documentSnapshot.child("college").getValue().toString();
+        age = documentSnapshot.child("DOB").getValue().toString();
+        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(age);
         Date now = new Date();
         long timeBetween = now.getTime() - date1.getTime();
         double yearsBetween = timeBetween / 3.15576e+10;
         int age1 = (int) Math.floor(yearsBetween);
-        age_yrs=Integer.toString(age1);
+        age_yrs = Integer.toString(age1);
         mProfileName.setText(name);
         mProfileAbout.setText(about);
         mProfilePlace.setText(place);
         mProfileCollege.setText(college);
-        mProfileAge.setText(", "+age_yrs);
+        mProfileAge.setText(", " + age_yrs);
 
         if (!image.equals("default"))
             Picasso.get()
@@ -255,7 +245,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     }
 
     @OnClick(R.id.user_sendrequest)
-    public void SendFriendRequest()  {
+    public void SendFriendRequest() {
 
         mProfileReqBtn.setEnabled(false);
 
@@ -377,14 +367,16 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         }
 
     }
+
     @OnClick(R.id.user_startchat)
-    public void startchat(){
+    public void startchat() {
         Intent chatintent = new Intent(getContext(), ChatActivity.class);
         chatintent.putExtra("user_id", user_id);
         chatintent.putExtra("name", name);
         chatintent.putExtra("image", image);
         startActivity(chatintent);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -394,7 +386,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels-50;
+        int width = metrics.widthPixels - 50;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);

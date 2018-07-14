@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,10 +20,10 @@
         <com.roughike.swipeselector.SwipeSelector
             android:id="@+id/worldSelector"
             android:layout_width="match_parent"
-            android:background="#E5FCC2"
             android:layout_height="wrap_content"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"/>
+            android:background="#E5FCC2"
+            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
+            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
 
         <View
             android:layout_width="match_parent"
@@ -34,11 +34,11 @@
 
         <com.roughike.swipeselector.SwipeSelector
             android:id="@+id/commmunicationselector"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="#9DE0AD"
-            android:layout_height="wrap_content" />
+            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
+            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
 
         <View
             android:layout_width="match_parent"
@@ -49,11 +49,11 @@
 
         <com.roughike.swipeselector.SwipeSelector
             android:id="@+id/spiritualSelector"
-            android:background="#45ADA8"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#45ADA8"
+            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
+            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
 
         <View
             android:layout_width="match_parent"
@@ -61,13 +61,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="#DDDDDD" />
+
         <com.roughike.swipeselector.SwipeSelector
             android:id="@+id/emotionalSelector"
-            android:background="#547980"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#547980"
+            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
+            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
 
         <View
             android:layout_width="match_parent"
@@ -75,13 +76,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="#DDDDDD" />
+
         <com.roughike.swipeselector.SwipeSelector
             android:id="@+id/professionSelector"
-            android:background="#594F4F"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#594F4F"
+            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
+            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
 
         <View
             android:layout_width="match_parent"
@@ -94,13 +96,13 @@
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
             android:layout_marginEnd="70dp"
+            android:layout_marginStart="70dp"
             android:layout_marginTop="20dp"
 
             android:background="@drawable/button_background_blue"
-            android:textColor="#FFFFFF"
-            android:text="Continue"/>
+            android:text="Continue"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 

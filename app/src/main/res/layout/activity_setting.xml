@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -23,27 +22,23 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/user_backdropimage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/logo"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" >
-            </android.support.v7.widget.Toolbar>
+                app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
 
             <ImageButton
-                android:id="@+id/changeImageBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="right|bottom"
                 android:background="#00ffffff"
-                android:src="@drawable/ic_mode_edit_black_24dp"/>
+                android:src="@drawable/ic_mode_edit_black_24dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -51,9 +46,10 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar"
         android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_below="@+id/app_bar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,100 +59,107 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="ABOUT"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginTop="5dp"
+                android:text="ABOUT" />
+
             <EditText
-                android:id="@+id/user_about"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:hint="About you"
-                android:layout_marginTop="5dp"
-                android:maxLength="140"
-                android:gravity="top|left"
-                android:background="#d3d3d3"
-                android:padding="8dp"
-                android:scrollbars="vertical"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:background="#d3d3d3"
+                android:gravity="top|left"
+                android:hint="About you"
+                android:maxLength="140"
+                android:padding="8dp"
+                android:scrollbars="vertical" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="COLLEGE"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginTop="10dp"
+                android:text="COLLEGE" />
+
             <EditText
                 android:id="@+id/user_college"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Your school"
-                android:layout_marginTop="5dp"
-                android:padding="8dp"
-                android:background="#d3d3d3"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:background="#d3d3d3"
+                android:hint="Your school"
+                android:padding="8dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Gender"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginTop="10dp"
+                android:text="Gender" />
+
             <RadioGroup
                 android:id="@+id/user_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:layout_marginTop="10dp">
 
                 <RadioButton
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_height="wrap_content"
-                    android:text="MALE"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_height="wrap_content"
-                    android:text="FEMALE"/>
+                    android:text="MALE" />
+
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="OTHER"/>
+                    android:text="FEMALE" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="OTHER" />
             </RadioGroup>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_background_blue"
                 android:text="Cancel"
-                android:textColor="#fff"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_background_blue"/>
+                android:textColor="#fff" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_background_blue"
                 android:text="Save"
-                android:textColor="#fff"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_background_blue"/>
+                android:textColor="#fff" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:textColor="#fff"
                 android:layout_marginRight="70dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/button_background_blue"
                 android:text="Log Out"
-                android:background="@drawable/button_background_blue"/>
+                android:textColor="#fff" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

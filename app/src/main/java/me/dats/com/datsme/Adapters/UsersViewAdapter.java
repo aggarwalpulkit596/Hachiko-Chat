@@ -17,8 +17,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -34,11 +32,11 @@ import me.dats.com.datsme.R;
 
 public class UsersViewAdapter extends RecyclerView.Adapter<UsersViewAdapter.UsersViewHolder> {
 
-    private List<Users> mUsersList = new ArrayList<>();
-    private List<String> mUsersUid = new ArrayList<>();
     HashMap<String, LatLng> userMap = new HashMap<>();
     HashMap<String, Marker> markers = new HashMap<>();
     Context mContext;
+    private List<Users> mUsersList = new ArrayList<>();
+    private List<String> mUsersUid = new ArrayList<>();
     private GoogleMap mMap;
 
     public UsersViewAdapter(List<Users> mUsers, List<String> mUsersUid, FragmentActivity activity, GoogleMap mMap) {

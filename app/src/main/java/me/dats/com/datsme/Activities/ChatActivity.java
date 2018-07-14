@@ -4,11 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,34 +43,34 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Adapters.MessageAdapter;
-import me.dats.com.datsme.Models.LastSeen;
+import me.dats.com.datsme.Adapters.ChatAdapter;
+import me.dats.com.datsme.Models.ChatModelObject;
+import me.dats.com.datsme.Models.DateObject;
+import me.dats.com.datsme.Models.ListObject;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.utils.DateParser;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private String chatUser, userName, userImage, userOnline;
-
+    private static final int TOTAL_ITEM_LOAD = 10;
+    private static final int GALLERY_PICK = 1;
+    private final List<Messages> MessageList = new ArrayList<>();
     @BindView(R.id.chatAppBar)
     Toolbar mToolbar;
-    private FirebaseAuth mAuth;
-
-    private DatabaseReference mRootRef;
-    private FirebaseUser currentUser;
     TextView mUserName;
     TextView mUserSeen;
     CircleImageView mUserImage;
-
     ImageButton chat_back_button;
-
-    private String uid;
     @BindView(R.id.chat_sendbtn)
     ImageButton mSendBtn;
     @BindView(R.id.chat_addbtn)
@@ -80,25 +81,24 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mMessagesList;
     @BindView(R.id.swipe_message_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-
-
-    private final List<Messages> MessageList = new ArrayList<>();
-    private MessageAdapter mAdapter;
+    private String chatUser, userName, userImage, userOnline;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mRootRef;
+    private FirebaseUser currentUser;
+    private String uid;
+    private ChatAdapter chatAdapter;
     private LinearLayoutManager mLinearLayout;
-
-    private static final int TOTAL_ITEM_LOAD = 10;
     private int mCurrentPage = 1;
-
-
     //new solution
     private int itemPos = 0;
     private String mLastKey = "";
     private String mPrevKey = "";
-
     // Storage Firebase
     private StorageReference mImageStorage;
-    private static final int GALLERY_PICK = 1;
     private ProgressDialog loadingBar;
+    LinkedHashMap<String, Set<Messages>> groupedHashMap = new LinkedHashMap<>();
+    Set<Messages> list = null;
+    int i = 0;
 
 
     @Override
@@ -153,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mUserImage = findViewById(R.id.chatBarImageView);
         mUserName = findViewById(R.id.chatBarUserName);
-       // mUserSeen = findViewById(R.id.chatBarUserOnline);
+        // mUserSeen = findViewById(R.id.chatBarUserOnline);
         chat_back_button = findViewById(R.id.chat_back_button);
 
         chat_back_button.setOnClickListener(new View.OnClickListener() {
@@ -165,13 +165,12 @@ public class ChatActivity extends AppCompatActivity {
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mAdapter = new MessageAdapter(MessageList, getApplicationContext());
-
+        chatAdapter = new ChatAdapter(null, getApplicationContext());
         mMessagesList.setHasFixedSize(true);
         mLinearLayout = new LinearLayoutManager(this);
         mMessagesList.setLayoutManager(mLinearLayout);
-        mMessagesList.setAdapter(mAdapter);
-
+        mMessagesList.setAdapter(chatAdapter);
+        mMessagesList.setItemAnimator(new DefaultItemAnimator());
         loadingBar = new ProgressDialog(this);
 
 
@@ -203,7 +202,7 @@ public class ChatActivity extends AppCompatActivity {
                     mLastKey = messageKey;
                 }
 
-                mAdapter.notifyDataSetChanged();
+                chatAdapter.notifyDataSetChanged();
 
                 mSwipeRefreshLayout.setRefreshing(false);
 
@@ -245,6 +244,22 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages messages = dataSnapshot.getValue(Messages.class);
+                String hashMapKey = DateParser.convertDateToString(messages.getTime());
+                Log.d("TAG", "start date: " + DateParser.convertDateToString(messages.getTime()));
+
+                if (groupedHashMap.containsKey(hashMapKey)) {
+                    // The key is already in the HashMap; add the pojo object
+                    // against the existing key.
+                    Log.d("TAG", "start date: " + hashMapKey + " message" + messages.getMessage());
+                    groupedHashMap.get(hashMapKey).add(messages);
+                } else {
+                    // The key is not there in the HashMap; create a new key-value pair
+                    list = new LinkedHashSet<>();
+                    list.add(messages);
+                    groupedHashMap.put(hashMapKey, list);
+                    Log.d("TAG", "start date: " + hashMapKey + " message" + groupedHashMap.get(i++));
+                }
+
 
                 itemPos++;
 
@@ -254,10 +269,11 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
                 MessageList.add(messages);
-                mAdapter.notifyDataSetChanged();
                 mMessagesList.scrollToPosition(MessageList.size() - 1);
 
                 mSwipeRefreshLayout.setRefreshing(false);
+                generateListFromMap(groupedHashMap);
+
 
             }
 
@@ -282,6 +298,25 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private List<ListObject> generateListFromMap(LinkedHashMap<String, Set<Messages>> groupedHashMap) {
+        // We linearly add every item into the consolidatedList.
+        List<ListObject> consolidatedList = new ArrayList<>();
+        for (String date : groupedHashMap.keySet()) {
+            DateObject dateItem = new DateObject();
+            dateItem.setDate(date);
+            consolidatedList.add(dateItem);
+            for (Messages chatModel : groupedHashMap.get(date)) {
+                ChatModelObject generalItem = new ChatModelObject();
+                generalItem.setChatModel(chatModel);
+                consolidatedList.add(generalItem);
+                Log.d("TAG", "start date: " + generalItem.toString());
+            }
+        }
+
+        chatAdapter.setDataChange(consolidatedList);
+        return consolidatedList;
     }
 
     @Override

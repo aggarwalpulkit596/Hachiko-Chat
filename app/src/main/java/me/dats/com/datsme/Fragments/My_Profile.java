@@ -7,27 +7,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Scroller;
@@ -53,62 +44,49 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
-import me.dats.com.datsme.Activities.Setting;
 import me.dats.com.datsme.R;
-import utils.BlurImage;
+import me.dats.com.datsme.utils.BlurImage;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class My_Profile extends Fragment  {
+public class My_Profile extends Fragment {
 
 
+    public ProgressDialog dialog;
+    public DatabaseReference newRef;
     Menu Mymenu;
     Boolean checkMenu;
     @BindView(R.id.toolbar_myprofile)
     Toolbar toolbar;
-
     @BindView(R.id.setting)
     ImageButton setting;
     @BindView(R.id.backdrop)
     ImageView pic;
-
     @BindView(R.id.above_backdrop)
     CircleImageView above_backdrop;
-
     @BindView(R.id.edit_abt_u)
     EditText abtU;
-
     @BindView(R.id.user_name)
     TextView user_name;
-
     @BindView(R.id.edit_ur_clg)
     EditText college;
-
     @BindView(R.id.radio_gender)
     RadioGroup gender;
-
     @BindView(R.id.settings_edit)
     CircleImageView edit_image;
-
     @BindView(R.id.save)
     TextView save;
-
     @BindView(R.id.cancel)
     TextView cancel;
     View view;
-
-    String name,about_u,ur_clg,ur_gender,ur_image;
+    String name, about_u, ur_clg, ur_gender, ur_image;
     private FirebaseUser mUser;
     private String uid;
     private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
-    public ProgressDialog dialog;
-    public DatabaseReference newRef;
     private int BLUR_PRECENTAGE = 95;
 
 
@@ -116,11 +94,11 @@ public class My_Profile extends Fragment  {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_my__profile, container, false);
-        ButterKnife.bind(this,view);
+        view = inflater.inflate(R.layout.fragment_my__profile, container, false);
+        ButterKnife.bind(this, view);
 
 
-        MapsActivity mapsActivity=(MapsActivity)getActivity();
+        MapsActivity mapsActivity = (MapsActivity) getActivity();
         mapsActivity.setSupportActionBar(toolbar);
 
         setHasOptionsMenu(true);
@@ -159,8 +137,7 @@ public class My_Profile extends Fragment  {
                 college.setText(ur_clg);
                 user_name.setText(name);
 
-                switch (ur_gender)
-                {
+                switch (ur_gender) {
                     case "Male":
                         gender.check(gender.getChildAt(0).getId());
                         SelectRadioForSetting(false);
@@ -226,18 +203,13 @@ public class My_Profile extends Fragment  {
             @Override
             public void onClick(View v) {
 
-                if(abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty())
-                {
-                    if(abtU.getText().toString().isEmpty())
-                    {
-                        Toast.makeText(getActivity(),"ABOUT YOU CAN'T BE EMPTY",Toast.LENGTH_SHORT).show();
+                if (abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty()) {
+                    if (abtU.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "ABOUT YOU CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
+                    } else if (college.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "COLLEGE CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
                     }
-                    else if(college.getText().toString().isEmpty())
-                    {
-                        Toast.makeText(getActivity(),"COLLEGE CAN'T BE EMPTY",Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
+                } else {
                     Map<String, Object> user = new HashMap<>();
                     user.put("about", abtU.getText().toString());
                     user.put("college", college.getText().toString());
@@ -284,14 +256,13 @@ public class My_Profile extends Fragment  {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-          inflater.inflate(R.menu.myprofile, menu);
+        inflater.inflate(R.menu.myprofile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getTitle().toString())
-        {
+        switch (item.getTitle().toString()) {
             case "Settings":
                 break;
             case "Edit":
@@ -328,22 +299,18 @@ public class My_Profile extends Fragment  {
     }
 
 
-    public void SelectRadioForSetting(boolean y)
-    {
-        if(!y) {
+    public void SelectRadioForSetting(boolean y) {
+        if (!y) {
             for (int i = 0; i < gender.getChildCount(); i++) {
                 if (gender.getCheckedRadioButtonId() != gender.getChildAt(i).getId())
                     gender.getChildAt(i).setVisibility(View.GONE);
             }
-        }
-        else
-        {
+        } else {
             for (int i = 0; i < gender.getChildCount(); i++) {
                 gender.getChildAt(i).setVisibility(View.VISIBLE);
             }
         }
     }
-
 
 
 }

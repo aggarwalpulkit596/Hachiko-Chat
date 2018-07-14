@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".Activities.ProfileActivity">
 
@@ -19,9 +17,9 @@
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:tint="#d3d3d3"
             android:background="@drawable/border"
-            android:src="@drawable/add" />
+            android:src="@drawable/add"
+            android:tint="#d3d3d3" />
 
         <EditText
             android:id="@+id/user_displayname"
@@ -29,24 +27,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/user_image"
             android:layout_centerInParent="true"
-            android:inputType="textCapWords"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="40dp"
             android:background="#D3D3D3"
             android:hint="Username"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginLeft="40dp"
+            android:inputType="textCapWords"
             android:padding="10dp"
             android:textAlignment="center"
             android:textSize="20sp" />
+
         <Spinner
             android:id="@+id/user_gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_displayname"
             android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
             android:background="#D3D3D3"
             android:padding="10dp"
             android:textAlignment="center"
@@ -59,12 +58,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_gender"
             android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
             android:background="#D3D3D3"
-            android:text="Date Of Birth"
             android:padding="10dp"
+            android:text="Date Of Birth"
             android:textAlignment="center"
             android:textSize="20sp" />
 
@@ -73,10 +72,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/user_dob"
-            android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
-            android:layout_marginRight="70dp"
             android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/button_background_blue"
             android:onClick="Savetodatabase"
             android:text="Continue"

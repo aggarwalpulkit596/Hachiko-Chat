@@ -1,4 +1,4 @@
-package me.dats.com.datsme.Models;
+package me.dats.com.datsme.utils;
 
 import android.app.Application;
 import android.content.Context;

@@ -1,15 +1,13 @@
 package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,9 +21,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.MyPreference;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.utils.MyPreference;
 
 public class CompleteProfileActivity extends AppCompatActivity {
 
@@ -51,7 +49,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     public void addToDatBase(View view) {
-        if (userAbout.getText().toString().isEmpty() || userCollege.getText().toString().isEmpty() ||userPlace.getText().toString().isEmpty()) {
+        if (userAbout.getText().toString().isEmpty() || userCollege.getText().toString().isEmpty() || userPlace.getText().toString().isEmpty()) {
             Snackbar snackBar;
             if (userCollege.getText().toString().isEmpty()) {
                 snackBar = Snackbar.make(rootlayout
@@ -68,7 +66,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         } else {
 
-            Datsme.getPreferenceManager().putString(MyPreference.COMPPRO,"true");
+            Datsme.getPreferenceManager().putString(MyPreference.COMPPRO, "true");
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("about", userAbout.getText().toString());
             userMap.put("place", userPlace.getText().toString());

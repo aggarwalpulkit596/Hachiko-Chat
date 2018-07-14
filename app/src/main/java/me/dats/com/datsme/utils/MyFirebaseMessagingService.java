@@ -1,8 +1,7 @@
-package me.dats.com.datsme;
+package me.dats.com.datsme.utils;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -15,6 +14,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

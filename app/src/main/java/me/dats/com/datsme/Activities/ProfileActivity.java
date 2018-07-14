@@ -4,12 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,13 +49,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Zodiac;
-import me.dats.com.datsme.MyPreference;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.utils.MyPreference;
 
 public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -72,18 +71,16 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     TextView user_dob;
     @BindView(R.id.button2)
     Button cont;
-
-    private DatabaseReference mDatabase;
-    private FirebaseUser mCurrentUser;
-    private StorageReference mStorageRef;
-    private ProgressDialog mProgessDialog;
     String thumb_downloadurl = null;
     String download_url = null;
     Calendar myCalendar;
     String userzodiac;
     String elements;
     int Numerlogy, age1;
-
+    private DatabaseReference mDatabase;
+    private FirebaseUser mCurrentUser;
+    private StorageReference mStorageRef;
+    private ProgressDialog mProgessDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

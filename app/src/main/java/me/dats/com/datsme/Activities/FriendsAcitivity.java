@@ -1,11 +1,10 @@
 package me.dats.com.datsme.Activities;
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -68,6 +67,7 @@ public class FriendsAcitivity extends AppCompatActivity {
         mFriendlist.setHasFixedSize(true);
         mFriendlist.setLayoutManager(new LinearLayoutManager(this));
     }
+
     @Override
     public void onStart() {
         super.onStart();

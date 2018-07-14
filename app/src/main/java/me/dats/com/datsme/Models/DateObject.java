@@ -1,15 +1,7 @@
 package me.dats.com.datsme.Models;
 
-public class Friends {
+public class DateObject extends ListObject {
     private String date;
-
-    public Friends() {
-
-    }
-
-    public Friends(String date) {
-        this.date = date;
-    }
 
     public String getDate() {
         return date;
@@ -18,5 +10,9 @@ public class Friends {
     public void setDate(String date) {
         this.date = date;
     }
-}
 
+    @Override
+    public int getType(String userId) {
+        return TYPE_DATE;
+    }
+}

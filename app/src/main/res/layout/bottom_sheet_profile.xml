@@ -1,136 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog"
+    tools:context=".Activities.ProfileActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/default_avatar"
+        app:civ_border_color="#000"
+        app:civ_border_width="2dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/user_displayname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/big_john"
+            android:text="Pulkit Aggarwal"
+            android:textColor="#000"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/user_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/big_john"
+            android:text=" ,22"
+            android:textColor="#000"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/userplace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="1dp"
+        android:text="New Delhi"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/usercollege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userplace"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="40dp"
+        android:text="Delhi University"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/aboutyoutextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usercollege"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/slim_joe"
+        android:text="ABout"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/user_aboutyou"
         android:layout_width="match_parent"
-        android:background="@drawable/rounded_dialog"
-        tools:context=".Activities.ProfileActivity"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/aboutyoutextview"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:maxLength="140"
+        android:text="Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised by Eddard alongside his lawful children at "
+        android:textColorHint="#000"
+        android:textSize="16sp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/default_avatar"
-            app:civ_border_color="#000"
-            app:civ_border_width="2dp" />
+    <Button
+        android:id="@+id/user_sendrequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_aboutyou"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_background_blue"
+        android:text="Send Request"
+        android:textColor="#fff" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/user_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp">
+    <Button
+        android:id="@+id/user_cancelrequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/user_sendrequest"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background_blue"
+        android:text="Cancel Request"
+        android:textColor="#fff" />
 
-            <TextView
-                android:id="@+id/user_displayname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/big_john"
-                android:text="Pulkit Aggarwal"
-                android:textColor="#000"
-                android:textSize="22sp" />
+    <Button
+        android:id="@+id/user_startchat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_sendrequest"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_background_blue"
+        android:text="Chat"
+        android:textColor="#fff"
+        android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/user_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/big_john"
-                android:text=" ,22"
-                android:textColor="#000"
-                android:textSize="22sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/userplace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="1dp"
-            android:text="New Delhi"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/usercollege"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userplace"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="40dp"
-            android:text="Delhi University"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/aboutyoutextview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/usercollege"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/slim_joe"
-            android:text="ABout"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/user_aboutyou"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/aboutyoutextview"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
-            android:maxLength="140"
-            android:text="Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised by Eddard alongside his lawful children at "
-            android:textColorHint="#000"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/user_sendrequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/user_aboutyou"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="70dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_background_blue"
-            android:text="Send Request"
-            android:textColor="#fff" />
-
-        <Button
-            android:id="@+id/user_cancelrequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/user_sendrequest"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="70dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_background_blue"
-            android:text="Cancel Request"
-            android:textColor="#fff" />
-
-        <Button
-            android:id="@+id/user_startchat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user_sendrequest"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_background_blue"
-            android:text="Chat"
-            android:textColor="#fff"
-            android:visibility="gone" />
-
-    </RelativeLayout>
+</RelativeLayout>

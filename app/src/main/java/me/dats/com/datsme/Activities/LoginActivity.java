@@ -2,20 +2,18 @@ package me.dats.com.datsme.Activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,15 +58,15 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
-import me.dats.com.datsme.MyPreference;
 import me.dats.com.datsme.R;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private FirebaseAuth mAuth;
+    //    private SignInButton signInButton;
+    private static final int RC_SIGN_IN = 9001;
+    public ProgressDialog dialog;
     Dialog dialog1;
     @BindView(R.id.btn_gSignIn)
     SignInButton signInButton;
@@ -78,30 +76,20 @@ public class LoginActivity extends AppCompatActivity implements
     Button phoneSignIn;
     @BindView(R.id.edittext_phoneno)
     EditText mPhoneNumberField;
-
     EditText otp1, otp2, otp3, otp4, otp5, otp6;
-
     TextView timer;
-
     TextView resend;
     Button cancel, otp_submit;
     ProgressBar otp_progressbar;
     CountDownTimer cdt;
-
+    private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
-    //    private SignInButton signInButton;
-    private static final int RC_SIGN_IN = 9001;
-
     //For PhoneAuth
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
-
-
     private DatabaseReference mDatabase;
-    public ProgressDialog dialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

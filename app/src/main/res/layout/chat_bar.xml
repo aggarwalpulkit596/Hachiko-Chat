@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/datsme_color"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/datsme_color">
 
     <ImageButton
+        android:id="@+id/chat_back_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
-        android:id="@+id/chat_back_button"
+        android:layout_marginTop="5dp"
         android:background="#00ffffff"
         android:src="@drawable/ic_arrow_back_black_24dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chatBarImageView"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:foregroundGravity="center"
-        android:layout_toRightOf="@+id/chat_back_button"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/default_avatar"
-        android:id="@+id/chatBarImageView" />
+        android:layout_toRightOf="@+id/chat_back_button"
+        android:foregroundGravity="center"
+        android:src="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/chatBarUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/chatBarImageView"
         android:text="Display Name"
-        android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="italic" />
 
-  <!--  <TextView
-        android:id="@+id/chatBarUserOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:layout_alignStart="@+id/chatBarUserName"
-        android:layout_below="@+id/chatBarUserName"
-        android:text="Last Seen at 10:40"
-        android:textColor="@android:color/white" />
--->
+    <!--  <TextView
+          android:id="@+id/chatBarUserOnline"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="13sp"
+          android:layout_alignStart="@+id/chatBarUserName"
+          android:layout_below="@+id/chatBarUserName"
+          android:text="Last Seen at 10:40"
+          android:textColor="@android:color/white" />
+  -->
 
 </RelativeLayout>

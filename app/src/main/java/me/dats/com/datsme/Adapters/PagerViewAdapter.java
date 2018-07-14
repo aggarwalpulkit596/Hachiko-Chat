@@ -18,7 +18,7 @@ public class PagerViewAdapter extends FragmentPagerAdapter {
         super(fm);
         bundle = new Bundle();
         bundle.putString("request_uid", user_id);
-        Log.i("Notification", "PagerViewAdapter: "+user_id);
+        Log.i("Notification", "PagerViewAdapter: " + user_id);
     }
 
     @Override

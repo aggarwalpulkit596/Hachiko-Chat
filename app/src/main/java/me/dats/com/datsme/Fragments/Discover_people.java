@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -78,24 +76,17 @@ import me.dats.com.datsme.R;
  */
 public class Discover_people extends Fragment implements OnMapReadyCallback {
 
-    @BindView(R.id.toggle_profile_button)
-    ImageButton toggle_profile_button;
-
-    @BindView(R.id.profile_box)
-    RelativeLayout Profile_box;
-
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public float Timer = 0;
     public CountDownTimer countDownTimer;
-    private Animation animShow, animHide;
-
+    @BindView(R.id.toggle_profile_button)
+    ImageButton toggle_profile_button;
+    @BindView(R.id.profile_box)
+    RelativeLayout Profile_box;
     boolean IsProfileVisible = false;
 
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
-    private DatabaseReference mUserRef;
-
-    private GoogleMap mMap;
-
     FusedLocationProviderClient mFusedLocationProviderClient;
     LocationCallback mLocationCallback;
     LocationRequest mLocationRequest;
@@ -112,9 +103,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             {75, 75, 50, 50, 100}
     };
     Users mUser;
-
-
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private Animation animShow, animHide;
+    private DatabaseReference mUserRef;
+    private GoogleMap mMap;
 
     public Discover_people() {
         // Required empty public constructor

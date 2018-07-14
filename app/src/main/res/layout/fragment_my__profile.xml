@@ -1,71 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Fragments.My_Profile"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.My_Profile">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_myprofile"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_myprofile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/datsme_color"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:fitsSystemWindows="true"
-            android:background="@color/datsme_color"
-            android:layout_gravity="center_vertical">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Profile" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="Profile"
-                    style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:id="@+id/cancel"
-                    android:visibility="gone"
-                    android:text="Cancel"
-                    android:textSize="15dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/save"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="Save"
-                    android:id="@+id/save"
-                    android:visibility="gone"
-                    android:layout_centerVertical="true"
-                    android:textSize="15dp"
-                    android:layout_alignParentEnd="true"/>
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:id="@+id/setting"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:background="#00ffffff"
-                    android:src="@drawable/ic_settings_black_24dp"/>
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toStartOf="@+id/save"
+                android:text="Cancel"
+                android:textSize="15dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:text="Save"
+                android:textSize="15dp"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:background="#00ffffff"
+                android:src="@drawable/ic_settings_black_24dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:paddingBottom="100dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -79,44 +84,45 @@
                     android:src="@drawable/logo" />
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:id="@+id/MYPROFILE_TOP_VIEW"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="100dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/above_backdrop"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:id="@+id/above_backdrop"
-                        app:civ_border_width="5dp"
                         android:src="@drawable/logo"
-                        app:civ_border_color="#fff">
-                    </de.hdodenhof.circleimageview.CircleImageView>
+                        app:civ_border_color="#fff"
+                        app:civ_border_width="5dp"></de.hdodenhof.circleimageview.CircleImageView>
+
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/settings_edit"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:id="@+id/settings_edit"
-                        app:civ_border_width="2dp"
-                        android:visibility="gone"
-                        app:civ_border_color="#fff"
                         android:layout_alignBottom="@+id/above_backdrop"
                         android:layout_alignRight="@+id/above_backdrop"
-                        android:src="@drawable/ic_mode_edit_black_24dp"/>
+                        android:src="@drawable/ic_mode_edit_black_24dp"
+                        android:visibility="gone"
+                        app:civ_border_color="#fff"
+                        app:civ_border_width="2dp" />
 
                 </RelativeLayout>
+
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
-                    android:textSize="25dp"
+                    android:layout_below="@+id/MYPROFILE_TOP_VIEW"
+                    android:layout_marginTop="5dp"
                     android:text="User Name"
-                    android:id="@+id/user_name"
-                    android:layout_below="@+id/MYPROFILE_TOP_VIEW"/>
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <LinearLayout
@@ -126,39 +132,38 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/about"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="10dp"
                     android:text="ABOUT"
-                    android:textColor="@color/datsme_color"/>
+                    android:textColor="@color/datsme_color" />
 
                 <EditText
                     android:id="@+id/edit_abt_u"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:layout_marginLeft="20dp"
-                    android:inputType="none"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
                     android:background="#fff"
                     android:gravity="left|top"
+                    android:inputType="none"
                     android:maxLength="140"
-                    android:singleLine="false"
+                    android:minHeight="100dp"
                     android:padding="8dp"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:singleLine="false" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:textColor="@color/datsme_color"
                     android:layout_marginTop="10dp"
-                    android:text="COLLEGE" />
+                    android:text="COLLEGE"
+                    android:textColor="@color/datsme_color" />
 
                 <EditText
                     android:id="@+id/edit_ur_clg"
@@ -175,9 +180,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:textColor="@color/datsme_color"
                     android:layout_marginTop="10dp"
-                    android:text="GENDER" />
+                    android:text="GENDER"
+                    android:textColor="@color/datsme_color" />
 
                 <RadioGroup
                     android:id="@+id/radio_gender"
@@ -185,8 +190,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
 
 
                     <RadioButton

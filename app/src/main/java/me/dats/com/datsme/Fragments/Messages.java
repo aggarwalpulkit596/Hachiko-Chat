@@ -4,20 +4,16 @@ package me.dats.com.datsme.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -36,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
-import me.dats.com.datsme.Activities.FriendsAcitivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
@@ -84,7 +79,7 @@ public class Messages extends Fragment implements View.OnClickListener {
         no_friend_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MapsActivity)getActivity()).getDiscoverFragment();
+                ((MapsActivity) getActivity()).getDiscoverFragment();
             }
         });
         return view;
@@ -105,12 +100,11 @@ public class Messages extends Fragment implements View.OnClickListener {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()<1){
+                if (dataSnapshot.getChildrenCount() < 1) {
 
-                        no_friend_view.setVisibility(View.VISIBLE);
-                        mFriendlist.setVisibility(View.GONE);
-                }
-                else{
+                    no_friend_view.setVisibility(View.VISIBLE);
+                    mFriendlist.setVisibility(View.GONE);
+                } else {
                     no_friend_view.setVisibility(View.GONE);
                     mFriendlist.setVisibility(View.VISIBLE);
                 }

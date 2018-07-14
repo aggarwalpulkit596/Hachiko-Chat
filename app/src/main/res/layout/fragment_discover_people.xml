@@ -62,7 +62,6 @@
         </RelativeLayout>
 
         <com.github.clans.fab.FloatingActionMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -71,7 +70,6 @@
             fab:menu_labels_singleLine="true">
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab_friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_people_outline_black_24dp"
@@ -79,7 +77,6 @@
                 fab:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_settings_black_24dp"
@@ -88,7 +85,6 @@
 
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_logout"
@@ -98,7 +94,6 @@
         </com.github.clans.fab.FloatingActionMenu>
 
         <me.dats.com.datsme.Widgets.VerticalSeekBar
-            android:id="@+id/seekBar1"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_alignParentRight="true"

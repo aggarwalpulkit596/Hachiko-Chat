@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/completeprofile_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/completeprofile_root"
     tools:context=".Activities.CompleteProfileActivity">
 
     <TextView
@@ -28,8 +27,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:background="#D3D3D3"
-        android:padding="10dp"
         android:maxLength="20"
+        android:padding="10dp"
         android:textColorHint="#000"
         android:textSize="20sp" />
 
@@ -40,8 +39,8 @@
         android:layout_below="@+id/user_college"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
-        android:maxLength="20"
         android:fontFamily="@font/slim_joe"
+        android:maxLength="20"
         android:text="Place"
         android:textSize="20sp" />
 
@@ -55,8 +54,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:background="#D3D3D3"
-        android:padding="10dp"
         android:maxLength="20"
+        android:padding="10dp"
         android:textColorHint="#000"
         android:textSize="20sp" />
 
@@ -79,11 +78,11 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
-        android:textAlignment="viewStart"
         android:layout_marginTop="10dp"
         android:background="#D3D3D3"
         android:maxLength="140"
         android:padding="10dp"
+        android:textAlignment="viewStart"
         android:textColorHint="#000"
         android:textSize="20sp" />
 

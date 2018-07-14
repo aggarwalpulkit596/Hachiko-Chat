@@ -27,29 +27,6 @@
 
     <style name="Widget" />
 
-    <style name="Widget.TextInputLayout">
-        <item name="android:layout_height">@dimen/wrap_content</item>
-        <item name="android:layout_width">@dimen/input_width</item>
-        <item name="android:textColorHint">@color/color_input_hint</item>
-    </style>
-
-    <style name="Widget.TextEdit">
-        <item name="android:layout_height">@dimen/match_parent</item>
-        <item name="android:layout_width">@dimen/match_parent</item>
-        <item name="android:textColorHighlight">@color/color_text_highlight</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColorHint">@color/color_input_hint</item>
-        <!--<item name="android:background">@drawable/state</item>-->
-        <item name="android:textColor">@color/color_text</item>
-        <item name="android:padding">@dimen/text_padding</item>
-    </style>
-
-    <style name="Widget.Hint">
-        <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/color_text</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
     </style>
@@ -57,6 +34,7 @@
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
     <style name="MyDescriptionTextApperance" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">20sp</item>
     </style>

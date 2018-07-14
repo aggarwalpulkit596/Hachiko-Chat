@@ -1,10 +1,23 @@
 package me.dats.com.datsme.Models;
 
-public class Messages {
+import java.io.Serializable;
+
+public class Messages implements Serializable {
     private String message, type, from;
     private boolean seen;
     private long time;
 
+
+    public Messages() {
+    }
+
+    public Messages(String message, boolean seen, long time, String type, String from) {
+        this.message = message;
+        this.seen = seen;
+        this.time = time;
+        this.type = type;
+        this.from = from;
+    }
 
     public String getMessage() {
         return message;
@@ -43,17 +56,6 @@ public class Messages {
     }
 
     public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public Messages() {
-    }
-
-    public Messages(String message, boolean seen, long time, String type,String from) {
-        this.message = message;
-        this.seen = seen;
-        this.time = time;
-        this.type = type;
         this.from = from;
     }
 }

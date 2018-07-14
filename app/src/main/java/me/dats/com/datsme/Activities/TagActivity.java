@@ -1,10 +1,9 @@
 package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,7 +18,6 @@ import com.roughike.swipeselector.SwipeSelector;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.R;
@@ -27,7 +25,7 @@ import me.dats.com.datsme.R;
 
 public class TagActivity extends AppCompatActivity {
 
-    @BindViews({R.id.worldSelector,R.id.commmunicationselector,R.id.spiritualSelector,R.id.emotionalSelector,R.id.professionSelector})
+    @BindViews({R.id.worldSelector, R.id.commmunicationselector, R.id.spiritualSelector, R.id.emotionalSelector, R.id.professionSelector})
     SwipeSelector[] swipeSelectors;
 
     private DatabaseReference mDatabase;
@@ -78,14 +76,14 @@ public class TagActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Map<String,Object> tags = new HashMap<>();
+                Map<String, Object> tags = new HashMap<>();
                 tags.put("Worldview", "1");
                 mDatabase.updateChildren(tags)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                startActivity(new Intent(TagActivity.this, MapsActivity.class));
+                                    startActivity(new Intent(TagActivity.this, MapsActivity.class));
                                 }
                             }
                         });
