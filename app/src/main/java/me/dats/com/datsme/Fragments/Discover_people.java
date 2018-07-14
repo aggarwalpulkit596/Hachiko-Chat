@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -264,15 +265,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         setUpClusterer();
         setMarkers();
-        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
-            @Override
-            public boolean onClusterClick(Cluster<MyItem> cluster) {
-
-                Log.d("Zoom", "onClusterClick: camerazoom" + mMap.getCameraPosition().zoom);
-                Log.d("Zoom", "onClusterClick: maxzoom" + mMap.getMaxZoomLevel());
-                return false;
-            }
-        });
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
             public boolean onClusterItemClick(MyItem myItem) {
@@ -497,11 +489,12 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         List<MyItem> markertems = new ArrayList<>(cluster.getItems());
         for (int i = 0; i < markertems.size(); i++) {
             markertems.get(i).getSnippet();
-
-
+            Toast.makeText(getContext(), "hello", Toast.LENGTH_SHORT).show();
         }
+        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
+        BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
-        return false;
+        return true;
     }
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {

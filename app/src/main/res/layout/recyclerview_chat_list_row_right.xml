@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
+                android:autoLink="web"
                 android:padding="7dp"
                 android:text="Message Text"
                 android:textSize="16sp" />

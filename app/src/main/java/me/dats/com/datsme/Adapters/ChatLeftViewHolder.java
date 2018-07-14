@@ -3,6 +3,7 @@ package me.dats.com.datsme.Adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class ChatLeftViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final Messages chatModel, Context mContext) {
         //TODO set data to xml view via textivew.setText();
+        Linkify.addLinks(messageText, Linkify.WEB_URLS);
         messageText.setText(chatModel.getMessage());
         String time = DateUtils.formatDateTime(mContext, chatModel.getTime(), DateUtils.FORMAT_SHOW_TIME);
 

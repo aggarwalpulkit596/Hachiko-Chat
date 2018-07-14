@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:minWidth="100dp"
             android:padding="7dp"
+            android:autoLink="web"
             android:text="Message Text"
             android:textSize="16sp" />
 
