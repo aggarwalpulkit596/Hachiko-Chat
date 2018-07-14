@@ -23,39 +23,12 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
 
         super(context, map, clusterManager);
         Log.d(TAG, "onBeforeClusterItemRendered: it is called soon" );
-        clusterManager.getMarkerCollection().getMarkers();
     }
 
     @Override
     protected void onBeforeClusterItemRendered(final MyItem item, final MarkerOptions markerOptions) {
-        Log.d(TAG, "onBeforeClusterItemRendered:" + item.URL);
-
-        super.onBeforeClusterItemRendered(item, markerOptions);
-        Target t = new Target() {
-
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Log.d(TAG, "onBeforeClusterItemRendered:" + bitmap);
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
-        Picasso.get().load(item.URL).resize(150, 150)
-                .centerInside()
-                .transform(new BubbleTransformation(10))
-                .into(t);
-
-
+        Log.d(TAG, "onBeforeClusterItemRendered:" + item.getBitmap());
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getBitmap()));
     }
 
 }
