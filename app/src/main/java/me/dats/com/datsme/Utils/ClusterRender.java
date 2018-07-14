@@ -22,6 +22,8 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     public ClusterRender(Context context, GoogleMap map, ClusterManager clusterManager) {
 
         super(context, map, clusterManager);
+        Log.d(TAG, "onBeforeClusterItemRendered: it is called soon" );
+        clusterManager.getMarkerCollection().getMarkers();
     }
 
     @Override
@@ -55,4 +57,5 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
 
 
     }
+
 }

@@ -255,6 +255,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         });
         setMarkers();
         setUpClusterer();
+
     }
 
     private void setMarkers() {
@@ -273,7 +274,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                 mClusterManager.addItem(myItem);
-                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                 mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
                     @Override
                     public boolean onClusterClick(Cluster<MyItem> cluster) {
@@ -490,12 +490,13 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     }
 
     private void setUpClusterer() {
-        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
+        mClusterManager = new ClusterManager<>(getActivity(), mMap);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
         // Add cluster items (markers) to the cluster manager.
     }
