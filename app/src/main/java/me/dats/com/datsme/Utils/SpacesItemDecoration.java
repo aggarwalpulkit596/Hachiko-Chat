@@ -1,4 +1,4 @@
-package me.dats.com.datsme.Adapters;
+package me.dats.com.datsme.Utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.utils.MyPreference;
+import me.dats.com.datsme.Utils.MyPreference;
 
 public class CompleteProfileActivity extends AppCompatActivity {
 

@@ -48,7 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.utils.BlurImage;
+import me.dats.com.datsme.Utils.BlurImage;
 
 /**
  * A simple {@link Fragment} subclass.

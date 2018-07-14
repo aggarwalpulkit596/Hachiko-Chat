@@ -1,4 +1,4 @@
-package me.dats.com.datsme.utils;
+package me.dats.com.datsme.Utils;
 
 import android.graphics.Bitmap;
 import android.util.Log;

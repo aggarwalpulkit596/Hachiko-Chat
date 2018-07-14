@@ -58,7 +58,7 @@ import me.dats.com.datsme.Models.DateObject;
 import me.dats.com.datsme.Models.ListObject;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.utils.DateParser;
+import me.dats.com.datsme.Utils.DateParser;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -81,6 +81,9 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mMessagesList;
     @BindView(R.id.swipe_message_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    LinkedHashMap<String, Set<Messages>> groupedHashMap = new LinkedHashMap<>();
+    Set<Messages> list = null;
+    int i = 0;
     private String chatUser, userName, userImage, userOnline;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
@@ -96,10 +99,6 @@ public class ChatActivity extends AppCompatActivity {
     // Storage Firebase
     private StorageReference mImageStorage;
     private ProgressDialog loadingBar;
-    LinkedHashMap<String, Set<Messages>> groupedHashMap = new LinkedHashMap<>();
-    Set<Messages> list = null;
-    int i = 0;
-
 
     @Override
 

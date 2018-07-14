@@ -55,7 +55,7 @@ import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Zodiac;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.utils.MyPreference;
+import me.dats.com.datsme.Utils.MyPreference;
 
 public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 

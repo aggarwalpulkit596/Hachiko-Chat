@@ -29,6 +29,7 @@ import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Fragments.BottomSheetProfileFragment;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.BubbleTransformation;
 
 public class UsersViewAdapter extends RecyclerView.Adapter<UsersViewAdapter.UsersViewHolder> {
 

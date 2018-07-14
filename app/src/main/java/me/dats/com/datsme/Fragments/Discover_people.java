@@ -6,7 +6,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +43,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +53,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -66,10 +65,12 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Adapters.BubbleTransformation;
-import me.dats.com.datsme.Adapters.SpacesItemDecoration;
+import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.BubbleTransformation;
+import me.dats.com.datsme.Utils.ClusterRender;
+import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,7 +85,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.profile_box)
     RelativeLayout Profile_box;
     boolean IsProfileVisible = false;
-
     @BindView(R.id.rv)
     RecyclerView mRecyclerView;
     FusedLocationProviderClient mFusedLocationProviderClient;
@@ -103,6 +103,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             {75, 75, 50, 50, 100}
     };
     Users mUser;
+    float zoomLevel = 1.0f; //This goes up to 21
+    private ClusterManager<MyItem> mClusterManager;
     private Animation animShow, animHide;
     private DatabaseReference mUserRef;
     private GoogleMap mMap;
@@ -168,7 +170,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 mUserRef.updateChildren(locationMap);
                 if (firstlauch) {
                     firstlauch = false;
-                    float zoomLevel = 16.0f; //This goes up to 21
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomLevel));
                 }
             }
@@ -182,7 +183,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
 
         //to set max zoom and remove navigation button
-        mMap.setMaxZoomPreference(15.0f);
+//        mMap.setMaxZoomPreference(15.0f);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
@@ -219,6 +220,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 if (Timer > 0) {
                     countDownTimer.cancel();
                 }
+                zoomLevel++;
                 if (IsProfileVisible) {
                     IsProfileVisible = false;
                     Profile_box.startAnimation(animHide);
@@ -252,6 +254,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             }
         });
         setMarkers();
+        setUpClusterer();
     }
 
     private void setMarkers() {
@@ -266,46 +269,76 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 mUser = dataSnapshot.getValue(Users.class);
 
                 final String user_id = dataSnapshot.getKey();
+
                 final LatLng latLng1 = new LatLng(mUser.getLattitude(), mUser.getLongitude());
-
-                targets.put(user_id, new Target() {
+                final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+                mClusterManager.addItem(myItem);
+                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
+                mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
                     @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        LatLng uid = userMap.get(dataSnapshot.getKey());
-                        if (uid == null) {
-                            Marker marker = mMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                    .position(latLng1)
-                                    .title(user_id).snippet(user_id));
-                            markers.put(dataSnapshot.getKey(), marker);
-                            userMap.put(dataSnapshot.getKey(), latLng1);
-                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                @Override
-                                public boolean onMarkerClick(Marker marker) {
-                                    BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                                    BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                                    return true;
-                                }
-                            });
+                    public boolean onClusterClick(Cluster<MyItem> cluster) {
 
+                        Log.d("Zoom", "onClusterClick: camerazoom" + mMap.getCameraPosition().zoom);
+                        Log.d("Zoom", "onClusterClick: maxzoom" + mMap.getMaxZoomLevel());
+                        if (mMap.getCameraPosition().zoom < mMap.getMaxZoomLevel()) {
+                            zoomLevel++;
+                            if (zoomLevel == 21.0f) {
+                                zoomLevel = 17.0f;
+                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), zoomLevel));
                         }
-                    }
 
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+                        return true;
                     }
                 });
+                mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+                    @Override
+                    public boolean onClusterItemClick(MyItem myItem) {
+                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                        BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                        return true;
+                    }
+                });
+//                targets.put(user_id, new Target() {
+//                    @Override
+//                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                        LatLng uid = userMap.get(dataSnapshot.getKey());
+//                        if (uid == null) {
 
-                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
-                        .centerInside()
-                        .transform(new BubbleTransformation(10))
-                        .into(targets.get(user_id));
+
+//                            Marker marker = mMap.addMarker(new MarkerOptions()
+//                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+//                                    .position(latLng1)
+//                                    .title(user_id).snippet(user_id));
+//                            markers.put(dataSnapshot.getKey(), marker);
+//                            userMap.put(dataSnapshot.getKey(), latLng1);
+//                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                                @Override
+//                                public boolean onMarkerClick(Marker marker) {
+//                                    BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+//                                    BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+//                                    return true;
+//                                }
+//                            });
+
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                    }
+//                });
+//
+//                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+//                        .centerInside()
+//                        .transform(new BubbleTransformation(10))
+//                        .into(targets.get(user_id));
 
             }
 
@@ -319,20 +352,20 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         LatLng uid = userMap.get(dataSnapshot.getKey());
                         Marker marker = markers.get(dataSnapshot.getKey());
-                        if (marker != null) marker.remove();
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                .position(latLng1)
-                                .title(user_id).snippet(user_id));
-                        markers.put(dataSnapshot.getKey(), marker);
-                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(Marker marker) {
-                                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                                BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                                return true;
-                            }
-                        });
+                        // if (marker != null) marker.remove();
+//                        marker = mMap.addMarker(new MarkerOptions()
+//                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+//                                .position(latLng1)
+//                                .title(user_id).snippet(user_id));
+//                        markers.put(dataSnapshot.getKey(), marker);
+//                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                            @Override
+//                            public boolean onMarkerClick(Marker marker) {
+//                                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+//                                BottomSheetProfileFragment.newInstance(marker.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+//                                return true;
+//                            }
+//                        });
 
                     }
 
@@ -456,16 +489,16 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
-        Canvas canvas = new Canvas();
-        Bitmap bitmap = Bitmap.createBitmap(60, 60, Bitmap.Config.ARGB_8888);
-        canvas.setBitmap(bitmap);
-        drawable.setBounds(0, 0, 60, 60);
-        drawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    private void setUpClusterer() {
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
 
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
     }
-
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
 
@@ -501,6 +534,4 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         }
 
     }
-
-
 }

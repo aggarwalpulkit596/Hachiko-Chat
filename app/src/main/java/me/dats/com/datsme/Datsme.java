@@ -5,7 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
-import me.dats.com.datsme.utils.MyPreference;
+import me.dats.com.datsme.Utils.MyPreference;
 
 public class Datsme extends MultiDexApplication {
     public static Datsme myApp;
