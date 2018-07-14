@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -25,7 +24,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -47,9 +45,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -62,8 +57,10 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -79,7 +76,7 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Discover_people extends Fragment implements OnMapReadyCallback {
+public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public float Timer = 0;
@@ -96,7 +93,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     LocationRequest mLocationRequest;
     boolean mRequestingLocationUpdates;
     android.location.Location location;
-    HashMap<String,MyItem> ItemsMap=new HashMap<>();
+    HashMap<String, MyItem> ItemsMap = new HashMap<>();
     HashMap<String, LatLng> userMap = new HashMap<>();
     HashMap<String, Target> targets = new HashMap<>();
     int[][] worldview = new int[][]{
@@ -108,7 +105,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
     };
     Users mUser;
     float zoomLevel = 18.0f; //This goes up to 21\
-    boolean firstlauch=true;
+    boolean firstlauch = true;
 
     private ClusterManager<MyItem> mClusterManager;
     private Animation animShow, animHide;
@@ -137,9 +134,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
 
 
-
-
-
         toggle_profile_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,16 +160,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d("locationcallback called", "onLocationResult: "+locationResult);
+                Log.d("locationcallback called", "onLocationResult: " + locationResult);
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
                 Map<String, Object> locationMap = new HashMap<>();
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
                 mUserRef.updateChildren(locationMap);
-                if(firstlauch)
-                {
-                    firstlauch=false;
+                if (firstlauch) {
+                    firstlauch = false;
                     moveCamera();
                 }
             }
@@ -302,16 +295,16 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                Log.d("TAG", "onChildAdded: "+dataSnapshot);
+                Log.d("TAG", "onChildAdded: " + dataSnapshot);
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
 
-                if(userMap.get(user_id)==null) {
+                if (userMap.get(user_id) == null) {
 
-                    userMap.put(user_id,new LatLng(mUser.getLattitude(),mUser.getLongitude()));
+                    userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
 
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
-                    ItemsMap.put(user_id,myItem);
+                    ItemsMap.put(user_id, myItem);
                     targets.put(user_id, new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -345,44 +338,39 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
                 String user_id = dataSnapshot.getKey();
 
 
-                if(userMap.get(user_id).equals(null)){
+                userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
+                MyItem item = ItemsMap.get(user_id);
+                mClusterManager.removeItem(item);
+                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
-                }
-                else{
-                    userMap.put(user_id,new LatLng(mUser.getLattitude(),mUser.getLongitude()));
-                    MyItem item=ItemsMap.get(user_id);
-                    mClusterManager.removeItem(item);
-                    mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
-
-                    final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
-                    ItemsMap.put(user_id,myItem);
-                    targets.put(user_id, new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
-                            myItem.setBitmap(bitmap);
-                            mClusterManager.addItem(myItem);
-                            mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
-                    Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
-                            .centerInside()
-                            .transform(new BubbleTransformation(10))
-                            .into(targets.get(user_id));
-
-
-                }
+                final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+                ItemsMap.put(user_id, myItem);
+                targets.put(user_id, new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
+                        myItem.setBitmap(bitmap);
+                        mClusterManager.addItem(myItem);
+                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                     }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+                        .centerInside()
+                        .transform(new BubbleTransformation(10))
+                        .into(targets.get(user_id));
+
+
+            }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
@@ -498,9 +486,22 @@ public class Discover_people extends Fragment implements OnMapReadyCallback {
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
 
 
         // Add cluster items (markers) to the cluster manager.
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster cluster) {
+        List<MyItem> markertems = new ArrayList<>(cluster.getItems());
+        for (int i = 0; i < markertems.size(); i++) {
+            markertems.get(i).getSnippet();
+
+
+        }
+
+        return false;
     }
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {

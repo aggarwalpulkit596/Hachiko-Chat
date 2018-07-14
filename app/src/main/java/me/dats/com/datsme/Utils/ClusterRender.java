@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.squareup.picasso.Picasso;
@@ -23,6 +24,12 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
 
         super(context, map, clusterManager);
         Log.d(TAG, "onBeforeClusterItemRendered: it is called soon" );
+    }
+
+    @Override
+    protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
+        //start clustering if at least 2 items overlap
+        return cluster.getSize() > 1;
     }
 
     @Override
