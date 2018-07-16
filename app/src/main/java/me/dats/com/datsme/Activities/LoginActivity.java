@@ -59,7 +59,9 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.MyPreference;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -82,7 +84,9 @@ public class LoginActivity extends AppCompatActivity implements
     Button cancel, otp_submit;
     ProgressBar otp_progressbar;
     CountDownTimer cdt;
+
     private FirebaseAuth mAuth;
+
     private CallbackManager mCallbackManager;
     //For PhoneAuth
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -96,7 +100,9 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
         mAuth = FirebaseAuth.getInstance();
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         signInButton.setOnClickListener(this);
         phoneSignIn.setOnClickListener(this);
@@ -230,6 +236,7 @@ public class LoginActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
                             updateUI();
@@ -584,8 +591,19 @@ public class LoginActivity extends AppCompatActivity implements
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.i("TAG", "onStart");
         if (currentUser != null) {
+
+            if (Datsme.getPreferenceManager().getBoolean(MyPreference.ProfileId)) {
+
+                if (Datsme.getPreferenceManager().getBoolean(MyPreference.CompleteProfileId)) {
+                    startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                } else {
+                    startActivity(new Intent(LoginActivity.this, CompleteProfileActivity.class));
+                }
+            }
+
+        }
             //  dialog.show();
-            updateUI();
+            //updateUI();
 //            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
 //            {
 //                Log.i("TAG","Maps");
@@ -604,7 +622,7 @@ public class LoginActivity extends AppCompatActivity implements
 ////                startActivity(intent);}
 ////            else
 ////                updateUI();
-        }
+
     }
 
     private boolean validatePhoneNumber() {

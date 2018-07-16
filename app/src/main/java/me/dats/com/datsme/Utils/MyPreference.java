@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
  * Created by hp on 12-Jul-18.
  */
 public class MyPreference {
+
+    public static final String ProfileId= "ProfileId";
+    public static final String CompleteProfileId = "CompleteProfileId";
     public static final String USERNAME = "id";
     public static final String KEY_ACCESS_TOKEN = "access_token";
     public static final String COMPPRO = "DONE";
@@ -25,6 +28,16 @@ public class MyPreference {
 
         editor.apply();
 
+    }
+
+    public void putBoolean(String key,Boolean value)
+    {
+        editor.putBoolean(key,value);
+        editor.apply();
+    }
+    public boolean getBoolean(String key)
+    {
+        return sharedPreferences.getBoolean(key,false);
     }
 
     public void putString(String key, String value) {
@@ -49,6 +62,4 @@ public class MyPreference {
         editor.apply();
 
     }
-
-
 }

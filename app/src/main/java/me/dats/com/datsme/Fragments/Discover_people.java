@@ -303,6 +303,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
+                            if (getActivity()!=null)
                             mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                         }
 
@@ -333,6 +334,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
                 MyItem item = ItemsMap.get(user_id);
                 mClusterManager.removeItem(item);
+                if(getActivity()!=null)
                 mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
@@ -343,6 +345,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                         Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                         myItem.setBitmap(bitmap);
                         mClusterManager.addItem(myItem);
+                        if (getActivity()!=null)
                         mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                     }
 
@@ -487,8 +490,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public boolean onClusterClick(Cluster cluster) {
         List<MyItem> markertems = new ArrayList<>(cluster.getItems());
-        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
-        BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+//        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
+//        BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
         return true;
     }

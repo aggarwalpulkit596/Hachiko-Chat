@@ -10,7 +10,7 @@ import me.dats.com.datsme.Models.MyItem;
 
 public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<MyItem>
+    List<MyItem> Item;
 
     @NonNull
     @Override
