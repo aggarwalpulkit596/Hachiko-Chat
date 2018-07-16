@@ -95,6 +95,7 @@
         <activity
             android:name=".Activities.FriendsAcitivity"
             android:parentActivityName=".Activities.MapsActivity" />
+        <activity android:name=".Activities.Others_profile"></activity>
     </application>
 
 </manifest>
