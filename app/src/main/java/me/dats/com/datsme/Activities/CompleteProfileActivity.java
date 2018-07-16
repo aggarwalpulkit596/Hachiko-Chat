@@ -2,12 +2,14 @@ package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +38,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     @BindView(R.id.user_aboutyou)
     EditText userAbout;
 
+    private boolean doubleBackToExitPressedOnce = false;
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
 
@@ -66,7 +69,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
             }
         } else {
 
-            Datsme.getPreferenceManager().putString(MyPreference.COMPPRO, "true");
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("about", userAbout.getText().toString());
             userMap.put("place", userPlace.getText().toString());
@@ -76,11 +78,31 @@ public class CompleteProfileActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
                                 startActivity(new Intent(CompleteProfileActivity.this, TagActivity.class));
                                 finish();
                             }
                         }
                     });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Complete your Details", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }

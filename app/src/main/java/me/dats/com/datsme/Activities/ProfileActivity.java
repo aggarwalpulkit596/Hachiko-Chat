@@ -188,6 +188,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         myCalendar.get(Calendar.DAY_OF_MONTH));
                 d.getDatePicker().setMaxDate(System.currentTimeMillis());
                 d.show();
+
+
             }
         });
     }
@@ -223,9 +225,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             Snackbar snackBar = Snackbar.make(rootlayout
                     , "Age should be more than 18 years", Snackbar.LENGTH_LONG);
             snackBar.show();
-
-        } else {
-            cont.setEnabled(true);
         }
     }
 
@@ -238,7 +237,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 mProgessDialog = new ProgressDialog(this);
                 mProgessDialog.setMessage("Please wait while we upload the image");
                 mProgessDialog.setTitle("Uploading Image...");
-                mProgessDialog.setCanceledOnTouchOutside(true);
+                mProgessDialog.setCancelable(false);
                 mProgessDialog.show();
 
 
@@ -248,8 +247,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
 
                 final String current_userid = mCurrentUser.getUid();
 
+                Bitmap file = null;
+
                 Bitmap thumb_bitmap = null;
                 final byte[] thumb_byte;
+                final byte[] file_byte;
 
                 try {
                     thumb_bitmap = new Compressor(this)
@@ -258,18 +260,28 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                             .setQuality(75)
                             .compressToBitmap(thumb_file);
 
+                    file=new Compressor(this)
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(30)
+                            .compressToBitmap(thumb_file);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+
                 thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                file.compress(Bitmap.CompressFormat.JPEG, 100, baos1);
                 thumb_byte = baos.toByteArray();
+                file_byte = baos1.toByteArray();
 
                 StorageReference filepath = mStorageRef.child("profile_images").child(current_userid + ".jpg");
                 final StorageReference thumb_filepath = mStorageRef.child("profile_images").child("thumbs").child(current_userid + ".jpg");
 
                 final StorageReference ref = mStorageRef.child("profile_images").child(current_userid + ".jpg");
-                UploadTask uploadTask = ref.putFile(resultUri);
+                UploadTask uploadTask = ref.putBytes(file_byte);
 
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -351,8 +363,13 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         , "Image Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
             }
-        } else {
-            Datsme.getPreferenceManager().putString(MyPreference.USERNAME, "true");
+
+        }
+        else if(age1<18){
+            Snackbar snackBar = Snackbar.make(rootlayout
+                    , "Age should be more than 18 years", Snackbar.LENGTH_LONG);
+            snackBar.show();
+        }else {
             final String device_token = FirebaseInstanceId.getInstance().getToken();
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
@@ -370,6 +387,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
                                 mProgessDialog.dismiss();
                                 startActivity(new Intent(ProfileActivity.this, CompleteProfileActivity.class));
 

@@ -113,11 +113,10 @@ public class My_Profile extends Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
         newRef = mRef.child(uid);
+        dialog.show();
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                dialog.show();
 
                 name = String.valueOf(dataSnapshot.child("name").getValue());
                 about_u = String.valueOf(dataSnapshot.child("about").getValue());
@@ -287,9 +286,9 @@ public class My_Profile extends Fragment {
 
                 break;
             case "Log Out":
+
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
-                mAuth = null;
                 Intent i = new Intent(getActivity(), LoginActivity.class);
                 startActivity(i);
                 getActivity().finish();
