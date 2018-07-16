@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="me.dats.com.datsme.Activities.Others_profile">
+    <ImageView
+        android:id="@+id/other_image"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/logo"/>
+    <TextView
+        android:id="@+id/other_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NAME"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#000"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/other_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="about"
+        android:textSize="16dp"
+
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/other_college"
+        android:layout_width="wrap_content"
+        android:text="college"
+        android:padding="5dp"
+        android:textSize="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/other_place"
+        android:layout_width="wrap_content"
+        android:text="place"
+        android:padding="5dp"
+        android:textSize="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/other_dob"
+        android:layout_width="wrap_content"
+        android:text="dob"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/other_gender"
+        android:layout_width="wrap_content"
+        android:text="gender"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16dp"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
