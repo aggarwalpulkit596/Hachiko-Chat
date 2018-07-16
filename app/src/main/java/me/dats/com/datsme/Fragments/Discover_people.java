@@ -218,7 +218,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                         MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
             } else {
                 boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapsnight));
+                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
             }
         } catch (Resources.NotFoundException e) {
             // Oops, looks like the map style resource couldn't be found!
@@ -334,6 +334,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                     MyItem item = ItemsMap.get(user_id);
                     mClusterManager.removeItem(item);
+                    mClusterManager.cluster();
 
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                     ItemsMap.put(user_id, myItem);
