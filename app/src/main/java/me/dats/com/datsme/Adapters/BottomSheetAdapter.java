@@ -17,11 +17,11 @@ import me.dats.com.datsme.R;
 
 public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-     public List<MyItem> item;
+    ArrayList<? extends MyItem> item;
 
     Context mContext;
 
-    public BottomSheetAdapter(List<MyItem> item, Context context) {
+    public BottomSheetAdapter(ArrayList<? extends MyItem> item, Context context) {
         this.item = item;
         this.mContext = context;
         Log.i("TAG","sheetConstructor");

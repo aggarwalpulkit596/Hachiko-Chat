@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -42,4 +43,9 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getBitmap()));
     }
 
+    @Override
+    protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
+
+        super.onClusterItemRendered(clusterItem, marker);
+    }
 }

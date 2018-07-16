@@ -67,7 +67,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Adapters.BottomSheetAdapter;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
@@ -304,7 +303,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
-                            if (getActivity()!=null)
                             mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                         }
 
@@ -335,7 +333,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
                 MyItem item = ItemsMap.get(user_id);
                 mClusterManager.removeItem(item);
-                if(getActivity()!=null)
                 mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
@@ -346,7 +343,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                         Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                         myItem.setBitmap(bitmap);
                         mClusterManager.addItem(myItem);
-                        if (getActivity()!=null)
                         mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                     }
 
@@ -490,12 +486,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     @Override
     public boolean onClusterClick(Cluster cluster) {
-        List<MyItem> markertems = new ArrayList<>(cluster.getItems());
-        Log.i("TAG","onClusterClick");
-        BottomSheetAdapter bottomSheetAdapter=new BottomSheetAdapter(markertems,getContext());
-        Log.i("TAG","BottomSheet");
-//        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
-//        BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+
+        ArrayList<? extends MyItem> markeritems = new ArrayList<>(cluster.getItems());
+        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
+
+        BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
         return true;
     }
