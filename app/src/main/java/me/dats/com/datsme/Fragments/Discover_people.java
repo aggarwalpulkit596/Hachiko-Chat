@@ -67,6 +67,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Adapters.BottomSheetAdapter;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
@@ -490,6 +491,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public boolean onClusterClick(Cluster cluster) {
         List<MyItem> markertems = new ArrayList<>(cluster.getItems());
+        Log.i("TAG","onClusterClick");
+        BottomSheetAdapter bottomSheetAdapter=new BottomSheetAdapter(markertems,getContext());
+        Log.i("TAG","BottomSheet");
 //        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
 //        BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
