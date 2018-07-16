@@ -33,16 +33,23 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     }
 
     @Override
+    protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
+        super.onBeforeClusterRendered(cluster, markerOptions);
+
+    }
+
+    @Override
     public void setAnimation(boolean animate) {
         super.setAnimation(animate);
     }
 
     @Override
     protected void onBeforeClusterItemRendered(final MyItem item, final MarkerOptions markerOptions) {
+        super.onBeforeClusterItemRendered(item,markerOptions);
         Log.d(TAG, "onBeforeClusterItemRendered:" + item.getBitmap());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getBitmap()));
-    }
 
+    }
     @Override
     protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
 

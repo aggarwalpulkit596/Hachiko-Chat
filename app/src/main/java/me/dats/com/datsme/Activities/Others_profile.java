@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class Others_profile extends AppCompatActivity {
     @BindView(R.id.other_gender)
     TextView gender;
     String User,userName,oabout,ocollege,oplace,odob,ogender;
+    Bitmap bitmap;
     private DatabaseReference mRootRef;
 
     @Override
@@ -42,8 +44,11 @@ public class Others_profile extends AppCompatActivity {
         ButterKnife.bind(this);
         User = getIntent().getStringExtra("user_id");
         userName = getIntent().getStringExtra("name");
+        bitmap = (Bitmap) getIntent().getParcelableExtra("bitmap");
+
+        image.setImageBitmap(bitmap);
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mRef=mRootRef.child("users").child(User);
+        DatabaseReference mRef=mRootRef.child("Users").child(User);
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

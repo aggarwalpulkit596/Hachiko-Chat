@@ -38,7 +38,8 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyItem generalItem = item.get(position);
         BottomSheetViewHolder bottomSheetViewHolder = (BottomSheetViewHolder) holder;
-        bottomSheetViewHolder.bind(generalItem, mContext);
+        bottomSheetViewHolder.bind(generalItem, mContext,position);
+
     }
 
     @Override

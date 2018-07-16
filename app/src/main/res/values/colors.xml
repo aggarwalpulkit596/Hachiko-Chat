@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+<color name="whitebottomsheet">#9dffffff</color>
 
     <color name="datsme_color">#67D0C5</color>
 

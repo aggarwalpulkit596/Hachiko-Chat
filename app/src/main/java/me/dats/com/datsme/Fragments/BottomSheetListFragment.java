@@ -29,7 +29,7 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
 public class BottomSheetListFragment extends BottomSheetDialogFragment {
 
-    ArrayList<? extends MyItem> list;
+    ArrayList<MyItem> list;
     BottomSheetAdapter bottomSheetAdapter;
     @BindView(R.id.ItemsList_BottomSheetListFragment)
     RecyclerView mRecyclerView;
@@ -45,11 +45,11 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
 //
 //    }
 
-    public static BottomSheetListFragment newInstance( ArrayList<? extends MyItem> list) {
+    public static BottomSheetListFragment newInstance( ArrayList<MyItem> list) {
 
         BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("Items", (ArrayList<? extends Parcelable>) list);
+        bundle.putSerializable("Items",list);
         bottomSheetFragment.setArguments(bundle);
 
         return bottomSheetFragment;
@@ -68,7 +68,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.bottom_sheet_list_profile, container, false);
         ButterKnife.bind(this, root);
-        list = getArguments().getParcelableArrayList("Items");
+        list = (ArrayList<MyItem>) getArguments().getSerializable("Items");
 
         mRecyclerView.setHasFixedSize(true);
         int spacingInPixels = 10;
@@ -89,7 +89,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels - 50;
+        int width = metrics.widthPixels - 70;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);

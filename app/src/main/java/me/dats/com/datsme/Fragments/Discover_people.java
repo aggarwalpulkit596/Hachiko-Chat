@@ -291,10 +291,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
 
-                if (userMap.get(user_id) == null) {
+                if (userMap.get(user_id) == null && ItemsMap.get(user_id)==null)
+                {
 
                     userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
-
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                     ItemsMap.put(user_id, myItem);
                     targets.put(user_id, new Target() {
@@ -303,7 +303,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
-                            mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                         }
 
                         @Override
@@ -320,6 +319,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             .centerInside()
                             .transform(new BubbleTransformation(10))
                             .into(targets.get(user_id));
+                    mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                 }
 
             }
@@ -333,7 +333,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
                 MyItem item = ItemsMap.get(user_id);
                 mClusterManager.removeItem(item);
-                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                 ItemsMap.put(user_id, myItem);
@@ -343,7 +342,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                         Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                         myItem.setBitmap(bitmap);
                         mClusterManager.addItem(myItem);
-                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                     }
 
                     @Override
@@ -360,6 +358,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                         .centerInside()
                         .transform(new BubbleTransformation(10))
                         .into(targets.get(user_id));
+                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
 
             }
@@ -487,7 +486,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public boolean onClusterClick(Cluster cluster) {
 
-        ArrayList<? extends MyItem> markeritems = new ArrayList<>(cluster.getItems());
+        ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
         BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
 
         BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
