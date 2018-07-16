@@ -23,13 +23,17 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     public ClusterRender(Context context, GoogleMap map, ClusterManager clusterManager) {
 
         super(context, map, clusterManager);
-        Log.d(TAG, "onBeforeClusterItemRendered: it is called soon" );
     }
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
         //start clustering if at least 2 items overlap
         return cluster.getSize() > 1;
+    }
+
+    @Override
+    public void setAnimation(boolean animate) {
+        super.setAnimation(animate);
     }
 
     @Override

@@ -6,7 +6,9 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-public class MyItem implements ClusterItem {
+import java.io.Serializable;
+
+public class MyItem implements ClusterItem,Serializable {
     public String URL;
     private LatLng mPosition;
     private String mTitle;

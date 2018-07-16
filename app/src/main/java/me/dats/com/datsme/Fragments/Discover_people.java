@@ -269,7 +269,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             @Override
             public boolean onClusterItemClick(MyItem myItem) {
                 BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                BottomSheetProfileFragment. newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
                 return true;
             }
         });
@@ -487,10 +487,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public boolean onClusterClick(Cluster cluster) {
         List<MyItem> markertems = new ArrayList<>(cluster.getItems());
-        for (int i = 0; i < markertems.size(); i++) {
-            markertems.get(i).getSnippet();
-            Toast.makeText(getContext(), "hello", Toast.LENGTH_SHORT).show();
-        }
         BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
         BottomSheetListFragment.newInstance("abc").show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
