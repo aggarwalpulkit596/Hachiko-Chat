@@ -46,6 +46,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -109,6 +110,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     boolean firstlauch = true;
 
     private ClusterManager<MyItem> mClusterManager;
+    private  ClusterRender clusterRender;
     private Animation animShow, animHide;
     private DatabaseReference mUserRef;
     private GoogleMap mMap;
@@ -319,50 +321,46 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             .centerInside()
                             .transform(new BubbleTransformation(10))
                             .into(targets.get(user_id));
-                    mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                 }
 
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
+                if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
 
+                    MyItem item = ItemsMap.get(user_id);
+                    mClusterManager.removeItem(item);
 
-                userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
-                MyItem item = ItemsMap.get(user_id);
-                mClusterManager.removeItem(item);
+                    final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+                    ItemsMap.put(user_id, myItem);
+                    targets.put(user_id, new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
+                            myItem.setBitmap(bitmap);
+                            mClusterManager.addItem(myItem);
+                        }
 
-                final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
-                ItemsMap.put(user_id, myItem);
-                targets.put(user_id, new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
-                        myItem.setBitmap(bitmap);
-                        mClusterManager.addItem(myItem);
-                    }
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        }
 
-                    }
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
-                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
-                        .centerInside()
-                        .transform(new BubbleTransformation(10))
-                        .into(targets.get(user_id));
-                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
-
-
+                        }
+                    });
+                    Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+                            .centerInside()
+                            .transform(new BubbleTransformation(10))
+                            .into(targets.get(user_id));
+                }
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
@@ -479,9 +477,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
 
-
-        // Add cluster items (markers) to the cluster manager.
-    }
+        clusterRender=new ClusterRender(getActivity(), mMap, mClusterManager);
+        mClusterManager.setRenderer(clusterRender); }
 
     @Override
     public boolean onClusterClick(Cluster cluster) {

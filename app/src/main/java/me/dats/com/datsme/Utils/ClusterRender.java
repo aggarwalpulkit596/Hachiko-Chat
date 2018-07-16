@@ -27,6 +27,16 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     }
 
     @Override
+    public Marker getMarker(MyItem clusterItem) {
+        return super.getMarker(clusterItem);
+    }
+
+    @Override
+    public void onRemove() {
+        super.onRemove();
+    }
+
+    @Override
     protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
         //start clustering if at least 2 items overlap
         return cluster.getSize() > 1;
@@ -55,4 +65,8 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
 
         super.onClusterItemRendered(clusterItem, marker);
     }
+//    public void RemoveMarker(MyItem item)
+//    {
+//        getMarker(item).remove();
+//    }
 }
