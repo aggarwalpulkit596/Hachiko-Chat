@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -26,9 +27,25 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     }
 
     @Override
+    public Marker getMarker(MyItem clusterItem) {
+        return super.getMarker(clusterItem);
+    }
+
+    @Override
+    public void onRemove() {
+        super.onRemove();
+    }
+
+    @Override
     protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
         //start clustering if at least 2 items overlap
         return cluster.getSize() > 1;
+    }
+
+    @Override
+    protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
+        super.onBeforeClusterRendered(cluster, markerOptions);
+
     }
 
     @Override
@@ -38,8 +55,18 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
 
     @Override
     protected void onBeforeClusterItemRendered(final MyItem item, final MarkerOptions markerOptions) {
+        super.onBeforeClusterItemRendered(item,markerOptions);
         Log.d(TAG, "onBeforeClusterItemRendered:" + item.getBitmap());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getBitmap()));
-    }
 
+    }
+    @Override
+    protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
+
+        super.onClusterItemRendered(clusterItem, marker);
+    }
+//    public void RemoveMarker(MyItem item)
+//    {
+//        getMarker(item).remove();
+//    }
 }

@@ -265,7 +265,6 @@ public class My_Profile extends Fragment {
             case "Settings":
                 break;
             case "Edit":
-                item.setVisible(false);
                 setting.setVisibility(View.GONE);
                 save.setVisibility(View.VISIBLE);
 

@@ -26,7 +26,13 @@
     </style>
 
     <style name="Widget" />
+    <style name="CustomBottomSheet1DialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet1Style</item>
+    </style>
 
+    <style name="CustomBottomSheet1Style" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@color/whitebottomsheet</item>
+    </style>
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
     </style>

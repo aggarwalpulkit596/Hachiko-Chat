@@ -21,7 +21,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.dats.com.datsme.Adapters.PagerViewAdapter;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.MyPreference;
 
 public class MapsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,6 +55,12 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
+        //shared preference tokens
+        Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
+        Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
+
         ButterKnife.bind(this);
         SetmyviewPager();
     }
