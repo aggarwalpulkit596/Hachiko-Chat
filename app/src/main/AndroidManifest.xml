@@ -44,6 +44,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
 
         <service android:name=".Utils.MyFirebaseMessagingService">
             <intent-filter>
@@ -70,13 +73,7 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/mytheme">
-            <intent-filter>
-                <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/mytheme" />
         <activity
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.MapsActivity"
@@ -95,7 +92,13 @@
         <activity
             android:name=".Activities.FriendsAcitivity"
             android:parentActivityName=".Activities.MapsActivity" />
-        <activity android:name=".Activities.Others_profile"></activity>
+        <activity android:name=".Activities.Others_profile">
+            <intent-filter>
+                <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

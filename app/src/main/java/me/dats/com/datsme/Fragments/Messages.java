@@ -28,6 +28,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -116,6 +118,7 @@ public class Messages extends Fragment implements View.OnClickListener {
             }
         });
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(options) {
+            @NonNull
             @Override
             public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 Log.i("TAG", "onCreateViewHolder: " + firebaseRecyclerAdapter.getItemCount());
@@ -129,12 +132,13 @@ public class Messages extends Fragment implements View.OnClickListener {
                 final String[] name = new String[1];
                 final String[] image = new String[1];
 
+                assert uid != null;
                 mUsersDatabase.child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
 
-                        name[0] = documentSnapshot.child("name").getValue().toString();
-                        image[0] = documentSnapshot.child("thumb_image").getValue().toString();
+                        name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
+                        image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
 
 //                        if (documentSnapshot.hasChild("online")) {
 //                            String userOnline = documentSnapshot.child("online").getValue().toString();
@@ -145,7 +149,7 @@ public class Messages extends Fragment implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
@@ -183,7 +187,7 @@ public class Messages extends Fragment implements View.OnClickListener {
 
         View mView;
 
-        public FriendsViewHolder(View itemView) {
+        FriendsViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;

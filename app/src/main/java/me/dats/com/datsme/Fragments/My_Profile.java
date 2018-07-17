@@ -265,24 +265,24 @@ public class My_Profile extends Fragment {
             case "Settings":
                 dialog.show();
                 Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
-                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-                if(user==null)
-                {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user == null) {
                     Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                dialog.dismiss();
+                                Toast.makeText(getActivity(), "succefully deleted", Toast.LENGTH_SHORT).show();
+                            } else {
+                                dialog.dismiss();
+                                Toast.makeText(getActivity(), "aslndfklahlf", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
-                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            dialog.dismiss();
-                            Toast.makeText(getActivity(), "succefully deleted", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            dialog.dismiss();
-                            Toast.makeText(getActivity(), "aslndfklahlf", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
                 break;
             case "Edit":
                 setting.setVisibility(View.GONE);

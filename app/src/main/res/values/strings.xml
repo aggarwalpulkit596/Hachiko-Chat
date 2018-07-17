@@ -7,4 +7,5 @@
     <string name="fb_login_protocol_scheme">fb209447589680098</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="default_notification_channel_id">testchannelid</string>
 </resources>

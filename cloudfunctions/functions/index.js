@@ -167,4 +167,16 @@ exports.sendRequest = functions.database.ref('/notifications/{user_id}/{notifica
   });
 
     });
+
+
+  exports.removeUserFromDatabase = functions.auth.user()
+    .onDelete(function(event) {
+  // Get the uid of the deleted user.
+    var uid = event.auth.variable ? event.auth.variable.uid : null;
+
+  console.log('This was the notification Feature',uid);
+
+  // Remove the user from your Realtime Database's /users node.
+  return admin.database().ref("Users/" + uid).remove();
+});
 // [END import]
