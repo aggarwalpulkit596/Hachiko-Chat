@@ -54,9 +54,9 @@ public class Others_profile extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 name.setText(user.getName());
                 gender.setText(user.getGender());
-//                about.setText(user.getAbout());
-//                college.setText(user.getCollege());
-//                dob.setText(user.getDOB());
+                about.setText(user.getAbout());
+                college.setText(user.getCollege());
+                dob.setText(user.getDateofbirth());
             }
 
             @Override
