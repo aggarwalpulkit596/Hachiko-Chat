@@ -114,7 +114,6 @@ public class My_Profile extends Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
         newRef = mRef.child(uid);
-        dialog.show();
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -171,7 +170,6 @@ public class My_Profile extends Fragment {
                 Picasso.get()
                         .load(ur_image).into(target);
                 pic.setTag(target);
-                dialog.dismiss();
 
             }
 
