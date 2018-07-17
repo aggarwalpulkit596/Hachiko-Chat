@@ -81,8 +81,10 @@
         android:layout_marginTop="10dp"
         android:background="#D3D3D3"
         android:maxLength="140"
+        android:inputType="textMultiLine"
+        android:gravity="top|left"
+        android:scrollbars="vertical"
         android:padding="10dp"
-        android:textAlignment="viewStart"
         android:textColorHint="#000"
         android:textSize="20sp" />
 

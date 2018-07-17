@@ -257,13 +257,13 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     thumb_bitmap = new Compressor(this)
                             .setMaxHeight(200)
                             .setMaxWidth(200)
-                            .setQuality(75)
+                            .setQuality(30)
                             .compressToBitmap(thumb_file);
 
                     file=new Compressor(this)
                             .setMaxHeight(200)
                             .setMaxWidth(200)
-                            .setQuality(30)
+                            .setQuality(75)
                             .compressToBitmap(thumb_file);
 
                 } catch (IOException e) {

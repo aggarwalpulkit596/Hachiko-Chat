@@ -47,6 +47,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.BlurImage;
 
@@ -87,7 +88,7 @@ public class My_Profile extends Fragment {
     private FirebaseUser mUser;
     private String uid;
     private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Users");
-    private int BLUR_PRECENTAGE = 95;
+    private int BLUR_PRECENTAGE = 20;
 
 
     @Override
@@ -122,7 +123,7 @@ public class My_Profile extends Fragment {
                 about_u = String.valueOf(dataSnapshot.child("about").getValue());
                 ur_clg = String.valueOf(dataSnapshot.child("college").getValue());
                 ur_gender = String.valueOf(dataSnapshot.child("gender").getValue());
-                ur_image = String.valueOf(dataSnapshot.child("image").getValue());
+                ur_image = String.valueOf(dataSnapshot.child("thumb_image").getValue());
 
                 abtU.setInputType(InputType.TYPE_NULL);
                 abtU.setLines(4);
@@ -263,26 +264,26 @@ public class My_Profile extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getTitle().toString()) {
             case "Settings":
-                dialog.show();
-                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user == null) {
-                    Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                dialog.dismiss();
-                                Toast.makeText(getActivity(), "succefully deleted", Toast.LENGTH_SHORT).show();
-                            } else {
-                                dialog.dismiss();
-                                Toast.makeText(getActivity(), "aslndfklahlf", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
+//                dialog.show();
+//                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
+//                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+//                if(user==null)
+//                {
+//                    Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+//                }
+//                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            dialog.dismiss();
+//                            Toast.makeText(getActivity(), "succefully deleted", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else {
+//                            dialog.dismiss();
+//                            Toast.makeText(getActivity(), "aslndfklahlf", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
                 break;
             case "Edit":
                 setting.setVisibility(View.GONE);
@@ -308,6 +309,7 @@ public class My_Profile extends Fragment {
 
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
+                Datsme.getPreferenceManager().clearLoginData();
                 Intent i = new Intent(getActivity(), LoginActivity.class);
                 startActivity(i);
                 getActivity().finish();

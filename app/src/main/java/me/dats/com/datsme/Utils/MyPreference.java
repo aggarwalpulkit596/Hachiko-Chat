@@ -56,7 +56,8 @@ public class MyPreference {
 
     //Method to clear the login data of the application.
     public void clearLoginData() {
-
+        editor.remove(CompleteProfileId);
+        editor.remove(ProfileId);
         editor.remove(USERNAME);
         editor.remove(KEY_ACCESS_TOKEN);
         editor.apply();
