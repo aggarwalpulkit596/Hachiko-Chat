@@ -69,7 +69,9 @@ exports.sendRequest = functions.database.ref('/notifications/{user_id}/{notifica
           click_action : "com.example.pulkit.chatapp1_TARGET_NOTIFICATION"
         },
         data : {
-          from_user_id : from_user_id
+          from_user_id : from_user_id,
+          userName : userName
+
         }
       };
 
