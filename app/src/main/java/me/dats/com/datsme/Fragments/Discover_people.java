@@ -142,7 +142,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     Profile_box.startAnimation(animHide);
                     toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
                     Profile_box.setVisibility(View.INVISIBLE);
-                } else {
+                }
+                else {
                     if (Timer > 0) {
                         countDownTimer.cancel();
                     }
@@ -169,7 +170,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mUserRef.updateChildren(locationMap);
                 if (firstlauch) {
                     firstlauch = false;
-                    moveCamera();
+                   moveCamera();
                 }
             }
         };
@@ -228,7 +229,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 if (Timer > 0) {
                     countDownTimer.cancel();
                 }
-                zoomLevel++;
                 if (IsProfileVisible) {
                     IsProfileVisible = false;
                     Profile_box.startAnimation(animHide);
@@ -244,13 +244,16 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                 if (Timer > 0) {
                     countDownTimer.cancel();
+                    Log.d("TAG", "onCameraIdle: timer>0");
                 }
-                countDownTimer = new CountDownTimer(2000, 1000) {
+                countDownTimer = new CountDownTimer(3000, 1000) {
                     @Override
-                    public void onTick(long l) {
+                    public void onTick(long l)
+                    {
                         Timer = l / 1000;
-                    }
+                        Log.d("TAG", "onCameraIdle: timer"+Timer);
 
+                    }
                     @Override
                     public void onFinish() {
                         IsProfileVisible = true;
@@ -478,7 +481,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
     }
