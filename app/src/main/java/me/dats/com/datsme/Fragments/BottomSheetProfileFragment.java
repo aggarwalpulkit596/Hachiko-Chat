@@ -369,9 +369,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.user_startchat)
     public void startchat() {
         Intent chatintent = new Intent(getContext(), ChatActivity.class);
-        chatintent.putExtra("user_id", user_id);
-        chatintent.putExtra("name", name);
-        chatintent.putExtra("image", image);
+        chatintent.putExtra("from_user_id", user_id);
+        chatintent.putExtra("userName", name);
         startActivity(chatintent);
     }
 
