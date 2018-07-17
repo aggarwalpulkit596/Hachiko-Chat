@@ -1,7 +1,5 @@
 package me.dats.com.datsme.Activities;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity {
@@ -33,8 +32,7 @@ public class Others_profile extends AppCompatActivity {
     TextView dob;
     @BindView(R.id.other_gender)
     TextView gender;
-    String User,userName,oabout,ocollege,oplace,odob,ogender;
-    Bitmap bitmap;
+    String userId,userName;
     private DatabaseReference mRootRef;
 
     @Override
@@ -42,27 +40,23 @@ public class Others_profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_profile);
         ButterKnife.bind(this);
-        User = getIntent().getStringExtra("user_id");
+        userId = getIntent().getStringExtra("user_id");
         userName = getIntent().getStringExtra("name");
-        bitmap = (Bitmap) getIntent().getParcelableExtra("bitmap");
 
-        image.setImageBitmap(bitmap);
+
+
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mRef=mRootRef.child("Users").child(User);
+        DatabaseReference mRef=mRootRef.child("Users").child(userId);
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                oabout=String.valueOf(dataSnapshot.child("about").getValue());
-                ocollege=String.valueOf(dataSnapshot.child("college").getValue());
-                oplace=String.valueOf(dataSnapshot.child("place").getValue());
-                odob=String.valueOf(dataSnapshot.child("dob").getValue());
-                ogender=String.valueOf(dataSnapshot.child("gender").getValue());
-                name.setText(userName);
-                place.setText(oplace);
-                gender.setText(ogender);
-                about.setText(oabout);
-                college.setText(ocollege);
-                dob.setText(odob);
+
+                Users user = dataSnapshot.getValue(Users.class);
+                name.setText(user.getName());
+                gender.setText(user.getGender());
+//                about.setText(user.getAbout());
+//                college.setText(user.getCollege());
+//                dob.setText(user.getDOB());
             }
 
             @Override

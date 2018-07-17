@@ -352,7 +352,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 snackBar.show();
             } else if (user_dob.getText().equals("Date Of Birth")) {
                 snackBar = Snackbar.make(rootlayout
-                        , "DOB Cannot Be Empty", Snackbar.LENGTH_SHORT);
+                        , "dob Cannot Be Empty", Snackbar.LENGTH_SHORT);
                 snackBar.show();
             } else if (user_gender.getSelectedItem() == null) {
                 snackBar = Snackbar.make(rootlayout
@@ -374,7 +374,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
             userMap.put("gender", user_gender.getSelectedItem().toString());
-            userMap.put("DOB", user_dob.getText().toString());
+            userMap.put("dob", user_dob.getText().toString());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
             userMap.put("Zodiac", userzodiac);
