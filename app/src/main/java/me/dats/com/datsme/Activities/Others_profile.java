@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,20 +19,10 @@ import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity {
-    @BindView(R.id.other_image)
+    @BindView(R.id.Other_image)
     ImageView image;
-    @BindView(R.id.other_name)
+    @BindView(R.id.Other_name)
     TextView name;
-    @BindView(R.id.other_about)
-    TextView about;
-    @BindView(R.id.other_college)
-    TextView college;
-    @BindView(R.id.other_place)
-    TextView place;
-    @BindView(R.id.other_dob)
-    TextView dob;
-    @BindView(R.id.other_gender)
-    TextView gender;
     String userId,userName;
     private DatabaseReference mRootRef;
 
@@ -53,7 +44,8 @@ public class Others_profile extends AppCompatActivity {
 
                 Users user = dataSnapshot.getValue(Users.class);
                 name.setText(user.getName());
-                gender.setText(user.getGender());
+
+                Picasso.get().load(user.getThumb_image()).into(image);
 //                about.setText(user.getAbout());
 //                college.setText(user.getCollege());
 //                dob.setText(user.getDOB());
