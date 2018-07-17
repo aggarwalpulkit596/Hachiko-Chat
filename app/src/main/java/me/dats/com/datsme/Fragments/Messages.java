@@ -160,8 +160,8 @@ public class Messages extends Fragment implements View.OnClickListener {
 
 
                         Intent chatintent = new Intent(getActivity(), ChatActivity.class);
-                        chatintent.putExtra("user_id", uid);
-                        chatintent.putExtra("name", name[0]);
+                        chatintent.putExtra("from_user_id", uid);
+                        chatintent.putExtra("userName", name[0]);
                         chatintent.putExtra("image", image[0]);
                         startActivity(chatintent);
 

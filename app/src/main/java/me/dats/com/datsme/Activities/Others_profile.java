@@ -40,8 +40,8 @@ public class Others_profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_profile);
         ButterKnife.bind(this);
-        userId = getIntent().getStringExtra("user_id");
-        userName = getIntent().getStringExtra("name");
+        userId = getIntent().getStringExtra("from_user_id");
+        userName = getIntent().getStringExtra("userName");
 
 
 

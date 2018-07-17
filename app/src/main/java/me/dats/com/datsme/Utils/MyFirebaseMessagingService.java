@@ -32,7 +32,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBody = remoteMessage.getNotification().getBody();
             user_id = remoteMessage.getData().get("from_user_id");
             username = remoteMessage.getData().get("userName");
-            sendNotificationChat(notificationTitle, notificationBody, user_id, username);
+            if (notificationTitle.equals("New Message"))
+                sendNotificationChat(notificationTitle, notificationBody, user_id, username);
+            else
+                sendNotification(notificationTitle, notificationBody, user_id, username);
 
         }
 
@@ -43,8 +46,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotificationChat(String notificationTitle, String notificationBody, String notficationData, String notficationData2) {
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("user_id", notficationData);
-        intent.putExtra("name", notficationData2);
+        intent.putExtra("from_user_id", notficationData);
+        intent.putExtra("userName", notficationData2);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -66,20 +69,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private void sendNotification(String notificationTitle, String notificationBody, String notficationData, String username) {
+    private void sendNotification(String notificationTitle, String notificationBody, String notficationData, String notficationData2) {
         Intent intent = new Intent(this, Others_profile.class);
-        intent.putExtra("user_id", notficationData);
-        intent.putExtra("name", username);
-        Log.i("Notification", "PagerViewAdapter: " + notficationData);
+        intent.putExtra("from_user_id", notficationData);
+        intent.putExtra("userName", notficationData2);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "testchannelid")
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setAutoCancel(true)   //Automatically delete the notification
-                .setSmallIcon(R.mipmap.ic_launcher) //Notification icon
+                .setSmallIcon(R.drawable.logo) //Notification icon
                 .setContentIntent(pendingIntent)
+                .setBadgeIconType(R.drawable.logo)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
                 .setSound(defaultSoundUri);

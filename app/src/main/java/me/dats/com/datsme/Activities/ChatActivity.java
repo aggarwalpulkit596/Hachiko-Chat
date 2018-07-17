@@ -107,8 +107,8 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
 
-        chatUser = getIntent().getStringExtra("user_id");
-        userName = getIntent().getStringExtra("name");
+        chatUser = getIntent().getStringExtra("from_user_id");
+        userName = getIntent().getStringExtra("userName");
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();

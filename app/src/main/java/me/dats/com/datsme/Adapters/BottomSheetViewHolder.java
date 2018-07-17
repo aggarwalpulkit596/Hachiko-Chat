@@ -46,8 +46,8 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(mContext, Others_profile.class);
-                i.putExtra("user_id", model.getSnippet());
-                i.putExtra("name", model.getTitle());
+                i.putExtra("from_user_id", model.getSnippet());
+                i.putExtra("userName", model.getTitle());
                 view.getContext().startActivity(i);
             }
         });
