@@ -78,6 +78,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user_id);
+        Log.d("TAG", "newInstance: "+user_id);
         bottomSheetFragment.setArguments(bundle);
 
         return bottomSheetFragment;
@@ -204,6 +205,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private void init() {
         //Firebase Instance
+        Log.d("TAG", "newInstance: "+user_id);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
@@ -219,6 +221,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     private void bindData(DataSnapshot documentSnapshot) throws Exception {
 
         name = documentSnapshot.child("name").getValue().toString();
+        Log.d("TAG", "bindData: "+name+documentSnapshot);
         image = documentSnapshot.child("thumb_image").getValue().toString();
         about = documentSnapshot.child("about").getValue().toString();
         place = documentSnapshot.child("place").getValue().toString();

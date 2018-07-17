@@ -267,6 +267,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
             public boolean onClusterItemClick(MyItem myItem) {
+                Log.d("TAG", "onClusterItemClick: "+myItem.getTitle()+myItem.getSnippet());
                 BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
                 BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
                 return true;
@@ -301,6 +302,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
+                            if(getActivity()!=null)
                             mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                         }
 
@@ -332,6 +334,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     MyItem item = ItemsMap.get(user_id);
                     mClusterManager.removeItem(item);
                     mClusterManager.cluster();
+                    if(getActivity()!=null)
                     mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
 
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
@@ -342,6 +345,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
+                            if(getActivity()!=null)
                             mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
                         }
 
