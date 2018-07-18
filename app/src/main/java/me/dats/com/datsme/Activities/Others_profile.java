@@ -1,8 +1,12 @@
 package me.dats.com.datsme.Activities;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +35,9 @@ public class Others_profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_profile);
         ButterKnife.bind(this);
+
         userId = getIntent().getStringExtra("from_user_id");
         userName = getIntent().getStringExtra("userName");
-
 
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -45,10 +49,8 @@ public class Others_profile extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 name.setText(user.getName());
 
-                Picasso.get().load(user.getThumb_image()).into(image);
-//                about.setText(user.getAbout());
-//                college.setText(user.getCollege());
-//                dob.setText(user.getDOB());
+                Picasso.get().load(user.getImage()).centerCrop().fit().into(image);
+
             }
 
             @Override
