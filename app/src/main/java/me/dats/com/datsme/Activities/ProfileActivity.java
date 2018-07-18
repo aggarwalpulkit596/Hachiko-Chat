@@ -374,7 +374,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
             userMap.put("gender", user_gender.getSelectedItem().toString());
-            userMap.put("dob", user_dob.getText().toString());
+            userMap.put("dateofbirth", user_dob.getText().toString());
             userMap.put("image", download_url);
             userMap.put("thumb_image", thumb_downloadurl);
             userMap.put("Zodiac", userzodiac);

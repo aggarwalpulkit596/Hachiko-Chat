@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
+import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
@@ -78,7 +79,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user_id);
-        Log.d("TAG", "newInstance: "+user_id);
+        Log.d("TAG", "newInstance: " + user_id);
         bottomSheetFragment.setArguments(bundle);
 
         return bottomSheetFragment;
@@ -205,7 +206,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private void init() {
         //Firebase Instance
-        Log.d("TAG", "newInstance: "+user_id);
+        Log.d("TAG", "newInstance: " + user_id);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
@@ -220,30 +221,24 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
     private void bindData(DataSnapshot documentSnapshot) throws Exception {
 
-        name = documentSnapshot.child("name").getValue().toString();
-        Log.d("TAG", "bindData: "+name+documentSnapshot);
-        image = documentSnapshot.child("thumb_image").getValue().toString();
-        about = documentSnapshot.child("about").getValue().toString();
-        place = documentSnapshot.child("place").getValue().toString();
-        college = documentSnapshot.child("college").getValue().toString();
-        age = documentSnapshot.child("DOB").getValue().toString();
+        Users user = documentSnapshot.getValue(Users.class);
+
+        age = user.getDateofbirth();
         Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(age);
         Date now = new Date();
         long timeBetween = now.getTime() - date1.getTime();
         double yearsBetween = timeBetween / 3.15576e+10;
         int age1 = (int) Math.floor(yearsBetween);
         age_yrs = Integer.toString(age1);
-        mProfileName.setText(name);
-        mProfileAbout.setText(about);
-        mProfilePlace.setText(place);
-        mProfileCollege.setText(college);
+        mProfileName.setText(user.getName());
+        mProfileAbout.setText(user.getAbout());
+        mProfilePlace.setText(user.getPlace());
+        mProfileCollege.setText(user.getCollege());
         mProfileAge.setText(", " + age_yrs);
-
-        if (!image.equals("default"))
-            Picasso.get()
-                    .load(image)
-                    .placeholder(R.drawable.default_avatar)
-                    .into(mProfileImage);
+        Picasso.get()
+                .load(user.getThumb_image())
+                .placeholder(R.drawable.default_avatar)
+                .into(mProfileImage);
 
     }
 
@@ -374,9 +369,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.user_startchat)
     public void startchat() {
         Intent chatintent = new Intent(getContext(), ChatActivity.class);
-        chatintent.putExtra("user_id", user_id);
-        chatintent.putExtra("name", name);
-        chatintent.putExtra("image", image);
+        chatintent.putExtra("from_user_id", user_id);
+        chatintent.putExtra("userName", name);
         startActivity(chatintent);
     }
 
@@ -389,7 +383,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels - 50;
+        int width = metrics.widthPixels - 150;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);
