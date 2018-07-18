@@ -9,9 +9,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_myprofile"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         app:titleTextColor="#fff"
         android:layout_gravity="center_vertical"
         android:background="@color/datsme_color"
@@ -19,7 +19,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -70,7 +70,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="100dp">
 
@@ -82,8 +82,8 @@
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
+                    android:background="#dfffd8"
+                    android:scaleType="centerCrop" />
 
                 <RelativeLayout
                     android:id="@+id/MYPROFILE_TOP_VIEW"
@@ -96,7 +96,7 @@
                         android:id="@+id/above_backdrop"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:src="@drawable/logo"
+                        android:src="@drawable/default_avatar"
                         app:civ_border_color="#fff"
                         app:civ_border_width="5dp"></de.hdodenhof.circleimageview.CircleImageView>
 

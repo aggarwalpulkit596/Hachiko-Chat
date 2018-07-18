@@ -43,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +76,7 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener {
+public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public float Timer = 0;
@@ -142,8 +143,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     Profile_box.startAnimation(animHide);
                     toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
                     Profile_box.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     if (Timer > 0) {
                         countDownTimer.cancel();
                     }
@@ -170,7 +170,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mUserRef.updateChildren(locationMap);
                 if (firstlauch) {
                     firstlauch = false;
-                   moveCamera();
+                    moveCamera();
                 }
             }
         };
@@ -190,6 +190,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnCameraIdleListener(this);
+        mMap.setOnCameraMoveStartedListener(this);
 
 //        mMap.setMaxZoomPreference(15.0f);
         mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -204,6 +206,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient
                 .requestLocationUpdates(mLocationRequest,
                         mLocationCallback, null);
+
         mRequestingLocationUpdates = true;
 
 
@@ -223,54 +226,12 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         }
 
 
-        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-            @Override
-            public void onCameraMoveStarted(int i) {
-                if (Timer > 0) {
-                    countDownTimer.cancel();
-                }
-                if (IsProfileVisible) {
-                    IsProfileVisible = false;
-                    Profile_box.startAnimation(animHide);
-                    toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
-                    Profile_box.setVisibility(View.INVISIBLE);
-                }
-            }
-
-        });
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-
-                if (Timer > 0) {
-                    countDownTimer.cancel();
-                    Log.d("TAG", "onCameraIdle: timer>0");
-                }
-                countDownTimer = new CountDownTimer(3000, 1000) {
-                    @Override
-                    public void onTick(long l)
-                    {
-                        Timer = l / 1000;
-                        Log.d("TAG", "onCameraIdle: timer"+Timer);
-
-                    }
-                    @Override
-                    public void onFinish() {
-                        IsProfileVisible = true;
-                        toggle_profile_button.setImageResource(R.drawable.ic_expand_less_black_24dp);
-                        Profile_box.setVisibility(View.VISIBLE);
-                        Profile_box.startAnimation(animShow);
-                    }
-                }.start();
-            }
-        });
-
         setUpClusterer();
         setMarkers();
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
             public boolean onClusterItemClick(MyItem myItem) {
-                Log.d("TAG", "onClusterItemClick: "+myItem.getTitle()+myItem.getSnippet());
+                Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
                 BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
                 BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
                 return true;
@@ -302,11 +263,18 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     targets.put(user_id, new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
+
                             myItem.setBitmap(bitmap);
+
                             mClusterManager.addItem(myItem);
-                            if(getActivity()!=null)
-                            mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
+
+                            mClusterManager.cluster();
+                            clusterRender.onAdd();//added
+
+//                            if (getActivity() != null)//removed
+//                                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
                         }
 
                         @Override
@@ -332,24 +300,34 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
+
                 if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
 
                     MyItem item = ItemsMap.get(user_id);
+
                     mClusterManager.removeItem(item);
                     mClusterManager.cluster();
-                    if(getActivity()!=null)
-                    mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
+                    clusterRender.onRemove();//added
+
+//                    if (getActivity() != null)//removed
+//                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
 
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+
                     ItemsMap.put(user_id, myItem);
+                    userMap.put(user_id,new LatLng(mUser.getLattitude(),mUser.getLongitude()));
+
                     targets.put(user_id, new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                             Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
-                            if(getActivity()!=null)
-                            mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));
+                            mClusterManager.cluster();
+                            clusterRender.onAdd();//added
+
+                            //if (getActivity() != null)//removed
+                              //  mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
                         }
 
                         @Override
@@ -479,10 +457,14 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         mClusterManager = new ClusterManager(getActivity(), mMap);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
+
+        if(getActivity()!=null)//added
+        clusterRender=new ClusterRender(getActivity(),mMap,mClusterManager);//added
+
+        mClusterManager.setRenderer(clusterRender);
+
     }
 
     @Override
@@ -494,6 +476,47 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
         return true;
+    }
+
+    @Override
+    public void onCameraIdle() {
+        mClusterManager.onCameraIdle();
+
+        if (Timer > 0) {
+            countDownTimer.cancel();
+            Log.d("TAG", "onCameraIdle: timer>0");
+        }
+        countDownTimer = new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long l) {
+                Timer = l / 1000;
+                Log.d("TAG", "onCameraIdle: timer" + Timer);
+
+            }
+
+            @Override
+            public void onFinish() {
+                IsProfileVisible = true;
+                toggle_profile_button.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                Profile_box.setVisibility(View.VISIBLE);
+                Profile_box.startAnimation(animShow);
+            }
+        }.start();
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+
+        if (Timer > 0) {
+            countDownTimer.cancel();
+        }
+        if (IsProfileVisible) {
+            IsProfileVisible = false;
+            Profile_box.startAnimation(animHide);
+            toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
+            Profile_box.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {

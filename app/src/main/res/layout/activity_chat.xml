@@ -49,7 +49,7 @@
             android:background="#DCDCDC"
             android:onClick="sendImage"
             android:padding="10dp"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            app:srcCompat="@drawable/ic_person_add_black_24dp" />
 
         <EditText
             android:id="@+id/chat_msgview"

@@ -1,8 +1,12 @@
 package me.dats.com.datsme.Activities;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,20 +23,10 @@ import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity {
-    @BindView(R.id.other_image)
+    @BindView(R.id.Other_image)
     ImageView image;
-    @BindView(R.id.other_name)
+    @BindView(R.id.Other_name)
     TextView name;
-    @BindView(R.id.other_about)
-    TextView about;
-    @BindView(R.id.other_college)
-    TextView college;
-    @BindView(R.id.other_place)
-    TextView place;
-    @BindView(R.id.other_dob)
-    TextView dob;
-    @BindView(R.id.other_gender)
-    TextView gender;
     String userId,userName;
     private DatabaseReference mRootRef;
 
@@ -40,9 +35,9 @@ public class Others_profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_profile);
         ButterKnife.bind(this);
+
         userId = getIntent().getStringExtra("from_user_id");
         userName = getIntent().getStringExtra("userName");
-
 
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -53,10 +48,9 @@ public class Others_profile extends AppCompatActivity {
 
                 Users user = dataSnapshot.getValue(Users.class);
                 name.setText(user.getName());
-                gender.setText(user.getGender());
-                about.setText(user.getAbout());
-                college.setText(user.getCollege());
-                dob.setText(user.getDateofbirth());
+
+                Picasso.get().load(user.getImage()).centerCrop().fit().into(image);
+
             }
 
             @Override

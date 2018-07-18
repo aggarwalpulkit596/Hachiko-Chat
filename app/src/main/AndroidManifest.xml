@@ -92,7 +92,9 @@
         <activity
             android:name=".Activities.FriendsAcitivity"
             android:parentActivityName=".Activities.MapsActivity" />
-        <activity android:name=".Activities.Others_profile">
+
+        <activity android:name=".Activities.Others_profile"
+            android:theme="@style/mytheme">
             <intent-filter>
                 <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION" />
 

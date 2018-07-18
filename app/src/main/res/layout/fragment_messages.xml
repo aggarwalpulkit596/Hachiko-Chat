@@ -10,13 +10,27 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_messages"
+        android:theme="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        app:titleTextColor="#fff"
         android:layout_gravity="center_vertical"
         android:background="@color/datsme_color"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Friends"></android.support.v7.widget.Toolbar>
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Datsme" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
 
     <LinearLayout
