@@ -82,43 +82,16 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/user_sendrequest"
-        android:layout_width="match_parent"
+        android:id="@+id/view_Other_profile"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_aboutyou"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="70dp"
-        android:layout_marginStart="70dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/button_background_blue"
-        android:text="Send Request"
+        android:text="View Profile"
+        android:textAllCaps="true"
+        android:layout_marginBottom="20dp"
         android:textColor="#fff" />
-
-    <Button
-        android:id="@+id/user_cancelrequest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_sendrequest"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="70dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/button_background_blue"
-        android:text="Cancel Request"
-        android:textColor="#fff" />
-
-    <Button
-        android:id="@+id/user_startchat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_sendrequest"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/button_background_blue"
-        android:text="Chat"
-        android:textColor="#fff"
-        android:visibility="gone" />
 
 </RelativeLayout>

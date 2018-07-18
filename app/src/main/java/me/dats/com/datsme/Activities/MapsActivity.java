@@ -69,8 +69,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         String user_id = getIntent().getStringExtra("From");
 
-        viewPager.setOffscreenPageLimit(2);
-
         mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(), user_id);
         Log.i("Notification", "PagerViewAdapter: " + user_id);
 

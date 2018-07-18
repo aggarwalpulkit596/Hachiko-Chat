@@ -29,6 +29,11 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     }
 
     @Override
+    public void setAnimation(boolean animate) {
+        super.setAnimation(animate);
+    }
+
+    @Override
     protected void onBeforeClusterItemRendered(MyItem item,MarkerOptions markerOptions) {
 
         Log.d(TAG, "onBeforeClusterItemRendered:" + item.getBitmap());
