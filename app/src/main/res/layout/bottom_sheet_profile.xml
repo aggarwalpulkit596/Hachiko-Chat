@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:fontFamily="@font/big_john" android:textColor="#000"
+            android:textColor="#000"
             android:textSize="22sp" />
 
         <TextView
@@ -38,7 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:fontFamily="@font/big_john"
             android:textColor="#000"
             android:textSize="22sp" />
     </LinearLayout>
@@ -69,7 +68,6 @@
         android:layout_below="@+id/usercollege"
         android:layout_marginStart="40dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/slim_joe"
         android:textSize="18sp" />
 
     <TextView

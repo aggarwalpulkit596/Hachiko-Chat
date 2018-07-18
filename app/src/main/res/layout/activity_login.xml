@@ -19,8 +19,7 @@
         android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:fontFamily="@font/big_john"
-        android:text="datsme"
+        android:text="Datsme"
         android:textColor="#000"
         android:textSize="40sp" />
 
@@ -59,7 +58,6 @@
         android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/button_background_blue"
-        android:fontFamily="@font/big_john"
         android:text="Verify"
         android:textColor="#fff" />
 
@@ -69,7 +67,6 @@
         android:layout_below="@+id/btn_verify"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:fontFamily="@font/big_john"
         android:text="OR"
         android:textColor="#000"
         android:textSize="25dp" />

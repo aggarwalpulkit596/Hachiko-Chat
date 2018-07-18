@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/big_john"
                 android:text="Top Profiles"
                 android:textColor="#000"
                 android:textSize="20dp" />

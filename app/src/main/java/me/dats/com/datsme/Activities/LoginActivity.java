@@ -1,14 +1,18 @@
 package me.dats.com.datsme.Activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -211,7 +215,11 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
-
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS, Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        if (!hasPermissions(LoginActivity.this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(LoginActivity.this, PERMISSIONS, PERMISSION_ALL);
+        }
     }
 
     public void gSignIn() {
@@ -602,8 +610,8 @@ public class LoginActivity extends AppCompatActivity implements
             }
 
         }
-            //  dialog.show();
-            //updateUI();
+        //  dialog.show();
+        //updateUI();
 //            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
 //            {
 //                Log.i("TAG","Maps");
@@ -659,6 +667,17 @@ public class LoginActivity extends AppCompatActivity implements
                 this,               // Activity (for callback binding)
                 mCallbacks,         // OnVerificationStateChangedCallbacks
                 token);             // ForceResendingToken from callbacks
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
