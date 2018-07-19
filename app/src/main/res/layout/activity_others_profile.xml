@@ -76,7 +76,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/Other_addFriend"
+                    android:id="@+id/Other_firstButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
@@ -85,7 +85,7 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/Other_addIcon"
+                        android:id="@+id/Other_firstIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -94,25 +94,25 @@
                     <TextView
                         style="@style/TextAppearance.AppCompat.Title"
                         android:layout_width="wrap_content"
+                        android:id="@+id/Other_firstText"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/Other_addIcon"
+                        android:layout_toRightOf="@+id/Other_firstIcon"
                         android:text="ADD FRIEND"
                         android:textColor="#FFF" />
                 </RelativeLayout>
                 <RelativeLayout
-                    android:id="@+id/Other_Friends"
+                    android:id="@+id/Other_secondButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="275dp"
+                    android:layout_marginTop="335dp"
                     android:background="@drawable/button_datsme_color"
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/Other_FriendsIcon"
+                        android:id="@+id/Other_secondIcon"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_centerVertical="true"
@@ -121,68 +121,12 @@
                     <TextView
                         style="@style/TextAppearance.AppCompat.Title"
                         android:layout_width="wrap_content"
+                        android:id="@+id/Other_secondText"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/Other_FriendsIcon"
+                        android:layout_toRightOf="@+id/Other_secondIcon"
                         android:text="FRIENDS"
-                        android:textColor="#FFF" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/Other_requestSent"
-                    android:layout_width="210dp"
-                    android:visibility="gone"
-                    android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="275dp"
-                    android:background="@drawable/button_datsme_color"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/Other_requestIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:rotation="-30"
-                        android:src="@drawable/request_send" />
-
-                    <TextView
-                        style="@style/TextAppearance.AppCompat.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/Other_requestIcon"
-                        android:text="Request sent"
-                        android:textColor="#FFF" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/Other_cancelrequest"
-                    android:layout_width="210dp"
-                    android:layout_height="50dp"
-                    android:visibility="gone"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="335dp"
-                    android:background="@drawable/button_datsme_color"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/Other_cancelrequestIcon"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/cancel_request" />
-
-                    <TextView
-                        style="@style/TextAppearance.AppCompat.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/Other_cancelrequestIcon"
-                        android:text="Cancel Request"
                         android:textColor="#FFF" />
                 </RelativeLayout>
 
