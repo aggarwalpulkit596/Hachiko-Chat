@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -37,9 +38,15 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     protected void onBeforeClusterItemRendered(MyItem item,MarkerOptions markerOptions) {
 
         Log.d(TAG, "onBeforeClusterItemRendered:" + item.getBitmap());
+        item.setMyItemMarker(getMarker(item));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getBitmap()));
 
 
     }
 
+    @Override
+    protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
+        clusterItem.setMyItemMarker(marker);
+        super.onClusterItemRendered(clusterItem, marker);
+    }
 }

@@ -39,6 +39,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,6 +47,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -65,6 +67,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTouch;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
@@ -76,7 +80,7 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
+public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,GoogleMap.OnCameraMoveListener{
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public float Timer = 0;
@@ -104,7 +108,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             {75, 75, 50, 50, 100}
     };
     Users mUser;
-    float zoomLevel = 18.0f; //This goes up to 21\
+    float MaxZoom=19.05f;
+    float zoomLevel = 15.0f; //This goes up to 21\
     boolean firstlauch = true;
 
     private ClusterManager<MyItem> mClusterManager;
@@ -189,20 +194,23 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveStartedListener(this);
+        mMap.setOnCameraMoveListener(this);
 
-//        mMap.setMaxZoomPreference(15.0f);
+
+        mMap.setMaxZoomPreference(MaxZoom);
+
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
-
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mMap.setMyLocationEnabled(true);
         mFusedLocationProviderClient
                 .requestLocationUpdates(mLocationRequest,
                         mLocationCallback, null);
@@ -260,6 +268,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
                     final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                     ItemsMap.put(user_id, myItem);
+
                     targets.put(user_id, new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -271,7 +280,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             mClusterManager.addItem(myItem);
 
                             mClusterManager.cluster();
-                            clusterRender.onAdd();//added
+                            //clusterRender.onAdd();//added
 
 //                            if (getActivity() != null)//removed
 //                                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
@@ -305,9 +314,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                     MyItem item = ItemsMap.get(user_id);
 
+                    Marker marker=item.getMyItemMarker();
+                    mClusterManager.getMarkerManager().remove(marker);
                     mClusterManager.removeItem(item);
                     mClusterManager.cluster();
-                    clusterRender.onRemove();//added
+                    //clusterRender.onRemove();//added
 
 //                    if (getActivity() != null)//removed
 //                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
@@ -324,7 +335,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             myItem.setBitmap(bitmap);
                             mClusterManager.addItem(myItem);
                             mClusterManager.cluster();
-                            clusterRender.onAdd();//added
+                          //  clusterRender.onAdd();//added
 
                             //if (getActivity() != null)//removed
                               //  mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
@@ -470,18 +481,44 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public boolean onClusterClick(Cluster cluster) {
 
-        ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
-        BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
+        if(zoomLevel==MaxZoom)
+        {
+            ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
+            BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
 
-        BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+            BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+        }
+        else if(zoomLevel<MaxZoom){
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+
+//            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
+//            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+//                    new CameraPosition.Builder()
+//                            .target(coordinate)
+//                            .tilt(90)
+//                            .zoom(zoomLevel+1)
+//                            .build()));
+
+        }
+
 
         return true;
     }
 
     @Override
     public void onCameraIdle() {
-        mClusterManager.onCameraIdle();
 
+        mClusterManager.onCameraIdle();
+        if(mMap.getMapType()==GoogleMap.MAP_TYPE_HYBRID&& mMap.getCameraPosition().zoom<17.05f)
+        {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            zoomLevel=mMap.getCameraPosition().zoom;
+        }
+        else if(mMap.getMapType()==GoogleMap.MAP_TYPE_NORMAL && mMap.getCameraPosition().zoom>17.05f){
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            zoomLevel=mMap.getCameraPosition().zoom;
+        }
         if (Timer > 0) {
             countDownTimer.cancel();
             Log.d("TAG", "onCameraIdle: timer>0");
@@ -516,6 +553,12 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             toggle_profile_button.setImageResource(R.drawable.ic_expand_more_black_24dp);
             Profile_box.setVisibility(View.INVISIBLE);
         }
+
+    }
+
+    @Override
+    public void onCameraMove() {
+zoomLevel=mMap.getCameraPosition().zoom;
 
     }
 
@@ -554,6 +597,20 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
+
+    @OnClick(R.id.location_icon)
+    public void goToMyLocation()
+    {
+        LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition.Builder()
+                        .target(coordinate)
+                        .tilt(90)
+                        .zoom(17.05f)
+                        .build()));
+        zoomLevel=mMap.getCameraPosition().zoom;
+    }
 //    private void getDeviceLoaction() {
 //        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 //        try {

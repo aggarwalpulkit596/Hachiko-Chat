@@ -30,22 +30,17 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     public final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @BindView(R.id.messages)
-    LinearLayout messages;
+    ImageView messages;
 
     @BindView(R.id.discover)
-    LinearLayout discover;
+    ImageView discover;
 
     @BindView(R.id.myprofile)
-    LinearLayout myprofile;
+    ImageView myprofile;
 
     @BindView(R.id.map_view_pager)
     ViewPager viewPager;
 
-    @BindView(R.id.myprofile_icon)
-    ImageView myProfile_icon;
-
-    @BindView(R.id.message_icon)
-    ImageView message_icon;
     String cont1;
 
     PagerViewAdapter mPagerViewdapter;
