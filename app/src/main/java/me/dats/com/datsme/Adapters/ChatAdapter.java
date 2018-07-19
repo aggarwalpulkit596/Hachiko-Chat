@@ -1,9 +1,11 @@
 package me.dats.com.datsme.Adapters;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<ListObject> listObjects;
     private Context mContext;
     private FirebaseAuth mAuth;
+//    final int width = getScreensWidh();
+//    public int getScreensWidh() {
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        return size.x;
+//
+//    }
 
     public ChatAdapter(List<ListObject> listObjects, Context mContext) {
         this.listObjects = listObjects;

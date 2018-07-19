@@ -8,8 +8,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/in_message_bg"
-        android:padding="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/chart_grey">
 
         <!--<de.hdodenhof.circleimageview.CircleImageView-->
         <!--android:id="@+id/message_image"-->
@@ -23,26 +25,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:padding="3dp">
 
             <TextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="100dp"
                 android:autoLink="web"
-                android:padding="7dp"
-                android:text="Message Text"
-                android:textSize="16sp" />
+                android:layout_marginRight="10dp"
+                android:textColor="#000"
+                android:text=""
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/text_message_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="10dp"
                 android:text="11:40"
-                android:textSize="12sp" />
+                android:textSize="9sp" />
 
             <!--<TextView-->
             <!--android:id="@+id/name_text_layout"-->
