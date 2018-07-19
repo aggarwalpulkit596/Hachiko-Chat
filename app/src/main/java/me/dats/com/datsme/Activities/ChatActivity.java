@@ -458,43 +458,44 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getMessage() {
 
-        String message = mMsgView.getText().toString();
+        String message = mMsgView.getText().toString().trim();
+        if(message!=null) {
 
-        if (!TextUtils.isEmpty(message)) {
+            if (!TextUtils.isEmpty(message)) {
 
-            String current_user_ref = "messages/" + uid + "/" + chatUser;
-            String chat_user_ref = "messages/" + chatUser + "/" + uid;
+                String current_user_ref = "messages/" + uid + "/" + chatUser;
+                String chat_user_ref = "messages/" + chatUser + "/" + uid;
 
-            DatabaseReference userMessagePush = mRootRef.child("messages")
-                    .child(uid).child(chatUser).push();
+                DatabaseReference userMessagePush = mRootRef.child("messages")
+                        .child(uid).child(chatUser).push();
 
-            String push_id = userMessagePush.getKey();
+                String push_id = userMessagePush.getKey();
 
-            Map<String, Object> messageMap = new HashMap<>();
-            messageMap.put("message", message);
-            messageMap.put("seen", false);
-            messageMap.put("type", "text");
-            messageMap.put("time", ServerValue.TIMESTAMP);
-            messageMap.put("from", uid);
+                Map<String, Object> messageMap = new HashMap<>();
+                messageMap.put("message", message);
+                messageMap.put("seen", false);
+                messageMap.put("type", "text");
+                messageMap.put("time", ServerValue.TIMESTAMP);
+                messageMap.put("from", uid);
 
-            Map<String, Object> messageUserMap = new HashMap<>();
-            messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-            messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+                Map<String, Object> messageUserMap = new HashMap<>();
+                messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+                messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
-            mMsgView.setText("");
+                mMsgView.setText("");
 
-            mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (databaseError != null) {
-                        Log.i("TAG", "onComplete: " + databaseError.getMessage().toString());
+                mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.i("TAG", "onComplete: " + databaseError.getMessage().toString());
+                        }
                     }
-                }
-            });
+                });
+
+            }
 
         }
-
-
     }
 
     public void sendImage(View view) {

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
+
 public class ChatRightViewHolder extends RecyclerView.ViewHolder {
     private final String TAG = ChatRightViewHolder.class.getSimpleName();
     TextView messageText;
