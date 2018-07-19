@@ -610,26 +610,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
 
         }
-        //  dialog.show();
-        //updateUI();
-//            if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true")&&Datsme.getPreferenceManager().getString(MyPreference.COMPPRO).equals("true"))
-//            {
-//                Log.i("TAG","Maps");
-//                Intent intent=new Intent(LoginActivity.this,MapsActivity.class);
-//                startActivity(intent);
-//            }
-//            else if(Datsme.getPreferenceManager().getString(MyPreference.USERNAME).equals("true"))
-//            {
-//                Log.i("TAG","Complete");
-//                Intent intent=new Intent(LoginActivity.this,CompleteProfileActivity.class);
-//                startActivity(intent);
-//            }
-////            else{
-////                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-////                dialog.dismiss();
-////                startActivity(intent);}
-////            else
-////                updateUI();
 
     }
 

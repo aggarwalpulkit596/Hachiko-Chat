@@ -68,6 +68,8 @@ public class Others_profile extends AppCompatActivity {
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
+        userId = getIntent().getStringExtra("from_user_id");
+        userName = getIntent().getStringExtra("userName");
         mCurrentUser
                 = FirebaseAuth.getInstance().getCurrentUser();
         current_uid = mCurrentUser.getUid();
@@ -84,8 +86,6 @@ public class Others_profile extends AppCompatActivity {
 
         cancelRequest.setVisibility(View.GONE);
 
-        userId = getIntent().getStringExtra("from_user_id");
-        userName = getIntent().getStringExtra("userName");
 
 
 

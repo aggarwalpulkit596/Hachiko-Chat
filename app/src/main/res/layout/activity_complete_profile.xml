@@ -64,7 +64,7 @@
         android:layout_below="@+id/user_place"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
-        android:text="ABout You"
+        android:text="About You"
         android:textSize="20sp" />
 
     <EditText
