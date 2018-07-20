@@ -23,7 +23,7 @@ public class MyItem implements ClusterItem, Serializable {
         this.marker =marker;
     }
 
-    private Marker marker;
+    private transient Marker marker;
     private transient Bitmap bitmap;
 
     public MyItem(double lat, double lng) {

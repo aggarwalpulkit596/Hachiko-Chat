@@ -86,8 +86,8 @@
 
                     <ImageView
                         android:id="@+id/Other_firstIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_person_add_black_24dp" />
 
@@ -126,7 +126,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@+id/Other_secondIcon"
-                        android:text="FRIENDS"
+                        android:text="Cancel request"
                         android:textColor="#FFF" />
                 </RelativeLayout>
 
@@ -134,12 +134,30 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="#fff"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
-
+                android:visibility="gone"
+                android:id="@+id/profile_shown"
+                android:layout_height="match_parent">
+                <Button
+                    android:layout_width="match_parent"
+                    android:id="@+id/unfriend"
+                    android:layout_height="wrap_content"
+                    android:text="Unfriend"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:id="@+id/chat"
+                    android:layout_height="wrap_content"
+                    android:text="chat"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/profile_hidden"
+                android:visibility="gone"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -155,6 +173,8 @@
                     android:textAlignment="center"
                     android:textColor="#a19f9f" />
             </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 

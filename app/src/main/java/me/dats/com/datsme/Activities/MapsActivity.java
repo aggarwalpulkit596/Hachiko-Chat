@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,8 +42,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.map_view_pager)
     ViewPager viewPager;
 
-    String cont1;
-
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -55,7 +54,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         //shared preference tokens
         Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
         Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
-
         ButterKnife.bind(this);
         SetmyviewPager();
     }
@@ -191,4 +189,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         }, 2000);
     }
 
+    public void getProfileFragment() {
+        viewPager.setCurrentItem(2);
+    }
 }
