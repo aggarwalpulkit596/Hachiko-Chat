@@ -50,6 +50,10 @@ public class SplashScreen extends AppCompatActivity {
                             startActivity(new Intent(SplashScreen.this, CompleteProfileActivity.class));
                             finish();
                         }
+                    } else {
+                        Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreen.this, splashLogo, ViewCompat.getTransitionName(splashLogo));
+                        startActivity(intent, options.toBundle());
                     }
 
                 } else {
