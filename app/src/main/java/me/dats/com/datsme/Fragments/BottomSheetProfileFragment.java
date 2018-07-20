@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +52,9 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     @BindView(R.id.user_age)
     TextView mProfileAge;
 
+    @BindView(R.id.view_Other_profile)
+    Button view_Other_Profile;
+
     private String user_id;
 
     public BottomSheetProfileFragment() {
@@ -70,7 +75,6 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
-
     }
 
     @Override
@@ -105,6 +109,17 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         user = documentSnapshot.getValue(Users.class);
 
+        if(user_id== FirebaseAuth.getInstance().getCurrentUser().getUid())
+        {
+            view_Other_Profile.setEnabled(false);
+            view_Other_Profile.setVisibility(View.GONE);
+        }
+        else{
+            view_Other_Profile.setEnabled(true);
+            view_Other_Profile.setVisibility(View.VISIBLE);
+
+        }
+
         String age = user.getDateofbirth();
         Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(age);
         Date now = new Date();
@@ -123,15 +138,6 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
                 .into(mProfileImage);
 
     }
-
-
-//    @OnClick(R.id.user_startchat)
-//    public void startchat() {
-//        Intent chatintent = new Intent(getContext(), ChatActivity.class);
-//        chatintent.putExtra("from_user_id", user_id);
-//        chatintent.putExtra("userName", name);
-//        startActivity(chatintent);
-//    }
 
 
     @OnClick(R.id.view_Other_profile)

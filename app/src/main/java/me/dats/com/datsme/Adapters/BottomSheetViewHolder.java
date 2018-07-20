@@ -9,9 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.Others_profile;
+import me.dats.com.datsme.Fragments.BottomSheetListFragment;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.R;
 
@@ -30,7 +35,7 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
         name_parent = itemView.findViewById(R.id.user_name_parent);
     }
 
-    public void bind(final MyItem model, final Context mContext, int position) {
+    public void bind(final MyItem model, final Context mContext, int position, final BottomSheetListFragment bottomSheetListFragment) {
 
         if (position % 2 == 0) {
             name_parent.setBackgroundColor(Color.rgb(245, 6, 6));
@@ -45,10 +50,18 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(mContext, Others_profile.class);
-                i.putExtra("from_user_id", model.getSnippet());
-                i.putExtra("userName", model.getTitle());
-                view.getContext().startActivity(i);
+                if(model.getSnippet()!= FirebaseAuth.getInstance().getCurrentUser().getUid())
+                {
+                    Intent i = new Intent(mContext, Others_profile.class);
+                    i.putExtra("from_user_id", model.getSnippet());
+                    i.putExtra("userName", model.getTitle());
+                    view.getContext().startActivity(i);
+                }
+                else{
+                    bottomSheetListFragment.dismiss();
+                    ((MapsActivity)mContext).getProfileFragment();
+                }
+
             }
         });
 

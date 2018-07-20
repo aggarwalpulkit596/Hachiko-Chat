@@ -451,6 +451,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
                         BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 

@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import me.dats.com.datsme.Fragments.BottomSheetListFragment;
 import me.dats.com.datsme.Models.MyItem;
-import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
 public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -20,10 +19,12 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     ArrayList<? extends MyItem> item;
 
     Context mContext;
+    BottomSheetListFragment bottomSheetListFragment;
 
-    public BottomSheetAdapter(ArrayList<? extends MyItem> item, Context context) {
+    public BottomSheetAdapter(ArrayList<? extends MyItem> item, Context context, BottomSheetListFragment bottomSheetListFragment) {
         this.item = item;
         this.mContext = context;
+        this.bottomSheetListFragment=bottomSheetListFragment;
         Log.i("TAG","sheetConstructor");
     }
 
@@ -38,7 +39,7 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyItem generalItem = item.get(position);
         BottomSheetViewHolder bottomSheetViewHolder = (BottomSheetViewHolder) holder;
-        bottomSheetViewHolder.bind(generalItem, mContext,position);
+        bottomSheetViewHolder.bind(generalItem, mContext,position,bottomSheetListFragment);
 
     }
 
