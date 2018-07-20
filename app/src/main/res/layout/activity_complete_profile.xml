@@ -1,104 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/completeprofile_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/custom_background"
+    android:fillViewport="true"
     tools:context=".Activities.CompleteProfileActivity">
 
-    <TextView
-        android:id="@+id/textview1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:text="College"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/user_college"
+    <RelativeLayout
+        android:id="@+id/completeprofile_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textview1"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:background="#D3D3D3"
-        android:maxLength="20"
-        android:padding="10dp"
-        android:textColorHint="#000"
-        android:textSize="20sp" />
+        android:background="@drawable/custom_background"
+        tools:context=".Activities.CompleteProfileActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_college"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:maxLength="20"
-        android:text="Place"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#9043666A"
+            android:paddingBottom="13dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="14dp"
+            android:text="Tell us something \nabout yourself..."
+            android:textColor="#fff"
+            android:textSize="35sp" />
 
-    <EditText
-        android:id="@+id/user_place"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:background="#D3D3D3"
-        android:maxLength="20"
-        android:padding="10dp"
-        android:textColorHint="#000"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/heading"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"
+            android:text="Where do you study?"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/aboutyoutextview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_place"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:text="About You"
-        android:textSize="20sp" />
+        <EditText
+            android:id="@+id/user_college"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview1"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:background="#90FFFFFF"
+            android:hint="Institution"
+            android:maxLength="20"
+            android:padding="10dp"
+            android:textColorHint="#707070"
+            android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/user_aboutyou"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_below="@+id/aboutyoutextview"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:background="#D3D3D3"
-        android:maxLength="140"
-        android:inputType="textMultiLine"
-        android:gravity="top|left"
-        android:scrollbars="vertical"
-        android:padding="10dp"
-        android:textColorHint="#000"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_college"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:maxLength="20"
+            android:text="Where do you live?"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginStart="70dp"
-        android:background="@drawable/button_background_blue"
-        android:onClick="addToDatBase"
-        android:text="Continue"
-        android:textColor="#fff"
-        android:textSize="18sp" />
+        <EditText
+            android:id="@+id/user_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:background="#90FFFFFF"
+            android:hint="City"
+            android:maxLength="20"
+            android:padding="10dp"
+            android:textColorHint="#707070"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/aboutyoutextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_place"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="How would you describe yourself?"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/user_aboutyou"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@+id/aboutyoutextview"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:background="#90FFFFFF"
+            android:gravity="top|left"
+            android:hint="Bio...."
+            android:inputType="textMultiLine"
+            android:maxLength="140"
+            android:layout_marginBottom="100dp"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:textColorHint="#707070"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="107dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/user_aboutyou"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/button_background_orange"
+            android:onClick="addToDatBase"
+            android:text="Done Here!"
+            android:textColor="#fff"
+            android:textSize="14sp" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
