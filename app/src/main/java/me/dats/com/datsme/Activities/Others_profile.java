@@ -163,20 +163,22 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                     }
                     mLoadProcess.dismiss();
 
-                } else {
-
+                }
+                else{
                     mFriendsDatabase.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
                             if (dataSnapshot.hasChild(user_id)) { //if already friends
 
                                 mCurrent_State = "friends";
 
-                                button[0].setEnabled(false);//we dont want to click here when we are friends its not unfriend button
+                                button[0].setOnClickListener(null);
+
                                 textView[0].setText("Friends");
                                 imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.friends));
                                 setvisibility(1, false);
-                                setvisibility(0, true);
+
 
                                 profileshown.setVisibility(View.VISIBLE);
                                 profilehidden.setVisibility(View.GONE);
@@ -184,7 +186,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                             } else {//if no friend
                                 mCurrent_State = "not friends";
 
-                                textView[0].setText("add friend");
+                                textView[0].setText("Add Friend");
                                 imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
                                 setvisibility(1, false);
                                 setvisibility(0, true);
@@ -205,7 +207,6 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                         }
                     });
 
-
                 }
             }
 
@@ -214,6 +215,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 mLoadProcess.dismiss();
             }
         });
+
 
     }
 
@@ -267,6 +269,12 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                             if (databaseError == null) {
                                 mCurrent_State = "not friends";
                                 unfriend.setEnabled(true);
+                                profileshown.setVisibility(View.GONE);
+                                profilehidden.setVisibility(View.VISIBLE);
+                                setvisibility(0,true);
+                                setvisibility(1,false);
+                                textView[0].setText("Add Friend");
+                                imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
                             } else {
                                 String error = databaseError.getMessage();
                                 Toast.makeText(Others_profile.this, error, Toast.LENGTH_SHORT).show();
@@ -338,7 +346,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
                                     mCurrent_State = "not friends";
 
-                                    textView[0].setText("add friend");
+                                    textView[0].setText("Add Friend");
                                     imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
                                     setvisibility(1,false);
                                     setvisibility(0,true);
@@ -395,7 +403,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                                 public void onSuccess(Void aVoid) {
 
                                     mCurrent_State = "not friends";
-                                    textView[0].setText("add friend");
+                                    textView[0].setText("Add friend");
                                     imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
                                     setvisibility(1,false);
                                     setvisibility(0,true);
