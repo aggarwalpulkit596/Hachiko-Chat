@@ -277,7 +277,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.chat:
-                Intent i=new Intent();
+                Intent i=new Intent(Others_profile.this,ChatActivity.class);
                 i.putExtra("from_user_id",user_id);
                 i.putExtra("userName",userName);
                 startActivity(i);
