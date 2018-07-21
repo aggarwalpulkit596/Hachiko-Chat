@@ -1,17 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="@drawable/custom_background">
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="49dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo"
+        android:transitionName="logo" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,75 +20,48 @@
         android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:text="Datsme"
-        android:textColor="#000"
-        android:textSize="40sp" />
-
-    <LinearLayout
-        android:id="@+id/ll1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+91"
-            android:textColor="#000"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/edittext_phoneno"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:hint="Enter your number"
-            android:textColor="#000"
-            android:textColorHint="#000"
-            android:textSize="20dp" />
-    </LinearLayout>
+        android:text="DATSME"
+        android:textColor="#FFF"
+        android:textSize="45sp"
+        android:textStyle="bold" />
 
     <Button
-        android:id="@+id/btn_verify"
+        android:id="@+id/btn_phonesignin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="70dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background_blue"
-        android:text="Verify"
-        android:textColor="#fff" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_verify"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:text="OR"
-        android:textColor="#000"
-        android:textSize="25dp" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/btn_gSignIn"
-        android:layout_width="250dp"
         android:layout_height="43dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="29dp" />
+        android:layout_above="@+id/btn_fbSignIn"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp"
+        android:background="@drawable/button_background_white"
+        android:drawableLeft="@drawable/cellphone"
+        android:onClick="phoneauth"
+        android:paddingStart="15dp"
+        android:text="Continue with Mobile Number"
+        android:textColor="#4267B2"
+        android:textSize="13sp" />
+
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/btn_fbSignIn"
-        android:layout_width="250dp"
-        android:layout_height="53dp"
+        style="@style/FacebookLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
         android:layout_above="@+id/btn_gSignIn"
-        android:layout_alignStart="@+id/btn_gSignIn"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="14dp"
-        android:padding="10dp" />
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btn_gSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="79dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp" />
 
 
 </RelativeLayout>

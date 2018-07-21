@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
@@ -13,6 +14,16 @@ public class MyItem implements ClusterItem, Serializable {
     private transient LatLng mPosition;
     private String mTitle;
     private String mSnippet;
+
+    public Marker getMyItemMarker() {
+        return this.marker;
+    }
+
+    public void setMyItemMarker(Marker marker) {
+        this.marker =marker;
+    }
+
+    private transient Marker marker;
     private transient Bitmap bitmap;
 
     public MyItem(double lat, double lng) {

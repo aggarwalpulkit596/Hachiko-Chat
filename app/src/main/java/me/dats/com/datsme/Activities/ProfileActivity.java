@@ -18,7 +18,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -68,7 +67,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     @BindView(R.id.user_gender)
     Spinner user_gender;
     @BindView(R.id.user_dob)
-    TextView user_dob;
+    EditText user_dob;
+    @BindView(R.id.user_dob_button)
+    Button user_dobbtn;
     @BindView(R.id.button2)
     Button cont;
     String thumb_downloadurl = null;
@@ -178,6 +179,17 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             }
 
         };
+        user_dobbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                d.getDatePicker().setMaxDate(System.currentTimeMillis());
+                d.show();
+            }
+        });
         user_dob.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -260,7 +272,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                             .setQuality(30)
                             .compressToBitmap(thumb_file);
 
-                    file=new Compressor(this)
+                    file = new Compressor(this)
                             .setMaxHeight(200)
                             .setMaxWidth(200)
                             .setQuality(75)
@@ -364,12 +376,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 snackBar.show();
             }
 
-        }
-        else if(age1<18){
+        } else if (age1 < 18) {
             Snackbar snackBar = Snackbar.make(rootlayout
                     , "Age should be more than 18 years", Snackbar.LENGTH_LONG);
             snackBar.show();
-        }else {
+        } else {
             final String device_token = FirebaseInstanceId.getInstance().getToken();
             Map<String, String> userMap = new HashMap<>();
             userMap.put("name", user_displayname.getText().toString());
@@ -387,7 +398,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
+                                Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
                                 mProgessDialog.dismiss();
                                 startActivity(new Intent(ProfileActivity.this, CompleteProfileActivity.class));
 

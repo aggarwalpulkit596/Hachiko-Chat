@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/custom_background"
     android:fillViewport="true"
     tools:context=".Activities.ProfileActivity">
 
@@ -13,12 +14,11 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/border"
-            android:src="@drawable/add"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/defaultavatar"
             android:tint="#d3d3d3" />
 
         <EditText
@@ -30,11 +30,10 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="40dp"
-            android:background="#D3D3D3"
             android:hint="Username"
             android:inputType="textCapWords"
             android:padding="10dp"
-            android:textAlignment="center"
+            android:textAlignment="viewStart"
             android:textSize="20sp" />
 
         <Spinner
@@ -46,41 +45,66 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="10dp"
-            android:background="#D3D3D3"
+            android:background="#fff"
             android:padding="10dp"
             android:textAlignment="center"
             android:textColorHint="#000"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/user_dob"
+        <!--<TextView-->
+        <!--android:id="@+id/user_dob"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/user_gender"-->
+        <!--android:layout_centerInParent="true"-->
+
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="Date Of Birth"-->
+        <!--android:textAlignment="viewStart"-->
+        <!--android:textSize="20sp" />-->
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_gender"
             android:layout_centerInParent="true"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp"
-            android:background="#D3D3D3"
-            android:padding="10dp"
-            android:text="Date Of Birth"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/user_dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="DD/MM/YYYY"
+                android:inputType="none" />
+
+            <Button
+                android:id="@+id/user_dob_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_event_black_24dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="match_parent"
+            android:layout_width="107dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_dob"
-            android:layout_marginBottom="40dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/button_background_blue"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/button_background_orange"
             android:onClick="Savetodatabase"
-            android:text="Continue"
+            android:text="Done Here!"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
 
     </RelativeLayout>

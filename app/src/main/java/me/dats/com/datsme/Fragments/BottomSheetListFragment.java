@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Adapters.BottomSheetAdapter;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.R;
@@ -45,7 +46,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
 //
 //    }
 
-    public static BottomSheetListFragment newInstance( ArrayList<MyItem> list) {
+    public static BottomSheetListFragment newInstance(ArrayList<MyItem> list) {
 
         BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
         Bundle bundle = new Bundle();
@@ -76,7 +77,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemViewCacheSize(10);
-        bottomSheetAdapter = new BottomSheetAdapter(list, getContext());
+        bottomSheetAdapter = new BottomSheetAdapter(list,getActivity(),this);
         mRecyclerView.setAdapter(bottomSheetAdapter);
         return root;
     }

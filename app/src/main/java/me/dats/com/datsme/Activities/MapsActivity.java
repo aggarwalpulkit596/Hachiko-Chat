@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,23 +31,16 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     public final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @BindView(R.id.messages)
-    LinearLayout messages;
+    ImageView messages;
 
     @BindView(R.id.discover)
-    LinearLayout discover;
+    ImageView discover;
 
     @BindView(R.id.myprofile)
-    LinearLayout myprofile;
+    ImageView myprofile;
 
     @BindView(R.id.map_view_pager)
     ViewPager viewPager;
-
-    @BindView(R.id.myprofile_icon)
-    ImageView myProfile_icon;
-
-    @BindView(R.id.message_icon)
-    ImageView message_icon;
-    String cont1;
 
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
@@ -60,7 +54,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         //shared preference tokens
         Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
         Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
-
         ButterKnife.bind(this);
         SetmyviewPager();
     }
@@ -196,4 +189,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         }, 2000);
     }
 
+    public void getProfileFragment() {
+        viewPager.setCurrentItem(2);
+    }
 }

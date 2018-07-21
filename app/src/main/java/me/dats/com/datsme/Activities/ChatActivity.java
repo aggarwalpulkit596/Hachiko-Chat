@@ -131,11 +131,8 @@ public class ChatActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-
                 mCurrentPage++;
                 itemPos = 0;
-
                 loadmoreMessages();
             }
 
@@ -460,7 +457,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getMessage() {
 
         String message = mMsgView.getText().toString().trim();
-        if(message!=null) {
+        if (message != null) {
 
             if (!TextUtils.isEmpty(message)) {
 
