@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.internal.SignInButtonImpl;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -57,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements
     public ProgressDialog dialog;
     Dialog dialog1;
     @BindView(R.id.btn_gSignIn)
-    SignInButton signInButton;
+    SignInButtonImpl signInButton;
     @BindView(R.id.btn_fbSignIn)
     LoginButton fbSignInBtn;
 
