@@ -6,6 +6,8 @@
 
         android:color="@color/datsme_color" />
 
-    <corners android:radius="5dp" />
+    <size
+        android:height="40dp"
+        android:width="20dp"/>
 
 </shape>
