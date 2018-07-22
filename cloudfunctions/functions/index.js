@@ -171,14 +171,48 @@ exports.sendRequest = functions.database.ref('/notifications/{user_id}/{notifica
     });
 
 
-  exports.removeUserFromDatabase = functions.auth.user()
-    .onDelete(function(event) {
-  // Get the uid of the deleted user.
-    var uid = event.auth.variable ? event.auth.variable.uid : null;
+//   exports.removeUserFromDatabase = functions.auth.user()
+//     .onDelete(function(event) {
+//   // Get the uid of the deleted user.
+//     var uid = event.auth.variable ? event.auth.variable.uid : null;
 
-  console.log('This was the notification Feature',uid);
+//   console.log('This was the notification Feature',uid);
 
-  // Remove the user from your Realtime Database's /users node.
-  return admin.database().ref("Users/" + uid).remove();
+//   // Remove the user from your Realtime Database's /users node.
+//   return admin.database().ref("Users/" + uid).remove();
+// });
+
+function listAllUsers(nextPageToken) {
+  // List batch of users, 10 at a time.
+  admin.auth().listUsers(10, nextPageToken)
+    .then(function(listUsersResult) {
+      listUsersResult.users.forEach(function(userRecord) {
+          
+        //console.log("user", userRecord.toJSON());
+        admin.auth().deleteUser(userRecord.uid)
+            .then(function() {
+                console.log("Successfully deleted user");
+                  return null;
+            })
+            .catch(function(error) {
+                console.log("Error deleting user:", error);
+            });
+
+      });
+      if (listUsersResult.pageToken) {
+        // List next batch of users.
+          //Wait because timeout
+          setTimeout(listAllUsers(listUsersResult.pageToken), 2000);
+                  
+      }
+      return null;
+    })
+    .catch(function(error) {
+      console.log("Error listing users:", error);
+    });
+}
+
+exports.clean = functions.https.onRequest((req, res) => {
+    listAllUsers();
 });
 // [END import]
