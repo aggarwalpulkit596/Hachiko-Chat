@@ -199,6 +199,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements View.OnClick
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
+        else if(TextUtils.getTrimmedLength(phoneNumber)<10){
+            mPhoneNumberField.setError("Invalid phone number.");
+            return false;
+        }
 
         return true;
     }
