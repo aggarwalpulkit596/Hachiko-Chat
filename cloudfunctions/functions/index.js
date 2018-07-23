@@ -171,16 +171,15 @@ exports.sendRequest = functions.database.ref('/notifications/{user_id}/{notifica
     });
 
 
-//   exports.removeUserFromDatabase = functions.auth.user()
-//     .onDelete(function(event) {
-//   // Get the uid of the deleted user.
-//     var uid = event.auth.variable ? event.auth.variable.uid : null;
+  exports.removeUserFromDatabase = functions.auth.user()
+    .onDelete((user)=> {
+  // Get the uid of the deleted user.
+    var uid = user.uid;
 
-//   console.log('This was the notification Feature',uid);
-
-//   // Remove the user from your Realtime Database's /users node.
-//   return admin.database().ref("Users/" + uid).remove();
-// });
+  console.log('This was the notification Feature',uid);
+  // Remove the user from your Realtime Database's /users node.
+  return admin.database().ref("Users/" + uid).remove();
+});
 
 function listAllUsers(nextPageToken) {
   // List batch of users, 10 at a time.
