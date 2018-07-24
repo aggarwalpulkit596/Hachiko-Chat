@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -174,8 +175,45 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadmoreMessages() {
+
         DatabaseReference messageRef = mRootRef.child("messages").child(uid).child(chatUser);
 
+        Query query1 = FirebaseDatabase.getInstance().getReference().child("messages").child(uid);
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                {
+                    snapshot.getRef().orderByKey().limitToLast(1).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot d) {
+                            Log.d("LetsTestthis", "onDataChange: "+d.getValue());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+//        query1.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Log.i("TAG", "loadmoreMessages: "+dataSnapshot.toString());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
         Query messagequery = messageRef.orderByKey().endAt(mLastKey).limitToFirst(10);
 
         messagequery.addChildEventListener(new ChildEventListener() {
