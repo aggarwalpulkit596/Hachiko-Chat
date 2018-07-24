@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
@@ -75,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     @BindView(R.id.chat_sendbtn)
     ImageButton mSendBtn;
     @BindView(R.id.chat_addbtn)
-    ImageButton mAddbtn;
+    ImageView mAddbtn;
     @BindView(R.id.chat_msgview)
     EditText mMsgView;
     @BindView(R.id.messageslist)
