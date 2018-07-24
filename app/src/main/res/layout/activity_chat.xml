@@ -29,6 +29,14 @@
             android:background="#eceff1" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+    <ImageView
+        android:id="@+id/scroll"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_above="@id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:src="@drawable/scroll_to_bottom"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"

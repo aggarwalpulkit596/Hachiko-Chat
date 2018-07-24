@@ -83,6 +83,8 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mMessagesList;
     @BindView(R.id.swipe_message_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.scroll)
+    ImageView scroll;
     LinkedHashMap<String, Set<Messages>> groupedHashMap = new LinkedHashMap<>();
     Set<Messages> list = null;
     int i = 0;
@@ -138,8 +140,6 @@ public class ChatActivity extends AppCompatActivity {
             }
 
         });
-
-
     }
 
     private void bindingViews() {
@@ -308,7 +308,35 @@ public class ChatActivity extends AppCompatActivity {
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 generateListFromMap(groupedHashMap);
+                mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        Log.i("TAG","onScrollState");
+                        super.onScrollStateChanged(recyclerView, newState);
+                    }
 
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        Log.e("DY",""+dy);
+                        if(dy>0){
+                            scroll.setVisibility(View.INVISIBLE);
+                        }else{
+                            Log.i("TAG","onScroll");
+                            scroll.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+                scroll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("TAG","scroll on click");
+                        scroll.setVisibility(View.GONE);
+                        mMessagesList.scrollToPosition(MessageList.size() + 1);
+
+                    }
+                });
 
             }
 
