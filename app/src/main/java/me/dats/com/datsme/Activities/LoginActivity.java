@@ -295,6 +295,11 @@ public class LoginActivity extends AppCompatActivity implements
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 
     public void phoneauth(View view) {
         startActivity(new Intent(LoginActivity.this, PhoneAuthActivity.class));
