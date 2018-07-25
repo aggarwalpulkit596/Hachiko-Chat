@@ -592,7 +592,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
-
     @OnClick(R.id.location_icon)
     public void goToMyLocation() {
         if (location != null) {
@@ -607,27 +606,4 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             zoomLevel = mMap.getCameraPosition().zoom;
         }
     }
-//    private void getDeviceLoaction() {
-//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-//        try {
-//            if (true) {
-//                Task location = mFusedLocationProviderClient.getLastLocation();
-//                location.addOnCompleteListener(new OnCompleteListener() {
-//                    @Override
-//                    public void onComplete(@NonNull Task task) {
-//                        if (task.isSuccessful()) {
-//                            Location currentLocation = (Location) task.getResult();
-//                            LatLng latLng=new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-//
-//                        } else {
-//                            Toast.makeText(getActivity(), "Unable tp find location", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        } catch (SecurityException e) {
-//            Log.e("not", "getDeviceLoaction: security error"+e.getMessage() );
-//        }
-//    }
 }

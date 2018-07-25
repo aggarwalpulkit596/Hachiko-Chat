@@ -140,8 +140,8 @@ public class LoginActivity extends AppCompatActivity implements
     public void onPause() {
         super.onPause();
 
-        mGoogleApiClient.stopAutoManage(this);
-        mGoogleApiClient.disconnect();
+//        mGoogleApiClient.stopAutoManage(this);
+//        mGoogleApiClient.disconnect();
     }
 
     // [START auth_with_facebook]

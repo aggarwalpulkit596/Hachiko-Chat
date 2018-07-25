@@ -102,7 +102,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.PhoneAuthActivity"></activity>
+        <activity android:name=".Activities.PhoneAuthActivity" />
+        <activity
+            android:name=".Activities.Notifications"
+            android:theme="@style/mytheme">
+
+        </activity>
     </application>
 
 </manifest>
