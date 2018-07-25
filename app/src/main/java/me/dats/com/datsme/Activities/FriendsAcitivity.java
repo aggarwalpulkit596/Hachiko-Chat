@@ -50,6 +50,10 @@ public class FriendsAcitivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_friends);
+        ButterKnife.bind(this);
+        ButterKnife.bind(this);
         ButterKnife.bind(this);
 
 

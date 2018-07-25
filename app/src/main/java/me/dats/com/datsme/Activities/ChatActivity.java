@@ -44,6 +44,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -103,6 +104,7 @@ public class ChatActivity extends AppCompatActivity {
     // Storage Firebase
     private StorageReference mImageStorage;
     private ProgressDialog loadingBar;
+    private ArrayList<Messages> inboxList = new ArrayList<>();
 
     @Override
 
@@ -182,12 +184,30 @@ public class ChatActivity extends AppCompatActivity {
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot:dataSnapshot.getChildren())
-                {
-                    snapshot.getRef().orderByKey().limitToLast(1).addValueEventListener(new ValueEventListener() {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    snapshot.getRef().orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot d) {
-                            Log.d("LetsTestthis", "onDataChange: "+d.getValue());
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            Log.i("TAG", "onChildAddedinbox: " + dataSnapshot.getValue(Messages.class).getMessage());
+                            inboxList.add(dataSnapshot.getValue(Messages.class));
+
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                         }
 
                         @Override
@@ -197,6 +217,7 @@ public class ChatActivity extends AppCompatActivity {
                     });
                 }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -214,6 +235,13 @@ public class ChatActivity extends AppCompatActivity {
 //
 //            }
 //        });
+        inboxList.sort(new Comparator<Messages>() {
+            @Override
+            public int compare(Messages o1, Messages o2) {
+                return o1.getTime() > o2.getTime() ? 0 : 1;
+            }
+        });
+
         Query messagequery = messageRef.orderByKey().endAt(mLastKey).limitToFirst(10);
 
         messagequery.addChildEventListener(new ChildEventListener() {
@@ -311,18 +339,18 @@ public class ChatActivity extends AppCompatActivity {
                 mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                        Log.i("TAG","onScrollState");
+                        Log.i("TAG", "onScrollState");
                         super.onScrollStateChanged(recyclerView, newState);
                     }
 
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
-                        Log.e("DY",""+dy);
-                        if(dy>0){
+                        Log.e("DY", "" + dy);
+                        if (dy > 0) {
                             scroll.setVisibility(View.INVISIBLE);
-                        }else{
-                            Log.i("TAG","onScroll");
+                        } else {
+                            Log.i("TAG", "onScroll");
                             scroll.setVisibility(View.VISIBLE);
                         }
                     }
@@ -331,7 +359,7 @@ public class ChatActivity extends AppCompatActivity {
                 scroll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("TAG","scroll on click");
+                        Log.i("TAG", "scroll on click");
                         scroll.setVisibility(View.GONE);
                         mMessagesList.scrollToPosition(MessageList.size() + 1);
 
