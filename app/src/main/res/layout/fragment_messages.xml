@@ -29,6 +29,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="Datsme" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_add_alert_black_24dp"
+                android:id="@+id/notification"
+                android:layout_alignParentEnd="true"
+                android:layout_height="wrap_content" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

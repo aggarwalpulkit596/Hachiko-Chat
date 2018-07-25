@@ -29,11 +29,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.internal.IdTokenListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.internal.InternalTokenResult;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -304,8 +306,8 @@ public class My_Profile extends Fragment {
 
                 break;
             case "Log Out":
-
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user=mAuth.getCurrentUser();
                 mAuth.signOut();
                 Datsme.getPreferenceManager().clearLoginData();
                 Intent i = new Intent(getActivity(), LoginActivity.class);

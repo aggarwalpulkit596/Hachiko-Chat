@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.Activities.Notifications;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 
@@ -54,6 +56,8 @@ public class Messages extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.no_friends_button)
     Button no_friend_button;
+    @BindView(R.id.notification)
+    ImageView notification;
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private FirebaseAuth mAuth;
@@ -84,6 +88,7 @@ public class Messages extends Fragment implements View.OnClickListener {
                 ((MapsActivity) getActivity()).getDiscoverFragment();
             }
         });
+        notification.setOnClickListener(this);
         return view;
     }
 
@@ -179,6 +184,10 @@ public class Messages extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.no_friends_button:
 
+                break;
+            case R.id.notification:
+                Intent i=new Intent(getActivity(), Notifications.class);
+                startActivity(i);
                 break;
         }
     }
