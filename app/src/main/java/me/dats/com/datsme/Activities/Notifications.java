@@ -2,15 +2,18 @@ package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -34,9 +37,11 @@ import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
-public class Notifications extends AppCompatActivity {
+public class Notifications extends AppCompatActivity{
 
     FirebaseAuth mAuth;
+    @BindView(R.id.toolbar_notifications)
+    android.support.v7.widget.Toolbar toolbar;
     FirebaseUser mUser;
     @BindView(R.id.notificationlist)
     RecyclerView mNotificationlist;
@@ -52,6 +57,12 @@ public class Notifications extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("notifications").child(mUser.getUid().toString());
 
@@ -146,5 +157,15 @@ public class Notifications extends AppCompatActivity {
                 textnotification.setText(name+" has sent you a Friend Request.");
             }
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
