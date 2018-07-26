@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
     // Storage Firebase
     private StorageReference mImageStorage;
     private ProgressDialog loadingBar;
-    private ArrayList<Messages> inboxList = new ArrayList<>();
+
 
     @Override
 
@@ -180,50 +180,48 @@ public class ChatActivity extends AppCompatActivity {
 
         DatabaseReference messageRef = mRootRef.child("messages").child(uid).child(chatUser);
 
-        Query query1 = FirebaseDatabase.getInstance().getReference().child("messages").child(uid);
-        query1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    snapshot.getRef().orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            Log.i("TAG", "onChildAddedinbox: " + dataSnapshot.getValue(Messages.class).getMessage());
-                            inboxList.add(dataSnapshot.getValue(Messages.class));
-
-
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    snapshot.getRef().orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                            Log.i("TAG", "onChildAddedinbox: " + dataSnapshot.getValue(Messages.class).getMessage());
+//                            inboxList.add(dataSnapshot.getValue(Messages.class));
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 //        query1.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -235,12 +233,12 @@ public class ChatActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        inboxList.sort(new Comparator<Messages>() {
-            @Override
-            public int compare(Messages o1, Messages o2) {
-                return o1.getTime() > o2.getTime() ? 0 : 1;
-            }
-        });
+//        inboxList.sort(new Comparator<Messages>() {
+//            @Override
+//            public int compare(Messages o1, Messages o2) {
+//                return o1.getTime() > o2.getTime() ? 0 : 1;
+//            }
+//        });
 
         Query messagequery = messageRef.orderByKey().endAt(mLastKey).limitToFirst(10);
 

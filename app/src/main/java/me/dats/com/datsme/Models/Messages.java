@@ -1,8 +1,16 @@
 package me.dats.com.datsme.Models;
 
-import java.io.Serializable;
+import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 
-public class Messages implements Serializable {
+import com.google.firebase.database.DatabaseReference;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import me.dats.com.datsme.Utils.DateParser;
+
+public class Messages implements Serializable,Comparable {
     private String message, type, from;
     private boolean seen;
     private long time;
@@ -57,5 +65,16 @@ public class Messages implements Serializable {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+
+        long comparetime=((Messages)o).getTime();
+        if(comparetime>this.time)
+        return 1;
+        else return 0;
     }
 }

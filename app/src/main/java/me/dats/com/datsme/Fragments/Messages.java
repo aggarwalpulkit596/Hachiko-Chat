@@ -37,6 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.Notifications;
+import me.dats.com.datsme.Activities.inbox;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 
@@ -58,6 +59,9 @@ public class Messages extends Fragment implements View.OnClickListener {
     Button no_friend_button;
     @BindView(R.id.notification)
     ImageView notification;
+
+    @BindView(R.id.inbox)
+    ImageView inbox;
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private FirebaseAuth mAuth;
@@ -89,6 +93,7 @@ public class Messages extends Fragment implements View.OnClickListener {
             }
         });
         notification.setOnClickListener(this);
+        inbox.setOnClickListener(this);
         return view;
     }
 
@@ -189,6 +194,11 @@ public class Messages extends Fragment implements View.OnClickListener {
                 Intent i=new Intent(getActivity(), Notifications.class);
                 startActivity(i);
                 break;
+            case R.id.inbox:
+                Intent q=new Intent(getActivity(), inbox.class);
+                startActivity(q);
+                break;
+
         }
     }
 

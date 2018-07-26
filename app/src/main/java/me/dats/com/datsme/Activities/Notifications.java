@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,7 +72,7 @@ public class Notifications extends AppCompatActivity{
         mNotificationlist.setHasFixedSize(true);
         int spacingInPixels = 10;
 
-        mNotificationlist.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+        mNotificationlist.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         mNotificationlist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 

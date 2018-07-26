@@ -91,6 +91,7 @@
             android:theme="@style/mytheme">
             <intent-filter>
                 <action android:name="com.example.pulkit.chatapp1_TARGET_NOTIFICATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -104,9 +105,9 @@
         <activity android:name=".Activities.PhoneAuthActivity" />
         <activity
             android:name=".Activities.Notifications"
-            android:theme="@style/mytheme">
-
-        </activity>
+            android:theme="@style/mytheme"></activity>
+        <activity android:name=".Activities.inbox"
+            android:theme="@style/mytheme"></activity>
     </application>
 
 </manifest>
