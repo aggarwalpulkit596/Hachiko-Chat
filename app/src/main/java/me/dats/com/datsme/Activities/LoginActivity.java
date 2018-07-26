@@ -61,7 +61,6 @@ public class LoginActivity extends AppCompatActivity implements
     SignInButtonImpl signInButton;
     @BindView(R.id.btn_fbSignIn)
     LoginButton fbSignInBtn;
-    GoogleApiClient mGoogleApiClient;
 
 
     private FirebaseAuth mAuth;
@@ -129,20 +128,14 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
         // [END config_signin]
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    @Override
-    public void onPause() {
-        super.onPause();
 
-//        mGoogleApiClient.stopAutoManage(this);
-//        mGoogleApiClient.disconnect();
-    }
 
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken token) {
@@ -302,11 +295,6 @@ public class LoginActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finishAffinity();
-    }
 
     public void phoneauth(View view) {
         startActivity(new Intent(LoginActivity.this, PhoneAuthActivity.class));
