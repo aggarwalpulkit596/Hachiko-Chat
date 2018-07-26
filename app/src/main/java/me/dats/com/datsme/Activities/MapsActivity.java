@@ -1,7 +1,7 @@
 package me.dats.com.datsme.Activities;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,8 +16,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,8 +53,8 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //shared preference tokens
-        Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId,true);
-        Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
+        Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
+        Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
         ButterKnife.bind(this);
         SetmyviewPager();
     }
@@ -191,5 +192,14 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getProfileFragment() {
         viewPager.setCurrentItem(2);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            //find the current fragment by tag or id
+//            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.);
+//            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

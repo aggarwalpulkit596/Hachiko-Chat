@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,33 +26,41 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.internal.IdTokenListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.internal.InternalTokenResult;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.BlurImage;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,6 +100,9 @@ public class My_Profile extends Fragment {
     private String uid;
     private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Users");
     private int BLUR_PRECENTAGE = 20;
+    String thumb_downloadurl = null;
+    String download_url = null;
+    private StorageReference mStorageRef;
 
 
     @Override
@@ -116,6 +128,7 @@ public class My_Profile extends Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
         newRef = mRef.child(uid);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -307,7 +320,7 @@ public class My_Profile extends Fragment {
                 break;
             case "Log Out":
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser user=mAuth.getCurrentUser();
+                FirebaseUser user = mAuth.getCurrentUser();
                 mAuth.signOut();
                 Datsme.getPreferenceManager().clearLoginData();
                 Intent i = new Intent(getActivity(), LoginActivity.class);
@@ -328,6 +341,120 @@ public class My_Profile extends Fragment {
         } else {
             for (int i = 0; i < gender.getChildCount(); i++) {
                 gender.getChildAt(i).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            final CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Please wait while we upload the image");
+                dialog.setTitle("Uploading Image...");
+                dialog.setCancelable(false);
+                dialog.show();
+
+
+                Uri resultUri = result.getUri();
+
+                File thumb_file = new File(resultUri.getPath());
+
+                final String current_userid = uid;
+
+                Bitmap file = null;
+
+                Bitmap thumb_bitmap = null;
+                final byte[] thumb_byte;
+                final byte[] file_byte;
+
+                try {
+                    thumb_bitmap = new Compressor(getActivity())
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(30)
+                            .compressToBitmap(thumb_file);
+
+                    file = new Compressor(getActivity())
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(75)
+                            .compressToBitmap(thumb_file);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+
+                thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                file.compress(Bitmap.CompressFormat.JPEG, 100, baos1);
+                thumb_byte = baos.toByteArray();
+                file_byte = baos1.toByteArray();
+
+                StorageReference filepath = mStorageRef.child("profile_images").child(current_userid + ".jpg");
+                final StorageReference thumb_filepath = mStorageRef.child("profile_images").child("thumbs").child(current_userid + ".jpg");
+
+                final StorageReference ref = mStorageRef.child("profile_images").child(current_userid + ".jpg");
+                UploadTask uploadTask = ref.putBytes(file_byte);
+
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+
+                        // Continue with the task to get the download URL
+                        return ref.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+
+                            download_url = task.getResult().toString();
+                            UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+
+                                    // Continue with the task to get the download URL
+                                    return ref.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> thumb_task) {
+                                    if (thumb_task.isSuccessful()) {
+                                        if (thumb_task.isSuccessful()) {
+
+                                            thumb_downloadurl = thumb_task.getResult().toString();
+
+                                            dialog.dismiss();
+                                            edit_image.setImageURI(result.getUri());
+
+                                        } else {
+                                            dialog.dismiss();
+                                            Toast.makeText(getActivity(), "Try Again Later", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                }
+                            });
+                        } else {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "Try Again Later", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         }
     }

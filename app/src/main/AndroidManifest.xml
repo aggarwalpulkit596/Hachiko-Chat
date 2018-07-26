@@ -106,7 +106,7 @@
         <activity
             android:name=".Activities.Notifications"
             android:theme="@style/mytheme"></activity>
-        <activity android:name=".Activities.inbox"
+        <activity android:name=".Activities.InboxActivity"
             android:theme="@style/mytheme"></activity>
     </application>
 
