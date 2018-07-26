@@ -28,7 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Datsme" />
+                android:text="Friends" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_message_black_24dp"
+                android:id="@+id/inbox"
+                android:layout_toLeftOf="@+id/notification"
+                android:layout_height="wrap_content" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_marginRight="20dp"
