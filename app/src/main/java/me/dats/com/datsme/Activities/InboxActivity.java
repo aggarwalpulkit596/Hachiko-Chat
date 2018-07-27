@@ -34,7 +34,7 @@ public class InboxActivity extends AppCompatActivity {
     private HashMap<String, Messages> inbox = new HashMap<>();
     Toolbar toolbar;
     RecyclerView recyclerView;
-
+    Messages messages;
     InboxAdapter inboxAdapter;
 
     @Override
@@ -53,7 +53,7 @@ public class InboxActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
 
-        inboxAdapter = new InboxAdapter(inboxList);
+        inboxAdapter = new InboxAdapter(inboxList, getApplicationContext());
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -79,20 +79,20 @@ public class InboxActivity extends AppCompatActivity {
                             snapshot.getRef().orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
                                 @Override
                                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                    Messages m;
-                                    m = dataSnapshot.getValue(Messages.class);
+
+                                    messages = dataSnapshot.getValue(Messages.class);
+                                    messages.fuid = userId;
                                     if (inbox.get(userId) != null) {
                                         inboxList.remove(inbox.get(userId));
-                                        inbox.put(userId, m);
-                                        inboxList.add(m);
+                                        inbox.put(userId, messages);
+                                        inboxList.add(messages);
                                     } else {
-                                        inbox.put(userId, m);
-                                        inboxList.add(m);
+                                        inbox.put(userId, messages);
+                                        inboxList.add(messages);
 
                                     }
-                                    Log.d("TAG", "onChildAdded: " + dataSnapshot.getRef().getKey());
-                                    Log.d("TAG", "onChildAdded: " + dataSnapshot.getValue(Messages.class).getMessage());
-                                    Collections.sort(inboxList);//checking
+//                                    inboxList.sort((e1, e2) -> Long.compare(e1.getTime(), e2.getTime()));
+                                    Collections.sort(inboxList, (o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
                                     inboxAdapter.notifyDataSetChanged();
                                 }
 
@@ -124,7 +124,6 @@ public class InboxActivity extends AppCompatActivity {
 
                     }
                 });
-
 
     }
 }
