@@ -190,19 +190,15 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 d.show();
             }
         });
-        user_dob.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                d.getDatePicker().setMaxDate(System.currentTimeMillis());
-                d.show();
+        user_dob.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH));
+            d.getDatePicker().setMaxDate(System.currentTimeMillis());
+            d.show();
 
 
-            }
         });
     }
 

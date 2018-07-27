@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import me.dats.com.datsme.Adapters.InboxAdapter;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
@@ -136,6 +137,13 @@ public class InboxActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Datsme.checkAuth();
+
+    }
+
 }
 
 

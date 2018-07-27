@@ -1,10 +1,10 @@
 package me.dats.com.datsme.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -26,19 +25,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
-public class Notifications extends AppCompatActivity{
+public class NotificationsActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     @BindView(R.id.toolbar_notifications)
@@ -68,7 +65,7 @@ public class Notifications extends AppCompatActivity{
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("notifications").child(mUser.getUid().toString());
 
 
-        Query query=mRef.orderByKey();//not working
+        Query query = mRef.orderByKey();//not working
         mNotificationlist.setHasFixedSize(true);
         int spacingInPixels = 10;
 
@@ -86,7 +83,7 @@ public class Notifications extends AppCompatActivity{
             protected void onBindViewHolder(@NonNull final NotificationsViewHolder holder, int position, @NonNull final notifications model) {
                 Log.d("TAG", "onDataChange: " + model.getType());
 
-                DatabaseReference user=FirebaseDatabase.getInstance().getReference().child("Users").child(model.getFrom().toString());
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("Users").child(model.getFrom().toString());
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,9 +100,9 @@ public class Notifications extends AppCompatActivity{
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent i=new Intent(Notifications.this,Others_profile.class);
-                        i.putExtra("from_user_id",holder.userId);
-                        i.putExtra("userName",holder.other_user.getName());
+                        Intent i = new Intent(NotificationsActivity.this, Others_profile.class);
+                        i.putExtra("from_user_id", holder.userId);
+                        i.putExtra("userName", holder.other_user.getName());
                         startActivity(i);
                     }
                 });
@@ -137,25 +134,25 @@ public class Notifications extends AppCompatActivity{
             mView = itemView;
         }
 
-        public void bind(Users OtherUser)
-        {
-            other_user=OtherUser;
-            textnotification=mView.findViewById(R.id.text_notification);
-            image=mView.findViewById(R.id.image_notification);
+        public void bind(Users OtherUser) {
+            other_user = OtherUser;
+            textnotification = mView.findViewById(R.id.text_notification);
+            image = mView.findViewById(R.id.image_notification);
             Picasso.get()
                     .load(OtherUser.getThumb_image())
                     .placeholder(R.drawable.default_avatar)
                     .centerCrop()
                     .fit()
                     .into(image);
-            name=OtherUser.getName().toString().toUpperCase();
+            name = OtherUser.getName().toString().toUpperCase();
 
         }
+
         public void setNotification(notifications model) {
-            userId=model.getFrom().toString();
-            String type=model.getType();
+            userId = model.getFrom().toString();
+            String type = model.getType();
             if (type.equals("request")) {
-                textnotification.setText(name+" has sent you a Friend Request.");
+                textnotification.setText(name + " has sent you a Friend Request.");
             }
         }
     }
@@ -168,5 +165,12 @@ public class Notifications extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Datsme.checkAuth();
+
     }
 }

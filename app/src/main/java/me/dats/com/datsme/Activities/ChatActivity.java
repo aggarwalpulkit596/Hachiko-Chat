@@ -54,6 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Adapters.ChatAdapter;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.ChatModelObject;
 import me.dats.com.datsme.Models.DateObject;
 import me.dats.com.datsme.Models.ListObject;
@@ -610,5 +611,11 @@ public class ChatActivity extends AppCompatActivity {
             });
 
         }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Datsme.checkAuth();
+
     }
 }

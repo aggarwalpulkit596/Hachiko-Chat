@@ -51,7 +51,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
-    DatabaseReference database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+        DatabaseReference database;
         database = FirebaseDatabase.getInstance().getReference();
         database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -85,6 +86,13 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Datsme.checkAuth();
 
     }
 
