@@ -321,6 +321,7 @@ public class My_Profile extends Fragment {
             case "Log Out":
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser user = mAuth.getCurrentUser();
+                newRef.child("device_token").setValue(null);
                 mAuth.signOut();
                 Datsme.getPreferenceManager().clearLoginData();
                 Intent i = new Intent(getActivity(), LoginActivity.class);
