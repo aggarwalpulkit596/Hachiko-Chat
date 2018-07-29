@@ -292,14 +292,11 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
-                scroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("TAG", "scroll on click");
-                        scroll.setVisibility(View.GONE);
-                        mMessagesList.scrollToPosition(MessageList.size() + 1);
+                scroll.setOnClickListener(v -> {
+                    Log.i("TAG", "scroll on click");
+                    scroll.setVisibility(View.GONE);
+                    mMessagesList.scrollToPosition(MessageList.size() + 1);
 
-                    }
                 });
 
             }
@@ -611,11 +608,5 @@ public class ChatActivity extends AppCompatActivity {
             });
 
         }
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Datsme.checkAuth();
-
     }
 }

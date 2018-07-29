@@ -49,28 +49,28 @@ public class Datsme extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
     }
 
-    public static void checkAuth() {
-        DatabaseReference database;
-        database = FirebaseDatabase.getInstance().getReference();
-        database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    Datsme.getPreferenceManager().clearLoginData();
-                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
-
-                } else {
-                    //shared preference tokens
-                    Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
-                    Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    public static void checkAuth() {
+//        DatabaseReference database;
+//        database = FirebaseDatabase.getInstance().getReference();
+//        database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (!dataSnapshot.exists()) {
+//                    Datsme.getPreferenceManager().clearLoginData();
+//                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
+//
+//                } else {
+//                    //shared preference tokens
+//                    Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
+//                    Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

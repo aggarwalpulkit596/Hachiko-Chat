@@ -89,13 +89,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Datsme.checkAuth();
-
-    }
-
     private void SetmyviewPager() {
 
         String user_id = getIntent().getStringExtra("From");
