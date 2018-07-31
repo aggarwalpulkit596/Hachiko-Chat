@@ -27,7 +27,7 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     @Override
     protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
         //start clustering if at least 2 items overlap
-        return cluster.getSize() > 1 && Discover_people.shouldCluster_zoom;
+        return cluster.getSize() > 1 ;
     }
 //
 //    @Override
