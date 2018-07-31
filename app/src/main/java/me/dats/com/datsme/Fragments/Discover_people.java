@@ -4,7 +4,6 @@ package me.dats.com.datsme.Fragments;
 import android.Manifest;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -46,7 +45,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -55,14 +53,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +77,7 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener {
+public class Discover_people extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, ClusterManager.OnClusterItemClickListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     public float Timer = 0;
@@ -98,13 +97,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     HashMap<String, MyItem> ItemsMap = new HashMap<>();
     HashMap<String, LatLng> userMap = new HashMap<>();
     HashMap<String, Target> targets = new HashMap<>();
-    int[][] worldview = new int[][]{
-            {100, 50, 25, 50, 75},
-            {50, 100, 25, 50, 75},
-            {25, 25, 100, 50, 50},
-            {30, 50, 50, 100, 50},
-            {75, 75, 50, 50, 100}
-    };
+    public static boolean shouldCluster_zoom = true;
+
     Users mUser;
     float MaxZoom = 19.05f;
     float zoomLevel = 15.0f; //This goes up to 21\
@@ -122,7 +116,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_discover_people, container, false);
@@ -132,6 +126,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
@@ -164,7 +159,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d("locationcallback called", "onLocationResult: " + locationResult);
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
                 Map<String, Object> locationMap = new HashMap<>();
@@ -173,7 +167,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mUserRef.updateChildren(locationMap);
                 if (firstlauch) {
                     firstlauch = false;
-                    moveCamera();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomLevel));
                 }
             }
         };
@@ -181,13 +175,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         fetchusers();
         fetchlocation();
         initAnimation();
+        setMarkers();
 
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    private void moveCamera() {
-        Log.i("camera", "onLocationResult:firstlaunch ");
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomLevel));
     }
 
     @Override
@@ -198,15 +187,13 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveStartedListener(this);
         mMap.setOnCameraMoveListener(this);
-
-
         mMap.setMaxZoomPreference(MaxZoom);
 
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mFusedLocationProviderClient
@@ -215,34 +202,25 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         mRequestingLocationUpdates = true;
 
+        mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
 
-        //for changing design of map
-        try {
-            Calendar calendar = Calendar.getInstance();
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            if (hourOfDay > 5 && hourOfDay < 21) {
-                boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
-            } else {
-                boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
-            }
-        } catch (Resources.NotFoundException e) {
-            // Oops, looks like the map style resource couldn't be found!
-        }
+//        //for changing design of map
+//        try {
+//            Calendar calendar = Calendar.getInstance();
+//            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+//            if (hourOfDay > 5 && hourOfDay < 21) {
+//
+//            } else {
+//                mMap.setMapStyle(
+//                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
+//            }
+//        } catch (Resources.NotFoundException e) {
+//            // Oops, looks like the map style resource couldn't be found!
+//        }
 
 
         setUpClusterer();
-        setMarkers();
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
-            @Override
-            public boolean onClusterItemClick(MyItem myItem) {
-                Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
-                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                return true;
-            }
-        });
 
 
     }
@@ -255,105 +233,88 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
-                Log.d("TAG", "onChildAdded: " + dataSnapshot);
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
+                userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
+                final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+                ItemsMap.put(user_id, myItem);
+                targets.put(user_id, new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        myItem.setBitmap(bitmap);
+                        mClusterManager.addItem(myItem);
+                        mClusterManager.cluster();
+                    }
 
-                if (userMap.get(user_id) == null && ItemsMap.get(user_id) == null) {
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-                    userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
-                    final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
-                    ItemsMap.put(user_id, myItem);
+                    }
 
-                    targets.put(user_id, new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                            Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
-
-                            myItem.setBitmap(bitmap);
-
-                            mClusterManager.addItem(myItem);
-
-                            mClusterManager.cluster();
-                            //clusterRender.onAdd();//added
-
-//                            if (getActivity() != null)//removed
-//                                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
-                    Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
-                            .centerInside()
-                            .transform(new BubbleTransformation(10))
-                            .into(targets.get(user_id));
-                }
-
+                    }
+                });
+                Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+                        .centerInside()
+                        .transform(new BubbleTransformation(10))
+                        .into(targets.get(user_id));
             }
+
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                mUser = dataSnapshot.getValue(Users.class);
-                String user_id = dataSnapshot.getKey();
-
-                if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
-
-                    MyItem item = ItemsMap.get(user_id);
-
-                    Marker marker = item.getMyItemMarker();
-                    mClusterManager.getMarkerManager().remove(marker);
-                    mClusterManager.removeItem(item);
-                    mClusterManager.cluster();
-                    //clusterRender.onRemove();//added
-
-//                    if (getActivity() != null)//removed
-//                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
-
-                    final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
-
-                    ItemsMap.put(user_id, myItem);
-                    userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
-
-                    targets.put(user_id, new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
-                            myItem.setBitmap(bitmap);
-                            mClusterManager.addItem(myItem);
-                            mClusterManager.cluster();
-                            //  clusterRender.onAdd();//added
-
-                            //if (getActivity() != null)//removed
-                            //  mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
-                    Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
-                            .centerInside()
-                            .transform(new BubbleTransformation(10))
-                            .into(targets.get(user_id));
-                }
+//                mUser = dataSnapshot.getValue(Users.class);
+//                String user_id = dataSnapshot.getKey();
+//
+//                if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
+//
+//                    MyItem item = ItemsMap.get(user_id);
+//
+//                    Marker marker = item.getMyItemMarker();
+//                    mClusterManager.getMarkerManager().remove(marker);
+//                    mClusterManager.removeItem(item);
+//                    mClusterManager.cluster();
+//                    //clusterRender.onRemove();//added
+//
+////                    if (getActivity() != null)//removed
+////                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
+//
+//                    final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
+//
+//                    ItemsMap.put(user_id, myItem);
+//                    userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
+//
+//                    targets.put(user_id, new Target() {
+//                        @Override
+//                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                            Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
+//                            myItem.setBitmap(bitmap);
+//                            mClusterManager.addItem(myItem);
+//                            mClusterManager.cluster();
+//                            //  clusterRender.onAdd();//added
+//
+//                            //if (getActivity() != null)//removed
+//                            //  mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
+//                        }
+//
+//                        @Override
+//                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                        }
+//                    });
+//                    Picasso.get().load(mUser.getThumb_image()).resize(150, 150)
+//                            .centerInside()
+//                            .transform(new BubbleTransformation(10))
+//                            .into(targets.get(user_id));
+//                }
             }
 
             @Override
@@ -384,8 +345,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000)
-                .setFastestInterval(5000)
+        mLocationRequest.setInterval(20000)
+                .setFastestInterval(10000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -417,86 +378,34 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
-    private void fetchusers() {
-
-        mRecyclerView.setHasFixedSize(true);
-        int spacingInPixels = 10;
-
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        mRecyclerView.setItemViewCacheSize(10);
-
-
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Users");
-        final FirebaseRecyclerOptions<Users> options =
-                new FirebaseRecyclerOptions.Builder<Users>()
-                        .setQuery(query, Users.class)
-                        .build();
-
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
-            @NonNull
-            @Override
-            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false));
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull final UsersViewHolder holder, final int position, @NonNull final Users model) {
-                holder.bind(model);
-                holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                        BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-
-                    }
-                });
-
-            }
-        };
-        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
-
-    }
 
     private void setUpClusterer() {
+        if (getActivity() != null) {
+            mClusterManager = new ClusterManager<>(getActivity(), mMap);
 
-        mClusterManager = new ClusterManager(getActivity(), mMap);
+            mMap.setOnMarkerClickListener(mClusterManager);
+            mClusterManager.setOnClusterClickListener(this);
+            mClusterManager.setOnClusterItemClickListener(this);
 
-        mMap.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setOnClusterClickListener(this);
 
-        if (getActivity() != null)//added
-            clusterRender = new ClusterRender(getActivity(), mMap, mClusterManager);//added
+            if (getActivity() != null)//added
+                clusterRender = new ClusterRender(getActivity(), mMap, mClusterManager);//added
 
-        mClusterManager.setRenderer(clusterRender);
+            mClusterManager.setRenderer(clusterRender);
+        }
 
     }
 
     @Override
     public boolean onClusterClick(Cluster cluster) {
 
-        if (zoomLevel == MaxZoom) {
+        if (zoomLevel < MaxZoom) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 19.0f));
+        } else {
             ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
             BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
 
             BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-        } else if (zoomLevel < MaxZoom) {
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
-
-//            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
-//            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-//                    new CameraPosition.Builder()
-//                            .target(coordinate)
-//                            .tilt(90)
-//                            .zoom(zoomLevel+1)
-//                            .build()));
-
         }
 
 
@@ -557,6 +466,76 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
+
+    @OnClick(R.id.location_icon)
+    public void goToMyLocation() {
+        if (location != null) {
+            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(coordinate)
+                            .tilt(90)
+                            .zoom(17.05f)
+                            .build()));
+            zoomLevel = mMap.getCameraPosition().zoom;
+        }
+    }
+
+    private void fetchusers() {
+
+        mRecyclerView.setHasFixedSize(true);
+        int spacingInPixels = 10;
+
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setItemViewCacheSize(10);
+
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Users");
+        final FirebaseRecyclerOptions<Users> options =
+                new FirebaseRecyclerOptions.Builder<Users>()
+                        .setQuery(query, Users.class)
+                        .build();
+
+        FirebaseRecyclerAdapter<Users, UsersViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
+            @NonNull
+            @Override
+            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false));
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull final UsersViewHolder holder, final int position, @NonNull final Users model) {
+                holder.bind(model);
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                        BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+
+                    }
+                });
+
+            }
+        };
+        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(ClusterItem myItem) {
+        Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
+        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+        BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+        return true;
+    }
+
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
@@ -592,18 +571,4 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
-    @OnClick(R.id.location_icon)
-    public void goToMyLocation() {
-        if (location != null) {
-            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(coordinate)
-                            .tilt(90)
-                            .zoom(17.05f)
-                            .build()));
-            zoomLevel = mMap.getCameraPosition().zoom;
-        }
-    }
 }

@@ -22,10 +22,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import me.dats.com.datsme.Adapters.InboxAdapter;
-import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
@@ -94,7 +94,12 @@ public class InboxActivity extends AppCompatActivity {
 
                                     }
 //                                    inboxList.sort((e1, e2) -> Long.compare(e1.getTime(), e2.getTime()));
-                                    Collections.sort(inboxList, (o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
+                                    Collections.sort(inboxList, new Comparator<Messages>() {
+                                        @Override
+                                        public int compare(Messages o1, Messages o2) {
+                                            return Long.compare(o2.getTime(), o1.getTime());
+                                        }
+                                    });
                                     inboxAdapter.notifyDataSetChanged();
                                 }
 
@@ -128,6 +133,7 @@ public class InboxActivity extends AppCompatActivity {
                 });
 
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
