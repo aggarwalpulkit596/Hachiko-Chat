@@ -37,7 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.InboxActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
-import me.dats.com.datsme.Activities.Notifications;
+import me.dats.com.datsme.Activities.NotificationsActivity;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 
@@ -164,17 +164,18 @@ public class Messages extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                holder.mView.setOnClickListener(view -> {
-
-
-                    Intent chatintent = new Intent(getActivity(), ChatActivity.class);
-                    chatintent.putExtra("from_user_id", uid);
-                    chatintent.putExtra("userName", name[0]);
-                    chatintent.putExtra("image", image[0]);
-                    startActivity(chatintent);
-
-
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent chatintent = new Intent(getActivity(), ChatActivity.class);
+                        chatintent.putExtra("from_user_id", uid);
+                        chatintent.putExtra("userName", name[0]);
+                        chatintent.putExtra("image", image[0]);
+                        startActivity(chatintent);
+                    }
                 });
+
+
             }
         };
         mFriendlist.setAdapter(firebaseRecyclerAdapter);
@@ -188,11 +189,11 @@ public class Messages extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.notification:
-                Intent i=new Intent(getActivity(), Notifications.class);
+                Intent i = new Intent(getActivity(), NotificationsActivity.class);
                 startActivity(i);
                 break;
             case R.id.inbox:
-                Intent q=new Intent(getActivity(), InboxActivity.class);
+                Intent q = new Intent(getActivity(), InboxActivity.class);
                 startActivity(q);
                 break;
 

@@ -191,7 +191,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             }
         });
         user_dob.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -200,8 +199,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         myCalendar.get(Calendar.DAY_OF_MONTH));
                 d.getDatePicker().setMaxDate(System.currentTimeMillis());
                 d.show();
-
-
             }
         });
     }
