@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.Notifications">
+    tools:context=".Activities.NotificationsActivity">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:background="@color/datsme_color"

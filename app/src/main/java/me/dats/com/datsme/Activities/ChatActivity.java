@@ -297,10 +297,8 @@ public class ChatActivity extends AppCompatActivity {
                         Log.i("TAG", "scroll on click");
                         scroll.setVisibility(View.GONE);
                         mMessagesList.scrollToPosition(MessageList.size() + 1);
-
                     }
                 });
-
             }
 
             @Override
@@ -326,7 +324,8 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private List<ListObject> generateListFromMap(LinkedHashMap<String, Set<Messages>> groupedHashMap) {
+    private List<ListObject> generateListFromMap
+            (LinkedHashMap<String, Set<Messages>> groupedHashMap) {
         // We linearly add every item into the consolidatedList.
         List<ListObject> consolidatedList = new ArrayList<>();
         for (String date : groupedHashMap.keySet()) {

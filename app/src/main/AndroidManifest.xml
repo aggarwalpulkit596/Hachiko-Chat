@@ -104,8 +104,8 @@
         </activity>
         <activity android:name=".Activities.PhoneAuthActivity" />
         <activity
-            android:name=".Activities.Notifications"
-            android:theme="@style/mytheme" />
+            android:name=".Activities.NotificationsActivity"
+            android:theme="@style/mytheme"></activity>
         <activity
             android:name=".Activities.InboxActivity"
             android:theme="@style/mytheme" />

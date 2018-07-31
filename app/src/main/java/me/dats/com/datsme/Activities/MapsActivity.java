@@ -18,6 +18,12 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import butterknife.BindView;
@@ -46,17 +52,41 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-
-        //shared preference tokens
-        Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
-        Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
         ButterKnife.bind(this);
-        SetmyviewPager();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DatabaseReference database;
+        database = FirebaseDatabase.getInstance().getReference();
+        database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    Datsme.getPreferenceManager().clearLoginData();
+                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    //shared preference tokens
+                    Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
+                    Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
+                    SetmyviewPager();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void SetmyviewPager() {

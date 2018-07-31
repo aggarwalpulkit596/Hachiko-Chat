@@ -127,6 +127,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_discover_people, container, false);
         ButterKnife.bind(this, view);
+        Log.i("TAG", "onMapReady: view");
         return view;
     }
 
@@ -181,7 +182,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         fetchusers();
         fetchlocation();
         initAnimation();
-
+        Log.i("TAG", "onMapReady: activity");
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -231,24 +232,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             // Oops, looks like the map style resource couldn't be found!
         }
 
-
+        Log.i("TAG", "onMapReady: map");
         setUpClusterer();
         setMarkers();
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
-            @Override
-            public boolean onClusterItemClick(MyItem myItem) {
-                Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
-                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-                return true;
-            }
-        });
 
 
     }
 
     private void setMarkers() {
-
+        Log.i("TAG", "onMapReady: marker");
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Users");
@@ -466,7 +458,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     private void setUpClusterer() {
 
         mClusterManager = new ClusterManager(getActivity(), mMap);
-
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+            @Override
+            public boolean onClusterItemClick(MyItem myItem) {
+                Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
+                BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
+                BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                return true;
+            }
+        });
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
 
@@ -475,28 +475,19 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         mClusterManager.setRenderer(clusterRender);
 
+
     }
 
     @Override
     public boolean onClusterClick(Cluster cluster) {
 
-        if (zoomLevel == MaxZoom) {
+        if (zoomLevel < MaxZoom) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 19.0f));
+        } else {
             ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
             BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
 
             BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
-        } else if (zoomLevel < MaxZoom) {
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
-
-//            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
-//            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-//                    new CameraPosition.Builder()
-//                            .target(coordinate)
-//                            .tilt(90)
-//                            .zoom(zoomLevel+1)
-//                            .build()));
-
         }
 
 
