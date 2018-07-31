@@ -8,4 +8,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="default_notification_channel_id">testchannelid</string>
+
+
+    <string-array name="myQuestions">
+        <item>Do you smoke ?</item>
+        <item>Do you like waking up early or staying up late? </item>
+        <item>Which is better: asking for permission or asking for forgiveness? </item>
+        <item>You only get 3 words to describe yourself – what are they? </item>
+        <item> Which is better to listen to – your heart or your brain?</item>
+    </string-array>
 </resources>

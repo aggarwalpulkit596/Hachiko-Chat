@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".Activities.generateQuestions">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/generate_questionToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/datsme_color"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="Questions">
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/generate_questionToolbar"
+            android:layout_marginTop="20dp"
+            android:text="Choose a Question for your potential Friends."
+            android:textAlignment="center"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_questions_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="20dp"
+            android:overScrollMode="never"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp" />
+
+        <TextView
+            android:id="@+id/customQuestiontitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_questions_list"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Custom Question"
+            android:textAlignment="center"
+            android:textColor="@color/datsme_color" />
+
+        <RelativeLayout
+            android:id="@+id/customQuestionlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_below="@+id/customQuestiontitle"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#FFF">
+
+            <EditText
+                android:id="@+id/CustomQuestionText"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#fff"
+                android:gravity="top|left"
+                android:hint="Write Your Question"
+                android:inputType="textMultiLine"
+                android:padding="15dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/saveCustomQuestion"
+                android:layout_below="@id/CustomQuestionText"
+                android:background="#f95252"
+                android:text="save"
+                android:textColor="#FFF" />
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

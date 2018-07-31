@@ -106,7 +106,13 @@
         <activity
             android:name=".Activities.NotificationsActivity"
             android:theme="@style/mytheme"></activity>
-        <activity android:name=".Activities.InboxActivity"
+        <activity
+            android:name=".Activities.InboxActivity"
+            android:theme="@style/mytheme" />
+        <activity
+            android:name=".Activities.Friendsquestions"
+            android:theme="@style/mytheme" />
+        <activity android:name=".Activities.generateQuestions"
             android:theme="@style/mytheme"></activity>
     </application>
 
