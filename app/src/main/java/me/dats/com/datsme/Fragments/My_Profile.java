@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,6 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import me.dats.com.datsme.Activities.Friendsquestions;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Datsme;
@@ -65,7 +67,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class My_Profile extends Fragment {
+public class My_Profile extends Fragment implements View.OnClickListener {
 
 
     public ProgressDialog dialog;
@@ -94,6 +96,8 @@ public class My_Profile extends Fragment {
     TextView save;
     @BindView(R.id.cancel)
     TextView cancel;
+    @BindView(R.id.my_questions)
+    Button myquestions;
     View view;
     String name, about_u, ur_clg, ur_gender, ur_image;
     private FirebaseUser mUser;
@@ -125,6 +129,7 @@ public class My_Profile extends Fragment {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 
+        myquestions.setOnClickListener(this);
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
         newRef = mRef.child(uid);
@@ -459,4 +464,14 @@ public class My_Profile extends Fragment {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.my_questions:
+                Intent i=new Intent(getActivity(), Friendsquestions.class);
+                startActivity(i);
+                break;
+        }
+    }
 }
