@@ -109,12 +109,10 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         user = documentSnapshot.getValue(Users.class);
 
-        if(user_id== FirebaseAuth.getInstance().getCurrentUser().getUid())
-        {
+        if (user_id == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
             view_Other_Profile.setEnabled(false);
             view_Other_Profile.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             view_Other_Profile.setEnabled(true);
             view_Other_Profile.setVisibility(View.VISIBLE);
 

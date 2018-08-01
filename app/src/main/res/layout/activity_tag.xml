@@ -1,96 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <View
+        <com.mindorks.placeholderview.SwipePlaceHolderView
+            android:id="@+id/swipeView"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
-
-        <com.roughike.swipeselector.SwipeSelector
-            android:id="@+id/worldSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#E5FCC2"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
-
-        <com.roughike.swipeselector.SwipeSelector
-            android:id="@+id/commmunicationselector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#9DE0AD"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
-
-        <com.roughike.swipeselector.SwipeSelector
-            android:id="@+id/spiritualSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#45ADA8"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
-
-        <com.roughike.swipeselector.SwipeSelector
-            android:id="@+id/emotionalSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#547980"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
-
-        <com.roughike.swipeselector.SwipeSelector
-            android:id="@+id/professionSelector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#594F4F"
-            app:swipe_descriptionTextAppearance="@style/MyDescriptionTextApperance"
-            app:swipe_titleTextAppearance="@style/MyTitleTextApperance" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#DDDDDD" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/sendButton"
@@ -99,7 +21,6 @@
             android:layout_marginEnd="70dp"
             android:layout_marginStart="70dp"
             android:layout_marginTop="20dp"
-
             android:background="@drawable/button_background_blue"
             android:text="Continue"
             android:textColor="#FFFFFF" />
