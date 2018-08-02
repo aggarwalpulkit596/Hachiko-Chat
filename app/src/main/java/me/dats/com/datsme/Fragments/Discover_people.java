@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -117,7 +118,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     private GoogleMap mMap;
     View view;
 
-    String Map="Map";
+    String Map = "Map";
+
     public Discover_people() {
         // Required empty public constructor
     }
@@ -207,8 +209,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     public void onMapReady(GoogleMap googleMap) {
 
 
-        int i=1;
-        Log.d(Map, "onCreateView:onmapready"+i++);
+        int i = 1;
+        Log.d(Map, "onCreateView:onmapready" + i++);
         mMap = googleMap;
 
         mMap.setOnCameraIdleListener(this);
@@ -236,8 +238,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     private void setMarkers() {
 
-        int i=1;
-        Log.d(Map, "onCreateView:setmarkers"+i++);
+        int i = 1;
+        Log.d(Map, "onCreateView:setmarkers" + i++);
         Log.i("TAG", "onMapReady: marker");
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -298,10 +300,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mUser = dataSnapshot.getValue(Users.class);
                 String user_id = dataSnapshot.getKey();
 
-                if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
+                if (userMap.get(user_id).equals(null) || ItemsMap.get(user_id).equals(null)) {
+                    Log.d("usernptexists", "onChildChanged: not exists");
+                } else {
 
                     MyItem item = ItemsMap.get(user_id);
-
                     Marker marker = item.getMyItemMarker();
                     mClusterManager.getMarkerManager().remove(marker);
                     mClusterManager.removeItem(item);
@@ -456,8 +459,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     private void setUpClusterer() {
 
-        int i=1;
-        Log.d(Map, "onCreateView:setCluster"+i++);
+        int i = 1;
+        Log.d(Map, "onCreateView:setCluster" + i++);
         mClusterManager = new ClusterManager(getActivity(), mMap);
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
