@@ -25,8 +25,8 @@ import me.dats.com.datsme.R;
 
 public class TagActivity extends AppCompatActivity {
 
-    @BindViews({R.id.worldSelector, R.id.commmunicationselector, R.id.spiritualSelector, R.id.emotionalSelector, R.id.professionSelector})
-    SwipeSelector[] swipeSelectors;
+//    @BindViews({R.id.worldSelector, R.id.commmunicationselector, R.id.spiritualSelector, R.id.emotionalSelector, R.id.professionSelector})
+//    SwipeSelector[] swipeSelectors;
 
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
@@ -38,40 +38,40 @@ public class TagActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
-
-        swipeSelectors[0].setItems(
-                // The first argument is the value for that item, and should in most cases be unique for the
-                // current SwipeSelector, just as you would assign values to radio buttons.
-                // You can use the value later on to check what the selected item was.
-                // The value can be any Object, here we're using ints.
-                new SwipeItem(0, "Worldview", "Lets have a meaningful life"),
-                new SwipeItem(1, "Worldview", "Lets change the world"),
-                new SwipeItem(2, "Worldview", "Lets have a fun life"),
-                new SwipeItem(3, "Worldview", "Lets have a beautiful life")
-
-        );
-        swipeSelectors[1].setItems(
-
-                new SwipeItem(0, "Communication", "Texting"),
-                new SwipeItem(1, "Communication", "Calling"),
-                new SwipeItem(2, "Communication", "Face to face conversation")
-        );
-        swipeSelectors[2].setItems(
-
-                new SwipeItem(0, "Spirituality", "Atheist"),
-                new SwipeItem(1, "Spirituality", "Spiritual"),
-                new SwipeItem(2, "Spirituality", "Religious")
-        );
-        swipeSelectors[3].setItems(
-                new SwipeItem(0, "Emotional Quotient", "Yes"),
-                new SwipeItem(1, "Emotional Quotient", "No"),
-                new SwipeItem(2, "Emotional Quotient", "Depends on Situation")
-        );
-        swipeSelectors[4].setItems(
-                new SwipeItem(0, "Professional Attitude", "Procrastinator"),
-                new SwipeItem(1, "Professional Attitude", "Easy Going"),
-                new SwipeItem(2, "Professional Attitude", "Workaholic")
-        );
+//
+//        swipeSelectors[0].setItems(
+//                // The first argument is the value for that item, and should in most cases be unique for the
+//                // current SwipeSelector, just as you would assign values to radio buttons.
+//                // You can use the value later on to check what the selected item was.
+//                // The value can be any Object, here we're using ints.
+//                new SwipeItem(0, "Worldview", "Lets have a meaningful life"),
+//                new SwipeItem(1, "Worldview", "Lets change the world"),
+//                new SwipeItem(2, "Worldview", "Lets have a fun life"),
+//                new SwipeItem(3, "Worldview", "Lets have a beautiful life")
+//
+//        );
+//        swipeSelectors[1].setItems(
+//
+//                new SwipeItem(0, "Communication", "Texting"),
+//                new SwipeItem(1, "Communication", "Calling"),
+//                new SwipeItem(2, "Communication", "Face to face conversation")
+//        );
+//        swipeSelectors[2].setItems(
+//
+//                new SwipeItem(0, "Spirituality", "Atheist"),
+//                new SwipeItem(1, "Spirituality", "Spiritual"),
+//                new SwipeItem(2, "Spirituality", "Religious")
+//        );
+//        swipeSelectors[3].setItems(
+//                new SwipeItem(0, "Emotional Quotient", "Yes"),
+//                new SwipeItem(1, "Emotional Quotient", "No"),
+//                new SwipeItem(2, "Emotional Quotient", "Depends on Situation")
+//        );
+//        swipeSelectors[4].setItems(
+//                new SwipeItem(0, "Professional Attitude", "Procrastinator"),
+//                new SwipeItem(1, "Professional Attitude", "Easy Going"),
+//                new SwipeItem(2, "Professional Attitude", "Workaholic")
+//        );
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

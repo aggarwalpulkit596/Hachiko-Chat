@@ -99,8 +99,10 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
                 }
                 else if(myQuestionsList.size()==5){
                     addButton.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noQuestions.setVisibility(View.INVISIBLE);
                 }
-                else{
+                else if(myQuestionsList.size()<5){
                     addButton.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     noQuestions.setVisibility(View.INVISIBLE);
