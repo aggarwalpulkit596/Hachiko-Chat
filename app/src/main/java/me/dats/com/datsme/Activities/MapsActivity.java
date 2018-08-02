@@ -58,11 +58,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         DatabaseReference database;
         database = FirebaseDatabase.getInstance().getReference();
         database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -86,7 +81,11 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void SetmyviewPager() {
@@ -104,6 +103,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
             viewPager.setAdapter(mPagerViewdapter);
+            viewPager.setOffscreenPageLimit(3);
             viewPager.setCurrentItem(1);
         }
 
