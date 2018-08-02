@@ -115,7 +115,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     private Animation animShow, animHide;
     private DatabaseReference mUserRef;
     private GoogleMap mMap;
+    View view;
 
+    String Map="Map";
     public Discover_people() {
         // Required empty public constructor
     }
@@ -125,9 +127,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_discover_people, container, false);
+        view = inflater.inflate(R.layout.fragment_discover_people, container, false);
         ButterKnife.bind(this, view);
-        Log.i("TAG", "onMapReady: view");
+        Log.d(Map, "onCreateView:123");
         return view;
     }
 
@@ -137,6 +139,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
+        Log.d(Map, "onCreateView:1");
 
 
         toggle_profile_button.setOnClickListener(new View.OnClickListener() {
@@ -158,9 +161,12 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 }
             }
         });
+        Log.d(Map, "onCreateView:2");
 
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         mUserRef.keepSynced(true);
+        Log.d(Map, "onCreateView:3");
+
 
         mLocationCallback = new LocationCallback() {
             @Override
@@ -178,11 +184,17 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 }
             }
         };
+        Log.d(Map, "onCreateView:4");
+
         mapFragment.getMapAsync(this);
+        Log.d(Map, "onCreateView:5");
+
         fetchusers();
+        Log.d(Map, "onCreateView:6");
         fetchlocation();
+        Log.d(Map, "onCreateView:7");
         initAnimation();
-        Log.i("TAG", "onMapReady: activity");
+        Log.d(Map, "onCreateView:8");
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -194,13 +206,14 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+
+        int i=1;
+        Log.d(Map, "onCreateView:onmapready"+i++);
         mMap = googleMap;
 
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveStartedListener(this);
         mMap.setOnCameraMoveListener(this);
-
-
         mMap.setMaxZoomPreference(MaxZoom);
 
         mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -216,30 +229,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         mRequestingLocationUpdates = true;
 
-
-        //for changing design of map
-        try {
-            Calendar calendar = Calendar.getInstance();
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            if (hourOfDay > 5 && hourOfDay < 21) {
-                boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
-            } else {
-                boolean success = mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle));
-            }
-        } catch (Resources.NotFoundException e) {
-            // Oops, looks like the map style resource couldn't be found!
-        }
-
-        Log.i("TAG", "onMapReady: map");
+        MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle);
         setUpClusterer();
         setMarkers();
-
-
     }
 
     private void setMarkers() {
+
+        int i=1;
+        Log.d(Map, "onCreateView:setmarkers"+i++);
         Log.i("TAG", "onMapReady: marker");
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -308,6 +306,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     mClusterManager.getMarkerManager().remove(marker);
                     mClusterManager.removeItem(item);
                     mClusterManager.cluster();
+
                     //clusterRender.onRemove();//added
 
 //                    if (getActivity() != null)//removed
@@ -457,6 +456,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     private void setUpClusterer() {
 
+        int i=1;
+        Log.d(Map, "onCreateView:setCluster"+i++);
         mClusterManager = new ClusterManager(getActivity(), mMap);
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
@@ -596,5 +597,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                             .build()));
             zoomLevel = mMap.getCameraPosition().zoom;
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }
