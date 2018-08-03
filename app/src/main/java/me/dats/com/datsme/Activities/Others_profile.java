@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +43,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     ImageView image;
     @BindView(R.id.Other_name)
     TextView name;
+    @BindView(R.id.Other_compatibility)
+    TextView compatibility;
 
 
     String user_id, userName;
@@ -66,8 +69,12 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     Button unfriend;
     @BindView(R.id.chat)
     Button chat;
+    private HashMap<String, String> culist = new HashMap<>();
+    private HashMap<String, String> oulist = new HashMap<>();
+    static float count = 0;
 
-    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase;
+
+    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
     private FirebaseUser mCurrentUser;
     private String mCurrent_State;
     private String current_uid;
@@ -227,18 +234,19 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     }
 
     private void init() {
+        //Constants
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        current_uid = mCurrentUser.getUid();
+        mCurrent_State = "not friends";
 
         //Firebase Instance
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         mOtherUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        mCurrentUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid).child("Tags");
         mFriendReqDatabse = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
-
-        //Constants
-        current_uid = mCurrentUser.getUid();
-        mCurrent_State = "not friends";
 
 
         mLoadProcess = new ProgressDialog(this);
@@ -246,6 +254,52 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mLoadProcess.setMessage("PLease Wait...");
         mLoadProcess.setCanceledOnTouchOutside(false);
         mLoadProcess.show();
+        findCompatibility();
+    }
+
+    private void findCompatibility() {
+        mCurrentUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+
+                    culist.put(dsp.getKey(), dsp.getValue().toString());
+
+                }
+                mOtherUserDatabase.child("Tags").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            oulist.put(dsp.getKey(), dsp.getValue().toString());
+                        }
+                        try {
+                            for (String k : oulist.keySet()) {
+                                if (culist.get(k).equals(oulist.get(k))) {
+                                    ++count;
+                                }
+                            }
+                        } catch (NullPointerException np) {
+                            Log.i("TAG", "findCompatibility: " + np.getLocalizedMessage());
+                        } finally {
+                            int size = oulist.size() > culist.size() ? culist.size() : oulist.size();
+                            int comp = (int) (count / size * 100);
+                            compatibility.setText(comp + "%");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     public void setvisibility(int i, boolean t) {
