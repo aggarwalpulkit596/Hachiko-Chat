@@ -13,8 +13,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
@@ -38,6 +41,7 @@ public class TagActivity extends AppCompatActivity {
 
     List<String> list = new ArrayList<>();
     private DatabaseReference mDatabase;
+    private DatabaseReference mQuestionDatabase;
     private FirebaseUser mCurrentUser;
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
@@ -49,10 +53,21 @@ public class TagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag);
         ButterKnife.bind(this);
-        list.add(" kiki Do you love me ?");
-        list.add("You Used to call me Cellphone");
-        list.add("Take me through the night");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        mQuestionDatabase = FirebaseDatabase.getInstance().getReference().child("tag");
+        mQuestionDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    list.add(dsp.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid()).child("Tags");
 
         mSwipeView = findViewById(R.id.swipeView);
@@ -128,7 +143,7 @@ public class TagActivity extends AppCompatActivity {
         private void onSwipeIn() {
             Log.d("EVENT", "onSwipedIn");
             answers.put(list.get(i++), "Yes");
-            Log.i("TAG", "onSwipeIn: "+answers.size());
+            Log.i("TAG", "onSwipeIn: " + answers.size());
         }
 
         @SwipeInState
