@@ -1,5 +1,6 @@
 package me.dats.com.datsme.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class TagActivity extends AppCompatActivity {
     private Context mContext;
     static Map<String, String> answers = new HashMap<>();
     static int i = 0;
+    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +57,14 @@ public class TagActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mQuestionDatabase = FirebaseDatabase.getInstance().getReference().child("tag");
-        mQuestionDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    list.add(dsp.getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid()).child("Tags");
 
         mSwipeView = findViewById(R.id.swipeView);
         mContext = getApplicationContext();
-
+        loadingBar = new ProgressDialog(this);
+        loadingBar.setTitle("Loading");
+        loadingBar.setMessage("Please wait, while your question are coming ");
+        loadingBar.show();
         mSwipeView.getBuilder()
                 .setDisplayViewCount(3)
                 .setSwipeDecor(new SwipeDecor()
@@ -81,11 +73,22 @@ public class TagActivity extends AppCompatActivity {
                         .setSwipeInMsgLayoutId(R.layout.msg_swipe_in)
                         .setSwipeOutMsgLayoutId(R.layout.msg_swipe_out));
 
+        mQuestionDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                loadingBar.dismiss();
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    list.add(dsp.getValue().toString());
+                    mSwipeView.addView(new QuestionCard(mContext, dsp.getValue().toString(), mSwipeView));
 
-        for (String profile : list) {
-            mSwipeView.addView(new QuestionCard(mContext, profile, mSwipeView));
-        }
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
