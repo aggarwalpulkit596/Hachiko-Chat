@@ -24,8 +24,8 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public BottomSheetAdapter(ArrayList<? extends MyItem> item, Context context, BottomSheetListFragment bottomSheetListFragment) {
         this.item = item;
         this.mContext = context;
-        this.bottomSheetListFragment=bottomSheetListFragment;
-        Log.i("TAG","sheetConstructor");
+        this.bottomSheetListFragment = bottomSheetListFragment;
+        Log.i("TAG", "sheetConstructor");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyItem generalItem = item.get(position);
         BottomSheetViewHolder bottomSheetViewHolder = (BottomSheetViewHolder) holder;
-        bottomSheetViewHolder.bind(generalItem, mContext,position,bottomSheetListFragment);
+        bottomSheetViewHolder.bind(generalItem, mContext, position, bottomSheetListFragment);
 
     }
 
@@ -48,6 +48,7 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (item != null) {
             return item.size();
-        }return 0;
+        }
+        return 0;
     }
 }

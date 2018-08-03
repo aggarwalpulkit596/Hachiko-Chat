@@ -4,14 +4,22 @@ import android.support.annotation.NonNull;
 
 public class Users implements Comparable<Users> {
 
-    private String name;
     public String thumb_image;
     public String image;
+    private String name;
     private double lattitude;
     private double longitude;
     private String dateofbirth;
     private String about;
     private String place;
+    private String college;
+    private String Worldview;
+    private Integer Compatibility;
+    private String gender;
+
+    public Users() {
+        //For Firebase
+    }
 
     public String getAbout() {
         return about;
@@ -35,16 +43,6 @@ public class Users implements Comparable<Users> {
 
     public void setCollege(String college) {
         this.college = college;
-    }
-
-    private String college;
-    private String Worldview;
-    private Integer Compatibility;
-    private String gender;
-
-
-    public Users() {
-        //For Firebase
     }
 
     public String getThumb_image() {

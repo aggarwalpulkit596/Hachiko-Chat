@@ -32,12 +32,12 @@ import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
 public class InboxActivity extends AppCompatActivity {
 
-    private ArrayList<Messages> inboxList = new ArrayList<>();
-    private HashMap<String, Messages> inbox = new HashMap<>();
     Toolbar toolbar;
     RecyclerView recyclerView;
     Messages messages;
     InboxAdapter inboxAdapter;
+    private ArrayList<Messages> inboxList = new ArrayList<>();
+    private HashMap<String, Messages> inbox = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

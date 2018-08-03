@@ -1,10 +1,9 @@
 package me.dats.com.datsme.Activities;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.dats.com.datsme.Adapters.QuestionAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Adapters.QuestionAdapter;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
@@ -55,11 +54,10 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
     @BindView(R.id.customQuestionlayout)
     RelativeLayout customQuestionLayout;
     Boolean customQuestionLayoutIsVisible;
-    private List<String> questionsList = new ArrayList<>();
-    private List<String> saveList = new ArrayList<>();
-
     QuestionAdapter QuestionAdapter;
     DatabaseReference quesRef;
+    private List<String> questionsList = new ArrayList<>();
+    private List<String> saveList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +108,7 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
 
         customQuestionTitle.setOnClickListener(this);
         saveCustomQuestion.setOnClickListener(this);
-        customQuestionLayoutIsVisible=false;
+        customQuestionLayoutIsVisible = false;
     }
 
     @Override
@@ -153,25 +151,21 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.saveCustomQuestion:
-                String question=customQuestionText.getText().toString().trim();
-                if(question.length()>0){
-                    if(saveList.size()<5)
-                    {
+                String question = customQuestionText.getText().toString().trim();
+                if (question.length() > 0) {
+                    if (saveList.size() < 5) {
 
-                    }
-                    else{
+                    } else {
 
                     }
                 }
                 break;
             case R.id.customQuestiontitle:
-                    if(customQuestionLayoutIsVisible)
-                    {
-                        customQuestionLayout.setVisibility(View.GONE);
-                    }
-                    else{
-                        customQuestionLayout.setVisibility(View.VISIBLE);
-                    }
+                if (customQuestionLayoutIsVisible) {
+                    customQuestionLayout.setVisibility(View.GONE);
+                } else {
+                    customQuestionLayout.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }

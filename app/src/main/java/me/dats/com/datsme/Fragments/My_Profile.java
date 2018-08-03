@@ -100,12 +100,12 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     Button myquestions;
     View view;
     String name, about_u, ur_clg, ur_gender, ur_image;
+    String thumb_downloadurl = null;
+    String download_url = null;
     private FirebaseUser mUser;
     private String uid;
     private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Users");
     private int BLUR_PRECENTAGE = 20;
-    String thumb_downloadurl = null;
-    String download_url = null;
     private StorageReference mStorageRef;
 
 
@@ -467,10 +467,9 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.my_questions:
-                Intent i=new Intent(getActivity(), Friendsquestions.class);
+                Intent i = new Intent(getActivity(), Friendsquestions.class);
                 startActivity(i);
                 break;
         }

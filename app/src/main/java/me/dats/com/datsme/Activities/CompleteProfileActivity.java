@@ -78,7 +78,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId,true);
+                                Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
                                 startActivity(new Intent(CompleteProfileActivity.this, TagActivity.class));
                                 finish();
                             }

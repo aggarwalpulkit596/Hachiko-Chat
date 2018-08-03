@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -50,16 +49,14 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model.getSnippet()!= FirebaseAuth.getInstance().getCurrentUser().getUid())
-                {
+                if (model.getSnippet() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
                     Intent i = new Intent(mContext, Others_profile.class);
                     i.putExtra("from_user_id", model.getSnippet());
                     i.putExtra("userName", model.getTitle());
                     view.getContext().startActivity(i);
-                }
-                else{
+                } else {
                     bottomSheetListFragment.dismiss();
-                    ((MapsActivity)mContext).getProfileFragment();
+                    ((MapsActivity) mContext).getProfileFragment();
                 }
 
             }

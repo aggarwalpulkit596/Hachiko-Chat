@@ -7,7 +7,7 @@
         android:color="@color/datsme_color" />
 
     <size
-        android:height="40dp"
-        android:width="20dp"/>
+        android:width="20dp"
+        android:height="40dp" />
 
 </shape>

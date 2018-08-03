@@ -25,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.internal.SignInButtonImpl;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,6 +67,17 @@ public class LoginActivity extends AppCompatActivity implements
     private CallbackManager mCallbackManager;
     //For PhoneAuth
     private DatabaseReference mDatabase;
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +146,6 @@ public class LoginActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("TAG", "handleFacebookAccessToken:" + token);
@@ -166,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements
                     }
                 });
     }
+    // [END auth_with_facebook]
 
     private void updateUI() {
         final String userId = mAuth.getCurrentUser().getUid();
@@ -192,7 +202,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
     }
-    // [END auth_with_facebook]
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -250,7 +259,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-
     @Override
     public void onClick(View view) {
 
@@ -261,7 +269,6 @@ public class LoginActivity extends AppCompatActivity implements
         }
 
     }
-
 
     @Override
     public void onStart() {
@@ -283,18 +290,6 @@ public class LoginActivity extends AppCompatActivity implements
         }
 
     }
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 
     public void phoneauth(View view) {
         startActivity(new Intent(LoginActivity.this, PhoneAuthActivity.class));

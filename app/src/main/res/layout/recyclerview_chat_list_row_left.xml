@@ -3,91 +3,92 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-<RelativeLayout
-    android:id="@+id/message_root_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="start"
-    android:background="@drawable/chat_white"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginBottom="10dp">
-
-    <!--<de.hdodenhof.circleimageview.CircleImageView-->
-    <!--android:id="@+id/message_image"-->
-    <!--android:layout_width="36dp"-->
-    <!--android:layout_height="36dp"-->
-    <!--android:layout_weight="0"-->
-    <!--android:src="@drawable/default_avatar" />-->
-    <LinearLayout
-
-        android:id="@+id/message_layout"
+    <RelativeLayout
+        android:id="@+id/message_root_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:padding="3dp">
+        android:layout_gravity="start"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/chat_white">
 
-        <TextView
-            android:id="@+id/message_text"
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/message_image"-->
+        <!--android:layout_width="36dp"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:layout_weight="0"-->
+        <!--android:src="@drawable/default_avatar" />-->
+        <LinearLayout
+
+            android:id="@+id/message_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:text=""
-            android:layout_marginRight="5dp"
-            android:textColor="#000"
-            android:textSize="15sp"/>
-        <ImageView
-            android:id="@+id/img"
-            android:layout_marginTop="2dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginRight="5dp"
-            android:scaleType="center"
-            android:background="@drawable/chat_white"/>
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:padding="3dp">
 
-        <TextView
-            android:id="@+id/text_message_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:text="11:40"
-            android:textSize="9sp" />
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:autoLink="web"
+                android:text=""
+                android:textColor="#000"
+                android:textSize="15sp" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/name_text_layout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:text="Display Name"-->
-        <!--android:textColor="@android:color/black"-->
-        <!--android:textSize="15sp"-->
-        <!--android:textStyle="bold" />-->
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/chat_white"
+                android:scaleType="center" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/time_text_layout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginTop="2dp"-->
-        <!--android:layout_toEndOf="@+id/name_text_layout"-->
-        <!--android:text="00:00"-->
-        <!--android:textSize="12sp" />-->
+            <TextView
+                android:id="@+id/text_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="5dp"
+                android:text="11:40"
+                android:textSize="9sp" />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/message_image_layout"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignStart="@+id/message_text"-->
-        <!--android:layout_alignTop="@+id/message_text" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/name_text_layout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:text="Display Name"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:textSize="15sp"-->
+            <!--android:textStyle="bold" />-->
 
-    </LinearLayout>
+            <!--<TextView-->
+            <!--android:id="@+id/time_text_layout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_toEndOf="@+id/name_text_layout"-->
+            <!--android:text="00:00"-->
+            <!--android:textSize="12sp" />-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/message_image_layout"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignStart="@+id/message_text"-->
+            <!--android:layout_alignTop="@+id/message_text" />-->
+
+        </LinearLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

@@ -2,20 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_bg"
-    android:padding="10dp"
     android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp">
+    android:layout_marginRight="15dp"
+    android:background="@drawable/dialog_bg"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/otp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColor="#0C0B0B"
         android:padding="2dp"
         android:text="Enter the code you just recieved"
         android:textAlignment="center"
+        android:textColor="#0C0B0B"
         android:textSize="15dp" />
 
     <LinearLayout
@@ -23,20 +23,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/otp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:weightSum="6"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:weightSum="6">
 
         <EditText
             android:id="@+id/edit_otp1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/otp_enter_text"
-            android:inputType="number"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:background="@drawable/otp_enter_text"
+            android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
             android:textSize="25dp" />
@@ -45,11 +45,11 @@
         <EditText
             android:id="@+id/edit_otp2"
             android:layout_width="match_parent"
-            android:background="@drawable/otp_enter_text"
             android:layout_height="wrap_content"
-            android:inputType="number"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:background="@drawable/otp_enter_text"
+            android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
             android:textSize="25dp" />
@@ -58,9 +58,9 @@
             android:id="@+id/edit_otp3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/otp_enter_text"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:background="@drawable/otp_enter_text"
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -69,10 +69,10 @@
         <EditText
             android:id="@+id/edit_otp4"
             android:layout_width="match_parent"
-            android:background="@drawable/otp_enter_text"
+            android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:background="@drawable/otp_enter_text"
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -82,10 +82,10 @@
             android:id="@+id/edit_otp5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:background="@drawable/otp_enter_text"
-            android:layout_margin="2dp"
+            android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
             android:textSize="25dp" />
@@ -93,9 +93,9 @@
         <EditText
             android:id="@+id/edit_otp6"
             android:layout_width="match_parent"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
+            android:layout_weight="1"
             android:background="@drawable/otp_enter_text"
             android:inputType="number"
             android:maxLength="1"
@@ -109,9 +109,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_otp"
         android:layout_centerHorizontal="true"
-        android:textColor="#0C0B0B"
         android:layout_marginTop="25dp"
         android:text="Timer"
+        android:textColor="#0C0B0B"
         android:textSize="15dp" />
 
     <TextView
@@ -130,17 +130,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_resend"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="15dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
             android:background="@drawable/button_background_orange"
             android:text="Cancel"
             android:textColor="#fff"

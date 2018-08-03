@@ -9,13 +9,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_myprofile"
-        android:theme="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="#fff"
         android:layout_gravity="center_vertical"
         android:background="@color/datsme_color"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.AppCompat.Light"
+        app:titleTextColor="#fff">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,11 +23,11 @@
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Profile" />
+                android:text="Profile"
+                android:textColor="#fff" />
 
             <TextView
                 android:id="@+id/cancel"
@@ -219,11 +219,12 @@
                 </RadioGroup>
 
             </LinearLayout>
+
             <Button
+                android:id="@+id/my_questions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_questions"
-                android:text="My questions"/>
+                android:text="My questions" />
 
         </LinearLayout>
     </ScrollView>

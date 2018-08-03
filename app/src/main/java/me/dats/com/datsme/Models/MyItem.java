@@ -14,22 +14,12 @@ public class MyItem implements ClusterItem, Serializable {
     private transient LatLng mPosition;
     private String mTitle;
     private String mSnippet;
-
-    public Marker getMyItemMarker() {
-        return this.marker;
-    }
-
-    public void setMyItemMarker(Marker marker) {
-        this.marker =marker;
-    }
-
     private transient Marker marker;
     private transient Bitmap bitmap;
 
     public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
     }
-
     public MyItem(double lat, double lng, String title, String mSnippet, String s, Bitmap bitmap) {
         Log.d("TAG", "item: " + title);
         mPosition = new LatLng(lat, lng);
@@ -45,6 +35,14 @@ public class MyItem implements ClusterItem, Serializable {
         mTitle = title;
         URL = s;
         this.mSnippet = mSnippet;
+    }
+
+    public Marker getMyItemMarker() {
+        return this.marker;
+    }
+
+    public void setMyItemMarker(Marker marker) {
+        this.marker = marker;
     }
 
     public String getURL() {

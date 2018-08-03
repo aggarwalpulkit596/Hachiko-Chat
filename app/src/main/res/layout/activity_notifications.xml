@@ -5,21 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.NotificationsActivity">
+
     <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:background="@color/datsme_color"
-        app:title="Notifications"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
         android:id="@+id/toolbar_notifications"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/datsme_color"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Notifications">
 
     </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notificationlist"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/toolbar_notifications"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_notifications"
+        android:layout_marginTop="10dp"
+        android:padding="5dp" />
 
 </RelativeLayout>
