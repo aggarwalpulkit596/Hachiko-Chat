@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDexApplication;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.facebook.FacebookSdk;
@@ -27,8 +28,12 @@ import me.dats.com.datsme.Utils.MyPreference;
 
 public class Datsme extends MultiDexApplication {
     public static Datsme myApp;
+   // public static boolean connected=true;
     public static MyPreference myPreferenceManager;
-    public static boolean connected = true;
+
+    //
+    // public static RelativeLayout v;
+
 
     public static MyPreference getPreferenceManager() {
         if (myPreferenceManager == null) {
@@ -48,6 +53,10 @@ public class Datsme extends MultiDexApplication {
         return myApp;
     }
 
+//    public static void setView(RelativeLayout view)
+//    {
+//        v= view;
+//    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -56,49 +65,17 @@ public class Datsme extends MultiDexApplication {
         // Initialize the SDK before executing any other operations,
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-    }
 
-    public static boolean isConnected()
-    {
-        return connected;
-    }
-    public static void checkInternet(final RelativeLayout relativeLayout)
-    {
-        ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean isConnectedToInternet) {
-                        // do something with isConnectedToInternet value
-                        showSnack(isConnectedToInternet,relativeLayout);
-                    }
-                });
-    }
-    private static void showSnack(boolean isConnected,RelativeLayout relativeLayout) {
-        String message;
-        if (isConnected) {
-            if (!connected) {
-                message = "Good! You're now connected.";
-
-                Snackbar snackBar = Snackbar.make(relativeLayout
-                        , message, Snackbar.LENGTH_SHORT);
-                View sbView = snackBar.getView();
-                sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
-                snackBar.show();
-            }
-        } else {
-            connected = false;
-            message = "Sorry! No internet connection.";
-            Snackbar snackBar = Snackbar.make(relativeLayout
-                    , message, Snackbar.LENGTH_INDEFINITE);
-            View sbView = snackBar.getView();
-            sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
-            snackBar.show();
-
-        }
-
-
+//        ReactiveNetwork.observeInternetConnectivity()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<Boolean>() {
+//                    @Override
+//                    public void accept(Boolean isConnectedToInternet) {
+//                        // do something with isConnectedToInternet value
+//                        showSnack(isConnectedToInternet);
+//                    }
+//                });
     }
 
 //    public static void checkAuth() {
@@ -125,4 +102,34 @@ public class Datsme extends MultiDexApplication {
 //            }
 //        });
 //    }
+//private static void showSnack(boolean isConnected) {
+//    String message;
+//
+//    if(v!=null)
+//    {
+//        if (isConnected) {
+//            if (!connected) {
+//                message = "Good! You're now connected.";
+//                Snackbar snackBar = Snackbar.make(v
+//                        , message, Snackbar.LENGTH_SHORT);
+//                View sbView = snackBar.getView();
+//                sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+//                snackBar.show();
+//            }
+//        } else {
+//            connected = false;
+//            message = "Sorry! No internet connection.";
+//            Snackbar snackBar = Snackbar.make(v
+//                    , message, Snackbar.LENGTH_INDEFINITE);
+//            View sbView = snackBar.getView();
+//            sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+//            snackBar.show();
+//
+//        }
+//
+//    }
+//
+//
+//}
+
 }

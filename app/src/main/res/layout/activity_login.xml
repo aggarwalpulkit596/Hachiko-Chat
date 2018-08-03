@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="5"
+    android:id="@+id/rootlayout_LoginActivity"
     android:background="@drawable/custom_background">
 <LinearLayout
     android:layout_weight="2"

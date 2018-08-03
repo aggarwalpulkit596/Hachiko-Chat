@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -61,8 +62,8 @@ public class LoginActivity extends AppCompatActivity implements
     SignInButtonImpl signInButton;
     @BindView(R.id.btn_fbSignIn)
     LoginButton fbSignInBtn;
-
-
+    @BindView(R.id.rootlayout_LoginActivity)
+    LinearLayout rootlayout;
     private FirebaseAuth mAuth;
 
     private CallbackManager mCallbackManager;

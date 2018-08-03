@@ -59,9 +59,11 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
+    public boolean connected = true;
+
 
     @BindView(R.id.rootlayout)
-    RelativeLayout relativeLayout;
+    public RelativeLayout relativeLayout;
 
 
     @Override
@@ -80,36 +82,47 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 //                .errorHandler(testErrorHandler)
 //                .strategy(strategy)
 //                .build();
-        Datsme.checkInternet(relativeLayout);
 
+        ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean isConnectedToInternet) {
+                        // do something with isConnectedToInternet value
+                        showSnack(isConnectedToInternet);
+                    }
+                });
         DatabaseReference database;
-    database =FirebaseDatabase.getInstance().getReference();
-    database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange (@NonNull DataSnapshot dataSnapshot){
-            if (!dataSnapshot.exists()) {
-                Datsme.getPreferenceManager().clearLoginData();
-                startActivity(new Intent(MapsActivity.this, LoginActivity.class));
-                finish();
-            } else {
-                //shared preference tokens
-                Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
-                Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
-                SetmyviewPager();
+        database = FirebaseDatabase.getInstance().getReference();
+        database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    Datsme.getPreferenceManager().clearLoginData();
+                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    //shared preference tokens
+                    Datsme.getPreferenceManager().putBoolean(MyPreference.ProfileId, true);
+                    Datsme.getPreferenceManager().putBoolean(MyPreference.CompleteProfileId, true);
+                    SetmyviewPager();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        }
+        });
 
-        @Override
-        public void onCancelled (@NonNull DatabaseError databaseError){
+    }
 
-        }
-    });
-
-}
     @Override
     protected void onStart() {
         super.onStart();
+       // Datsme.setView(relativeLayout);
     }
 
     private void SetmyviewPager() {
@@ -256,4 +269,30 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 //            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private void showSnack(boolean isConnected) {
+        String message;
+        if (isConnected) {
+            if (!connected) {
+                message = "Good! You're now connected.";
+                Snackbar snackBar = Snackbar.make(relativeLayout
+                        , message, Snackbar.LENGTH_SHORT);
+                View sbView = snackBar.getView();
+                sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+                snackBar.show();
+            }
+        } else {
+            connected = false;
+            message = "Sorry! No internet connection.";
+            Snackbar snackBar = Snackbar.make(relativeLayout
+                    , message, Snackbar.LENGTH_INDEFINITE);
+            View sbView = snackBar.getView();
+            sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+            snackBar.show();
+
+        }
+
+    }
+
+
 }
