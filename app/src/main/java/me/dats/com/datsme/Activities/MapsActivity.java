@@ -3,9 +3,11 @@ package me.dats.com.datsme.Activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +33,9 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import me.dats.com.datsme.Adapters.PagerViewAdapter;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
@@ -51,9 +58,12 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     ViewPager viewPager;
 
     PagerViewAdapter mPagerViewdapter;
-    @BindView(R.id.rootlayout)
-    RelativeLayout relativeLayout;
     private boolean doubleBackToExitPressedOnce = false;
+    public boolean connected = true;
+
+
+    @BindView(R.id.rootlayout)
+    public RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +81,17 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 //                .errorHandler(testErrorHandler)
 //                .strategy(strategy)
 //                .build();
-        Datsme.checkInternet(relativeLayout);
 
+        ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean isConnectedToInternet) {
+                        // do something with isConnectedToInternet value
+                        showSnack(isConnectedToInternet);
+                    }
+                });
         DatabaseReference database;
         database = FirebaseDatabase.getInstance().getReference();
         database.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -102,6 +121,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+       // Datsme.setView(relativeLayout);
     }
 
     private void SetmyviewPager() {
@@ -248,4 +268,30 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 //            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private void showSnack(boolean isConnected) {
+        String message;
+        if (isConnected) {
+            if (!connected) {
+                message = "Good! You're now connected.";
+                Snackbar snackBar = Snackbar.make(relativeLayout
+                        , message, Snackbar.LENGTH_SHORT);
+                View sbView = snackBar.getView();
+                sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+                snackBar.show();
+            }
+        } else {
+            connected = false;
+            message = "Sorry! No internet connection.";
+            Snackbar snackBar = Snackbar.make(relativeLayout
+                    , message, Snackbar.LENGTH_INDEFINITE);
+            View sbView = snackBar.getView();
+            sbView.setBackgroundColor(Color.parseColor("#d63f3a"));
+            snackBar.show();
+
+        }
+
+    }
+
+
 }

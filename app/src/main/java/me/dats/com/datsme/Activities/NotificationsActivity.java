@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -42,6 +44,8 @@ public class NotificationsActivity extends AppCompatActivity {
     FirebaseUser mUser;
     @BindView(R.id.notificationlist)
     RecyclerView mNotificationlist;
+    @BindView(R.id.rootlayout_notifications)
+    RelativeLayout rootlayout;
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
@@ -51,6 +55,7 @@ public class NotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notifications);
 
         ButterKnife.bind(this);
+
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
