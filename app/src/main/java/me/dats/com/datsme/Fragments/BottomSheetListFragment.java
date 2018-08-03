@@ -1,11 +1,7 @@
 package me.dats.com.datsme.Fragments;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,14 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Adapters.BottomSheetAdapter;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.R;
@@ -50,7 +43,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
 
         BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Items",list);
+        bundle.putSerializable("Items", list);
         bottomSheetFragment.setArguments(bundle);
 
         return bottomSheetFragment;
@@ -62,6 +55,7 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,10 +71,11 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemViewCacheSize(10);
-        bottomSheetAdapter = new BottomSheetAdapter(list,getActivity(),this);
+        bottomSheetAdapter = new BottomSheetAdapter(list, getActivity(), this);
         mRecyclerView.setAdapter(bottomSheetAdapter);
         return root;
     }
+
     @Override
     public void onResume() {
         super.onResume();

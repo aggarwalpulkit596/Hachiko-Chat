@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/datsme_color"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="Questions">
-        </android.support.v7.widget.Toolbar>
+            app:title="Questions"></android.support.v7.widget.Toolbar>
 
         <TextView
             android:id="@+id/title"
@@ -58,12 +57,12 @@
             android:id="@+id/customQuestionlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
             android:layout_below="@+id/customQuestiontitle"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="#FFF">
+            android:background="#FFF"
+            android:visibility="invisible">
 
             <EditText
                 android:id="@+id/CustomQuestionText"
@@ -76,10 +75,10 @@
                 android:padding="15dp" />
 
             <Button
+                android:id="@+id/saveCustomQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/saveCustomQuestion"
                 android:layout_below="@id/CustomQuestionText"
                 android:background="#f95252"
                 android:text="save"

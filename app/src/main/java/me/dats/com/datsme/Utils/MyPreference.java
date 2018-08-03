@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 public class MyPreference {
 
-    public static final String ProfileId= "ProfileId";
+    public static final String ProfileId = "ProfileId";
     public static final String CompleteProfileId = "CompleteProfileId";
     public static final String USERNAME = "id";
     public static final String KEY_ACCESS_TOKEN = "access_token";
@@ -30,14 +30,13 @@ public class MyPreference {
 
     }
 
-    public void putBoolean(String key,Boolean value)
-    {
-        editor.putBoolean(key,value);
+    public void putBoolean(String key, Boolean value) {
+        editor.putBoolean(key, value);
         editor.apply();
     }
-    public boolean getBoolean(String key)
-    {
-        return sharedPreferences.getBoolean(key,false);
+
+    public boolean getBoolean(String key) {
+        return sharedPreferences.getBoolean(key, false);
     }
 
     public void putString(String key, String value) {

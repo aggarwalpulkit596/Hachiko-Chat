@@ -4,7 +4,6 @@ package me.dats.com.datsme.Fragments;
 import android.Manifest;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -61,7 +59,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,15 +107,13 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     float MaxZoom = 19.05f;
     float zoomLevel = 15.0f; //This goes up to 21\
     boolean firstlauch = true;
-
+    View view;
+    String Map = "Map";
     private ClusterManager<MyItem> mClusterManager;
     private ClusterRender clusterRender;
     private Animation animShow, animHide;
     private DatabaseReference mUserRef;
     private GoogleMap mMap;
-    View view;
-
-    String Map = "Map";
 
     public Discover_people() {
         // Required empty public constructor
@@ -552,6 +547,26 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     }
 
+    @OnClick(R.id.location_icon)
+    public void goToMyLocation() {
+        if (location != null) {
+            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                    new CameraPosition.Builder()
+                            .target(coordinate)
+                            .tilt(90)
+                            .zoom(17.05f)
+                            .build()));
+            zoomLevel = mMap.getCameraPosition().zoom;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
@@ -585,25 +600,5 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         }
 
-    }
-
-    @OnClick(R.id.location_icon)
-    public void goToMyLocation() {
-        if (location != null) {
-            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude()); //Store these lat lng values somewhere. These should be constant.
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(coordinate)
-                            .tilt(90)
-                            .zoom(17.05f)
-                            .build()));
-            zoomLevel = mMap.getCameraPosition().zoom;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }

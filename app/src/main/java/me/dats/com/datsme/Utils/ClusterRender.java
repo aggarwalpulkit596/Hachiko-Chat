@@ -11,7 +11,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import me.dats.com.datsme.Fragments.Discover_people;
 import me.dats.com.datsme.Models.MyItem;
 
 public class ClusterRender extends DefaultClusterRenderer<MyItem> {
@@ -27,7 +26,7 @@ public class ClusterRender extends DefaultClusterRenderer<MyItem> {
     @Override
     protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
         //start clustering if at least 2 items overlap
-        return cluster.getSize() > 1 ;
+        return cluster.getSize() > 1;
     }
 //
 //    @Override

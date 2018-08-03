@@ -32,7 +32,6 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
@@ -125,6 +124,16 @@ public class NotificationsActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public static class NotificationsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
@@ -160,15 +169,5 @@ public class NotificationsActivity extends AppCompatActivity {
                 textnotification.setText(name + " has sent you a Friend Request.");
             }
         }
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

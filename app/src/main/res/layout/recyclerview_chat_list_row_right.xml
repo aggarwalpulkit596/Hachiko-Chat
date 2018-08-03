@@ -8,9 +8,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="50dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/chart_grey">
 
         <!--<de.hdodenhof.circleimageview.CircleImageView-->
@@ -24,28 +24,29 @@
             android:id="@+id/message_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:orientation="vertical"
             android:padding="3dp">
 
             <TextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
                 android:layout_marginRight="10dp"
-                android:textColor="#000"
+                android:autoLink="web"
                 android:text=""
+                android:textColor="#000"
                 android:textSize="15sp" />
+
             <ImageView
                 android:id="@+id/img"
-                android:layout_marginTop="2dp"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_marginRight="13dp"
-                android:scaleType="center"
-                android:background="@drawable/chart_grey"/>
+                android:layout_marginTop="2dp"
+                android:background="@drawable/chart_grey"
+                android:scaleType="center" />
 
             <TextView
                 android:id="@+id/text_message_time"

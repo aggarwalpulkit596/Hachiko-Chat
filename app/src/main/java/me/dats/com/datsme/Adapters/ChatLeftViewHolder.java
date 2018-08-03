@@ -30,19 +30,18 @@ public class ChatLeftViewHolder extends RecyclerView.ViewHolder {
         messageText = itemView.findViewById(R.id.message_text);
         time1 = itemView.findViewById(R.id.text_message_time);
         msg = itemView.findViewById(R.id.message_layout);
-        img=itemView.findViewById(R.id.img);
+        img = itemView.findViewById(R.id.img);
     }
 
     public void bind(final Messages chatModel, Context mContext) {
         //TODO set data to xml view via textivew.setText();
         Linkify.addLinks(messageText, Linkify.WEB_URLS);
-        final String message=chatModel.getMessage();
-        if(chatModel.getType().equals("text"))
-        {messageText.setVisibility(View.VISIBLE);
+        final String message = chatModel.getMessage();
+        if (chatModel.getType().equals("text")) {
+            messageText.setVisibility(View.VISIBLE);
             messageText.setText(chatModel.getMessage());
-            img.setVisibility(View.GONE);}
-        else
-        {
+            img.setVisibility(View.GONE);
+        } else {
             img.setVisibility(View.VISIBLE);
             messageText.setVisibility(View.GONE);
             if (!message.equals("default"))

@@ -65,7 +65,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.rootlayout)
     public RelativeLayout relativeLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

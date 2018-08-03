@@ -32,7 +32,7 @@
         android:layout_toEndOf="@+id/chatBarImageView"
         android:text="Display Name"
         android:textColor="@android:color/white"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <!--  <TextView
           android:id="@+id/chatBarUserOnline"

@@ -3,7 +3,6 @@ package me.dats.com.datsme.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,12 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import me.dats.com.datsme.Activities.Friendsquestions;
 import me.dats.com.datsme.R;
 
 
@@ -40,14 +33,14 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     public QuestionAdapter(List<String> questionsList, List<String> s, Context mContext) {
         this.questionsList = questionsList;
         this.mContext = mContext;
-        this.onlyShow=false;
+        this.onlyShow = false;
         this.saveList = s;
     }
-    public QuestionAdapter(List<String> questionsList,Context mContext)
-    {
+
+    public QuestionAdapter(List<String> questionsList, Context mContext) {
         this.questionsList = questionsList;
         this.mContext = mContext;
-        this.onlyShow=true;
+        this.onlyShow = true;
     }
 
 
@@ -63,8 +56,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     public void onBindViewHolder(final QuestionAdapter.MyViewHolder holder, int position) {
 
         holder.question.setText(questionsList.get(position).toString());
-        if(onlyShow)
-        {
+        if (onlyShow) {
             holder.delete.setVisibility(View.VISIBLE);
             holder.question.setVisibility(View.VISIBLE);
             holder.addIcon.setVisibility(View.INVISIBLE);
@@ -80,8 +72,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                if(dsp.getValue().equals(holder.question.getText()))
-                                {
+                                if (dsp.getValue().equals(holder.question.getText())) {
                                     dsp.getRef().removeValue();
                                 }
                             }
@@ -96,8 +87,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
 
                 }
             });
-        }
-        else{
+        } else {
             holder.delete.setVisibility(View.INVISIBLE);
             holder.question.setVisibility(View.VISIBLE);
             holder.addIcon.setVisibility(View.VISIBLE);
@@ -133,6 +123,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     public List<String> getSaveList() {
         return saveList;
     }
+
     public List<String> getQuestionList() {
         return this.questionsList;
     }
@@ -140,7 +131,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView question, numbering;
-        public ImageView addIcon,delete;
+        public ImageView addIcon, delete;
 
 
         public MyViewHolder(View view) {

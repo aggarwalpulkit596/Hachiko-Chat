@@ -10,8 +10,8 @@
         android:id="@+id/splashlogo"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:transitionName="logo"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo"
+        android:transitionName="logo" />
 
 </RelativeLayout>

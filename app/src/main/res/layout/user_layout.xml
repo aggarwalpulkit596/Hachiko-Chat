@@ -27,8 +27,8 @@
             android:layout_below="@id/image"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:maxLength="9"
             android:gravity="center"
+            android:maxLength="9"
             android:textColor="#000"
             android:textSize="22sp" />
     </RelativeLayout>

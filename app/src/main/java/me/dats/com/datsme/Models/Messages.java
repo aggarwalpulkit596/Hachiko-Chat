@@ -1,14 +1,13 @@
 package me.dats.com.datsme.Models;
 
 
-
 import java.io.Serializable;
 
 public class Messages implements Serializable {
+    public String fuid;
     private String message, type, from;
     private boolean seen;
     private long time;
-    public String fuid;
 
 
     public Messages() {

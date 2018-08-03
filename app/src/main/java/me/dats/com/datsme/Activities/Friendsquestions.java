@@ -1,30 +1,19 @@
 package me.dats.com.datsme.Activities;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,11 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.AbstractQueue;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +31,7 @@ import me.dats.com.datsme.Adapters.QuestionAdapter;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
-public class Friendsquestions extends AppCompatActivity implements View.OnClickListener{
+public class Friendsquestions extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.friends_quuestionToolbar)
     Toolbar toolbar;
@@ -60,6 +46,7 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
 
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +55,7 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -91,18 +78,15 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
                     myQuestionsList.add(dsp.getValue().toString());
                 }
                 QuestionAdapter.notifyDataSetChanged();
-                if(myQuestionsList.isEmpty())
-                {
+                if (myQuestionsList.isEmpty()) {
                     addButton.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                     noQuestions.setVisibility(View.VISIBLE);
-                }
-                else if(myQuestionsList.size()==5){
+                } else if (myQuestionsList.size() == 5) {
                     addButton.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     noQuestions.setVisibility(View.INVISIBLE);
-                }
-                else if(myQuestionsList.size()<5){
+                } else if (myQuestionsList.size() < 5) {
                     addButton.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     noQuestions.setVisibility(View.INVISIBLE);
@@ -117,7 +101,7 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
     }
 
     private void init() {
-        QuestionAdapter=new QuestionAdapter(myQuestionsList,getApplicationContext());
+        QuestionAdapter = new QuestionAdapter(myQuestionsList, getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -138,10 +122,9 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.addButton:
-                Intent i=new Intent(Friendsquestions.this, generateQuestions.class);
+                Intent i = new Intent(Friendsquestions.this, generateQuestions.class);
                 startActivity(i);
                 break;
         }

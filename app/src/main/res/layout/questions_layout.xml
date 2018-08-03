@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_height="wrap_content">
+    android:layout_marginRight="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/numbering"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
         android:textColor="@color/datsme_color"
-        android:textSize="16sp"
-        android:layout_height="wrap_content" />
+        android:textSize="16sp" />
+
     <TextView
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/question"
-        android:textColor="@color/datsme_color"
-        android:layout_toRightOf="@+id/numbering"
         android:layout_toLeftOf="@+id/addIcon"
-        android:textSize="16sp"/>
+        android:layout_toRightOf="@+id/numbering"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:textColor="@color/datsme_color"
+        android:textSize="16sp" />
+
     <ImageView
-        android:layout_width="20dp"
         android:id="@+id/addIcon"
-        android:layout_centerVertical="true"
-        android:layout_height="20dp"
-        android:src="@drawable/addcircle"
-        android:layout_alignParentEnd="true"/>
-    <ImageView
         android:layout_width="20dp"
-        android:id="@+id/deleteIcon"
-        android:layout_centerVertical="true"
         android:layout_height="20dp"
-        android:src="@drawable/delete"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/addcircle" />
+
+    <ImageView
+        android:id="@+id/deleteIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/delete" />
 
 </RelativeLayout>

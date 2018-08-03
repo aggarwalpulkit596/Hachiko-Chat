@@ -10,13 +10,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_messages"
-        android:theme="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="#fff"
         android:layout_gravity="center_vertical"
         android:background="@color/datsme_color"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.AppCompat.Light"
+        app:titleTextColor="#fff">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,25 +24,27 @@
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Friends" />
+                android:text="Friends"
+                android:textColor="#fff" />
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_message_black_24dp"
                 android:id="@+id/inbox"
-                android:layout_toLeftOf="@+id/notification"
-                android:layout_height="wrap_content" />
-            <ImageView
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/ic_add_alert_black_24dp"
+                android:layout_toLeftOf="@+id/notification"
+                android:src="@drawable/ic_message_black_24dp" />
+
+            <ImageView
                 android:id="@+id/notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_height="wrap_content" />
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_add_alert_black_24dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

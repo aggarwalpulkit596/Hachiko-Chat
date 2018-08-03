@@ -29,14 +29,15 @@
             android:background="#eceff1" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <ImageView
         android:id="@+id/scroll"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_above="@id/linearLayout"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:src="@drawable/scroll_to_bottom"/>
+        android:src="@drawable/scroll_to_bottom"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -54,9 +55,9 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1.5"
             android:alpha=".4"
-            android:onClick="sendImage"
             android:background="#cccccc"
-           android:src="@drawable/gal" />
+            android:onClick="sendImage"
+            android:src="@drawable/gal" />
 
         <EditText
             android:id="@+id/chat_msgview"

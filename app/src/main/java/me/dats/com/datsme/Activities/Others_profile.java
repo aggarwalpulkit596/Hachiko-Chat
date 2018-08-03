@@ -1,12 +1,10 @@
 package me.dats.com.datsme.Activities;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +34,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
@@ -85,7 +82,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        android.support.v7.app.ActionBar actionBar=getSupportActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -174,8 +171,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                     }
                     mLoadProcess.dismiss();
 
-                }
-                else{
+                } else {
                     mFriendsDatabase.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -264,12 +260,10 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        switch(view.getId())
-        {
+        switch (view.getId()) {
             case R.id.unfriend:
                 unfriend.setEnabled(false);
-                if (mCurrent_State.equals("friends"))
-                {
+                if (mCurrent_State.equals("friends")) {
                     final Map<String, Object> unfriendMap = new HashMap<>();
                     unfriendMap.put("Friends/" + current_uid + "/" + user_id, null);
                     unfriendMap.put("Friends/" + user_id + "/" + current_uid, null);
@@ -282,8 +276,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                                 unfriend.setEnabled(true);
                                 profileshown.setVisibility(View.GONE);
                                 profilehidden.setVisibility(View.VISIBLE);
-                                setvisibility(0,true);
-                                setvisibility(1,false);
+                                setvisibility(0, true);
+                                setvisibility(1, false);
                                 textView[0].setText("Add Friend");
                                 imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
                             } else {
@@ -296,9 +290,9 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.chat:
-                Intent i=new Intent(Others_profile.this,ChatActivity.class);
-                i.putExtra("from_user_id",user_id);
-                i.putExtra("userName",userName);
+                Intent i = new Intent(Others_profile.this, ChatActivity.class);
+                i.putExtra("from_user_id", user_id);
+                i.putExtra("userName", userName);
                 startActivity(i);
                 break;
             case R.id.Other_firstButton:
@@ -333,8 +327,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                                 Toast.makeText(Others_profile.this, "Request sent", Toast.LENGTH_SHORT).show();
                                 textView[0].setText("Cancel Request");
                                 imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.cancel_request));
-                                setvisibility(1,false);
-                                setvisibility(0,true);
+                                setvisibility(1, false);
+                                setvisibility(0, true);
                                 mLoadProcess.dismiss();
 
                             }
@@ -359,8 +353,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
                                     textView[0].setText("Add Friend");
                                     imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
-                                    setvisibility(1,false);
-                                    setvisibility(0,true);
+                                    setvisibility(1, false);
+                                    setvisibility(0, true);
                                     mLoadProcess.dismiss();
                                 }
                             });
@@ -388,8 +382,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                                 mCurrent_State = "friends";
                                 textView[0].setText("Friends");
                                 imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.friends));
-                                setvisibility(1,false);
-                                setvisibility(0,true);
+                                setvisibility(1, false);
+                                setvisibility(0, true);
                                 mLoadProcess.dismiss();
 
                             } else {
@@ -416,8 +410,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                                     mCurrent_State = "not friends";
                                     textView[0].setText("Add friend");
                                     imageView[0].setImageDrawable(getResources().getDrawable(R.drawable.ic_person_add_black_24dp));
-                                    setvisibility(1,false);
-                                    setvisibility(0,true);
+                                    setvisibility(1, false);
+                                    setvisibility(0, true);
                                     mLoadProcess.dismiss();
                                 }
                             });
@@ -428,6 +422,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
