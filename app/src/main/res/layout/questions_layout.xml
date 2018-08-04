@@ -7,19 +7,20 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:padding="5dp"
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/numbering"
+                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:textColor="@color/datsme_color"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/question"
@@ -27,15 +28,17 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/addIcon"
                 android:layout_toRightOf="@+id/numbering"
                 android:textColor="@color/datsme_color"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/addIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginRight="5dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/addcircle" />
@@ -46,6 +49,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
                 android:src="@drawable/delete" />
 
         </RelativeLayout>
