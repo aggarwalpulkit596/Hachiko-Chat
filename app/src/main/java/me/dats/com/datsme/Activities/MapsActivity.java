@@ -55,9 +55,9 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     ImageView myprofile;
 
     @BindView(R.id.map_view_pager)
-    ViewPager viewPager;
+   public ViewPager viewPager;
 
-    PagerViewAdapter mPagerViewdapter;
+    public PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
     public boolean connected = true;
 
@@ -70,7 +70,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-
         //        InternetOb
         // servingSettings settings = InternetObservingSettings
 //                .initialInterval(initialInterval)
@@ -118,14 +117,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-       // Datsme.setView(relativeLayout);
-    }
-
     private void SetmyviewPager() {
-
         String user_id = getIntent().getStringExtra("From");
 
         mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(), user_id);

@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -69,7 +71,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class My_Profile extends Fragment implements View.OnClickListener {
 
-
+    MapsActivity mapsActivity;
     public ProgressDialog dialog;
     public DatabaseReference newRef;
     Menu Mymenu;
@@ -116,11 +118,11 @@ public class My_Profile extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_my__profile, container, false);
         ButterKnife.bind(this, view);
 
-
-        MapsActivity mapsActivity = (MapsActivity) getActivity();
+        mapsActivity = (MapsActivity) getActivity();
         mapsActivity.setSupportActionBar(toolbar);
 
         setHasOptionsMenu(true);
+
         //Dialog Setup
         dialog = new ProgressDialog(getActivity());
         dialog.setCancelable(false);
@@ -130,6 +132,32 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
 
         myquestions.setOnClickListener(this);
+        cancel.setOnClickListener(this);
+        edit_image.setOnClickListener(this);
+        save.setOnClickListener(this);
+        setMyProfiledata();
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    //Do anything here which needs to be done after signout is complete
+
+                    Datsme.getPreferenceManager().clearLoginData();
+                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(i);
+                    if (getActivity() != null)
+                        getActivity().finish();
+
+                }
+            }
+        };
+        firebaseAuth.addAuthStateListener(authStateListener);
+        return view;
+    }
+
+    private void setMyProfiledata() {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = mUser.getUid();
         newRef = mRef.child(uid);
@@ -199,93 +227,6 @@ public class My_Profile extends Fragment implements View.OnClickListener {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                save.setVisibility(View.GONE);
-                cancel.setVisibility(View.GONE);
-
-                setting.setVisibility(View.VISIBLE);
-
-                edit_image.setVisibility(View.GONE);
-
-
-                abtU.setInputType(InputType.TYPE_NULL);
-                college.setInputType(InputType.TYPE_NULL);
-
-                SelectRadioForSetting(false);
-            }
-        });
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty()) {
-                    if (abtU.getText().toString().isEmpty()) {
-                        Toast.makeText(getActivity(), "ABOUT YOU CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
-                    } else if (college.getText().toString().isEmpty()) {
-                        Toast.makeText(getActivity(), "COLLEGE CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("about", abtU.getText().toString());
-                    user.put("college", college.getText().toString());
-                    String s = ((RadioButton) getView().findViewById(gender.getCheckedRadioButtonId())).getText().toString();
-
-                    user.put("gender", s);
-
-                    newRef.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getActivity(), "updated", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    cancel.setVisibility(View.GONE);
-                    save.setVisibility(View.GONE);
-
-                    setting.setVisibility(View.VISIBLE);
-
-                    edit_image.setVisibility(View.GONE);
-
-                    abtU.setInputType(InputType.TYPE_NULL);
-                    college.setInputType(InputType.TYPE_NULL);
-
-                    SelectRadioForSetting(false);
-                }
-            }
-        });
-        edit_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // start picker to get image for cropping and then use the image in cropping activity
-                CropImage.activity()
-                        .setAspectRatio(1, 1)
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setMinCropWindowSize(500, 500)
-                        .start(getActivity());
-
-            }
-        });
-        FirebaseAuth firebaseAuth;
-        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
-                    //Do anything here which needs to be done after signout is complete
-                    newRef.child("device_token").setValue(null);
-                    Datsme.getPreferenceManager().clearLoginData();
-                    Intent i = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(i);
-                    getActivity().finish();
-                }
-            }
-        };
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.addAuthStateListener(authStateListener);
-        return view;
     }
 
 
@@ -341,7 +282,17 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
                 break;
             case "Log Out":
-                FirebaseAuth.getInstance().signOut();
+                newRef.child("device_token").setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseAuth.getInstance().signOut();
+
+                        } else {
+                            Toast.makeText(getActivity(), "Try Again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 break;
 
         }
@@ -482,6 +433,63 @@ public class My_Profile extends Fragment implements View.OnClickListener {
             case R.id.my_questions:
                 Intent i = new Intent(getActivity(), Friendsquestions.class);
                 startActivity(i);
+                break;
+            case R.id.cancel:
+                save.setVisibility(View.GONE);
+                cancel.setVisibility(View.GONE);
+
+                setting.setVisibility(View.VISIBLE);
+
+                edit_image.setVisibility(View.GONE);
+
+
+                abtU.setInputType(InputType.TYPE_NULL);
+                college.setInputType(InputType.TYPE_NULL);
+
+                SelectRadioForSetting(false);
+                break;
+            case R.id.save:
+                if (abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty()) {
+                    if (abtU.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "ABOUT YOU CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
+                    } else if (college.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "COLLEGE CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("about", abtU.getText().toString());
+                    user.put("college", college.getText().toString());
+                    String s = ((RadioButton) getView().findViewById(gender.getCheckedRadioButtonId())).getText().toString();
+
+                    user.put("gender", s);
+
+                    newRef.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getActivity(), "updated", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    cancel.setVisibility(View.GONE);
+                    save.setVisibility(View.GONE);
+
+                    setting.setVisibility(View.VISIBLE);
+
+                    edit_image.setVisibility(View.GONE);
+
+                    abtU.setInputType(InputType.TYPE_NULL);
+                    college.setInputType(InputType.TYPE_NULL);
+
+                    SelectRadioForSetting(false);
+                }
+                break;
+            case R.id.settings_edit:
+                // start picker to get image for cropping and then use the image in cropping activity
+                CropImage.activity()
+                        .setAspectRatio(1, 1)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setMinCropWindowSize(500, 500)
+                        .start(getActivity());
                 break;
         }
     }
