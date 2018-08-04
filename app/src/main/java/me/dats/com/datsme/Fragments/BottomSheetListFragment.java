@@ -64,7 +64,6 @@ public class BottomSheetListFragment extends BottomSheetDialogFragment {
         View root = inflater.inflate(R.layout.bottom_sheet_list_profile, container, false);
         ButterKnife.bind(this, root);
         list = (ArrayList<MyItem>) getArguments().getSerializable("Items");
-
         mRecyclerView.setHasFixedSize(true);
         int spacingInPixels = 10;
 

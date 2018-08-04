@@ -147,14 +147,17 @@ public class Messages extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
 
-                        name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
-                        image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
+                       if(documentSnapshot.exists())//added
+                       {
+                           name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
+                           image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
 
 //                        if (documentSnapshot.hasChild("online")) {
 //                            String userOnline = documentSnapshot.child("online").getValue().toString();
 //                            holder.setUserOnline(userOnline);
 //                        }
-                        holder.bind(name[0], image[0]);
+                           holder.bind(name[0], image[0]);
+                       }
 
                     }
 

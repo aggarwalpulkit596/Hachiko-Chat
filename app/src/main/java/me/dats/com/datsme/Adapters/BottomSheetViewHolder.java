@@ -49,14 +49,15 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (model.getSnippet() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+                Log.d("TAGmarkerclick", "onClick: "+model.getSnippet()+"   "+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                if (model.getSnippet().equals(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())) {
+                    bottomSheetListFragment.dismiss();
+                    ((MapsActivity) mContext).getProfileFragment();
+                } else {
                     Intent i = new Intent(mContext, Others_profile.class);
                     i.putExtra("from_user_id", model.getSnippet());
                     i.putExtra("userName", model.getTitle());
                     view.getContext().startActivity(i);
-                } else {
-                    bottomSheetListFragment.dismiss();
-                    ((MapsActivity) mContext).getProfileFragment();
                 }
 
             }

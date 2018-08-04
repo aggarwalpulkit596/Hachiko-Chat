@@ -109,13 +109,13 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         user = documentSnapshot.getValue(Users.class);
 
-        if (user_id == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+        Log.d("TAGonbottomsheet page", "bindData: "+user_id+"  "+FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        if (user_id.equals(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())) {
             view_Other_Profile.setEnabled(false);
             view_Other_Profile.setVisibility(View.GONE);
         } else {
             view_Other_Profile.setEnabled(true);
             view_Other_Profile.setVisibility(View.VISIBLE);
-
         }
 
         String age = user.getDateofbirth();

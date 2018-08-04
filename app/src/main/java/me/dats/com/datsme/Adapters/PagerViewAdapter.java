@@ -1,6 +1,7 @@
 package me.dats.com.datsme.Adapters;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,12 +11,14 @@ import me.dats.com.datsme.Fragments.Discover_people;
 import me.dats.com.datsme.Fragments.Messages;
 import me.dats.com.datsme.Fragments.My_Profile;
 
-public class PagerViewAdapter extends FragmentPagerAdapter {
+public class PagerViewAdapter extends FragmentPagerAdapter{
 
+    FragmentManager fm;
     Bundle bundle;
 
     public PagerViewAdapter(FragmentManager fm, String user_id) {
         super(fm);
+        this.fm=fm;
         bundle = new Bundle();
         bundle.putString("request_uid", user_id);
         Log.i("Notification", "PagerViewAdapter: " + user_id);
@@ -30,7 +33,8 @@ public class PagerViewAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new Messages();
+                Messages m=new Messages();
+                return m;
             case 1:
                 Discover_people people = new Discover_people();
                 people.setArguments(bundle);
@@ -41,4 +45,5 @@ public class PagerViewAdapter extends FragmentPagerAdapter {
                 return null;
         }
     }
+
 }

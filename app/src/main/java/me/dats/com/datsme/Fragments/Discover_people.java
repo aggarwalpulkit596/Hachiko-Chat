@@ -2,6 +2,7 @@ package me.dats.com.datsme.Fragments;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -46,6 +47,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -53,6 +56,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
@@ -66,6 +70,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Activities.LoginActivity;
+import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
@@ -167,14 +173,53 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         mLocationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
+            public void onLocationResult(final LocationResult locationResult) {
                 Log.d("locationcallback called", "onLocationResult: " + locationResult);
                 super.onLocationResult(locationResult);
                 location = locationResult.getLastLocation();
-                Map<String, Object> locationMap = new HashMap<>();
+                final Map<String, Object> locationMap = new HashMap<>();
                 locationMap.put("lattitude", location.getLatitude());
                 locationMap.put("longitude", location.getLongitude());
-                mUserRef.updateChildren(locationMap);
+
+                DatabaseReference r=FirebaseDatabase.getInstance().getReference().child("Users").child(mUserRef.getKey());
+                r.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d("TAGhasklhksdkjfhlsa", "onLocationResult: "+dataSnapshot.getRef().getKey());
+                        if(dataSnapshot.exists())
+                        {
+                            mUserRef.updateChildren(locationMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful())
+                                    {
+                                        Log.d("locationupdate", "onComplete: "+location);
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            mLocationCallback=null;
+                            mLocationRequest=null;
+                            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Datsme.getPreferenceManager().clearLoginData();
+                                    Intent i=new Intent(getActivity(), LoginActivity.class);
+                                    getActivity().startActivity(i);
+                                    getActivity().finish();
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 if (firstlauch) {
                     firstlauch = false;
                     moveCamera();
@@ -373,10 +418,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setSmallestDisplacement(10)
-                .setInterval(30000) // Update location every 30 sec
-                .setFastestInterval(10000);
+
+        mLocationRequest.setInterval(10000)
+                .setFastestInterval(5000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API).build();
@@ -439,7 +484,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
                         BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
 
@@ -469,6 +513,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         });
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterClickListener(this);
 
         if (getActivity() != null)//added
             clusterRender = new ClusterRender(getActivity(), mMap, mClusterManager);//added
@@ -486,7 +531,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         } else {
             ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
             BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
-
             BottomSheetListFragment.newInstance(markeritems).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
         }
 
@@ -545,7 +589,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public void onCameraMove() {
         zoomLevel = mMap.getCameraPosition().zoom;
-
     }
 
     @OnClick(R.id.location_icon)
@@ -564,8 +607,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
