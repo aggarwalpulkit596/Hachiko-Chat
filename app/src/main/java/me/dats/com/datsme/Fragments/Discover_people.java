@@ -373,9 +373,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000)
-                .setFastestInterval(5000)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setSmallestDisplacement(10)
+                .setInterval(30000) // Update location every 30 sec
+                .setFastestInterval(10000);
 
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API).build();

@@ -269,8 +269,25 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
             }
         });
+        FirebaseAuth firebaseAuth;
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    //Do anything here which needs to be done after signout is complete
+                    newRef.child("device_token").setValue(null);
+                    Datsme.getPreferenceManager().clearLoginData();
+                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(i);
+                    getActivity().finish();
+                }
+            }
+        };
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.addAuthStateListener(authStateListener);
         return view;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -324,15 +341,9 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
                 break;
             case "Log Out":
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser user = mAuth.getCurrentUser();
-                newRef.child("device_token").setValue(null);
-                mAuth.signOut();
-                Datsme.getPreferenceManager().clearLoginData();
-                Intent i = new Intent(getActivity(), LoginActivity.class);
-                startActivity(i);
-                getActivity().finish();
+                FirebaseAuth.getInstance().signOut();
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

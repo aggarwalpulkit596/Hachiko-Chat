@@ -71,7 +71,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     Button chat;
     private HashMap<String, String> culist = new HashMap<>();
     private HashMap<String, String> oulist = new HashMap<>();
-    static float count = 0;
+    float count = 0;
 
 
     private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
