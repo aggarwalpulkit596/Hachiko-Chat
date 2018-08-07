@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -132,6 +133,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_discover_people, container, false);
         ButterKnife.bind(this, view);
+
         Log.d(Map, "onCreateView:123");
         return view;
     }

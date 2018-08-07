@@ -10,7 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="40dp"
         android:text="No"
+        android:background="@drawable/button_background_orange"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
         android:textColor="@android:color/holo_red_light"
         android:textSize="32sp"
         android:textStyle="bold" />
+
 </LinearLayout>

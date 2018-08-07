@@ -32,13 +32,14 @@ public class PagerViewAdapter extends FragmentPagerAdapter{
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
-                Messages m=new Messages();
-                return m;
             case 1:
                 Discover_people people = new Discover_people();
                 people.setArguments(bundle);
                 return people;
+
+            case 0:
+                Messages m=new Messages();
+                return m;
             case 2:
                 return new My_Profile();
             default:
