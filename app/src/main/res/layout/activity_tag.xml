@@ -6,22 +6,25 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <com.mindorks.placeholderview.SwipeDirectionalView
             android:id="@+id/swipeView"
+            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="400dp" />
 
-        <Button
+
+       <Button
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/swipeView"
             android:layout_marginEnd="70dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="70dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/button_background_blue"
             android:text="Continue"
             android:textColor="#FFFFFF" />
