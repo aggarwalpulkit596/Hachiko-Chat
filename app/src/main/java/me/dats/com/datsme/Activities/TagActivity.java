@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,14 +21,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mindorks.placeholderview.SwipeDecor;
+import com.mindorks.placeholderview.SwipeDirection;
+import com.mindorks.placeholderview.SwipeDirectionalView;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
+import com.mindorks.placeholderview.annotations.swipe.SwipeInDirectional;
 import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
+import com.mindorks.placeholderview.annotations.swipe.SwipeOutDirectional;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
+import com.mindorks.placeholderview.annotations.swipe.SwipeTouch;
+import com.mindorks.placeholderview.annotations.swipe.SwipingDirection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +51,7 @@ public class TagActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mQuestionDatabase;
     private FirebaseUser mCurrentUser;
-    private SwipePlaceHolderView mSwipeView;
+    private SwipeDirectionalView mSwipeView;
     private Context mContext;
     static Map<String, String> answers = new HashMap<>();
     static int i = 0;
@@ -130,34 +137,55 @@ public class TagActivity extends AppCompatActivity {
             profileImageView.setText(mProfile);
         }
 
-        @SwipeOut
-        private void onSwipedOut() {
-            Log.d("EVENT", "onSwipedOut");
-            answers.put(list.get(i++), "No");
+        @SwipeOutDirectional
+        public void onSwipeOutDirectional(SwipeDirection direction) {
+            Log.d("DEBUG", "SwipeOutDirectional " + direction.name());
+            if (direction.getDirection() == SwipeDirection.TOP.getDirection()) {
 
+//                mCallback.onSwipeUp();
+            }
         }
 
         @SwipeCancelState
-        private void onSwipeCancelState() {
-            Log.d("EVENT", "onSwipeCancelState");
+        public void onSwipeCancelState() {
+            Log.d("DEBUG", "onSwipeCancelState");
+            mSwipeView.setAlpha(1);
+
         }
 
-        @SwipeIn
-        private void onSwipeIn() {
-            Log.d("EVENT", "onSwipedIn");
-            answers.put(list.get(i++), "Yes");
-            Log.i("TAG", "onSwipeIn: " + answers.size());
+        @SwipeInDirectional
+        public void onSwipeInDirectional(SwipeDirection direction) {
+//            Log.d("DEBUG", "SwipeInDirectional " + direction.name());
         }
 
-        @SwipeInState
-        private void onSwipeInState() {
-            Log.d("EVENT", "onSwipeInState");
+        @SwipingDirection
+        public void onSwipingDirection(SwipeDirection direction) {
+            Log.d("DEBUG", "SwipingDirection " + direction.name());
+
         }
 
-        @SwipeOutState
-        private void onSwipeOutState() {
-            Log.d("EVENT", "onSwipeOutState");
+        @SwipeTouch
+        public void onSwipeTouch(float xStart, float yStart, float xCurrent, float yCurrent) {
+//
+//            float cardHolderDiagonalLength =
+//                    (float) Math.sqrt(Math.pow(mCardViewHolderSize.x, 2) + (Math.pow(mCardViewHolderSize.y, 2)));
+//            float distance = (float) Math.sqrt(Math.pow(xCurrent - xStart, 2) + (Math.pow(yCurrent - yStart, 2)));
+//
+//            float alpha = 1 - distance / cardHolderDiagonalLength;
+
+//            Log.d("DEBUG", "onSwipeTouch "
+//                    + " xStart : " + xStart
+//                    + " yStart : " + yStart
+//                    + " xCurrent : " + xCurrent
+//                    + " yCurrent : " + yCurrent
+////                    + " distance : " + distance
+////                    + " TotalLength : " + cardHolderDiagonalLength
+////                    + " alpha : " + alpha
+//            );
+
+//            ((FrameLayout)mSwipeView).setAlpha(alpha);
         }
+
 
     }
 }
