@@ -529,7 +529,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     public boolean onClusterClick(Cluster cluster) {
 
         if (zoomLevel < MaxZoom) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 19.0f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 19.05f));
         } else {
             ArrayList<MyItem> markeritems = new ArrayList<>(cluster.getItems());
             BottomSheetListFragment bottomSheetFragment = new BottomSheetListFragment();
