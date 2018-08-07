@@ -74,12 +74,8 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     MapsActivity mapsActivity;
     public ProgressDialog dialog;
     public DatabaseReference newRef;
-    Menu Mymenu;
-    Boolean checkMenu;
     @BindView(R.id.toolbar_myprofile)
     Toolbar toolbar;
-    @BindView(R.id.setting)
-    ImageButton setting;
     @BindView(R.id.backdrop)
     ImageView pic;
     @BindView(R.id.above_backdrop)
@@ -94,13 +90,10 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     RadioGroup gender;
     @BindView(R.id.settings_edit)
     CircleImageView edit_image;
-    @BindView(R.id.save)
-    TextView save;
-    @BindView(R.id.cancel)
-    TextView cancel;
     @BindView(R.id.my_questions)
     Button myquestions;
     View view;
+    Menu menu;
     String name, about_u, ur_clg, ur_gender, ur_image;
     String thumb_downloadurl = null;
     String download_url = null;
@@ -132,9 +125,7 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
 
         myquestions.setOnClickListener(this);
-        cancel.setOnClickListener(this);
         edit_image.setOnClickListener(this);
-        save.setOnClickListener(this);
         setMyProfiledata();
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -142,14 +133,15 @@ public class My_Profile extends Fragment implements View.OnClickListener {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null) {
+
                     //Do anything here which needs to be done after signout is complete
-
                     Datsme.getPreferenceManager().clearLoginData();
-                    Intent i = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(i);
-                    if (getActivity() != null)
+                    if(getActivity()!=null)
+                    {
+                        Intent i = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(i);
                         getActivity().finish();
-
+                    }
                 }
             }
         };
@@ -233,13 +225,15 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.myprofile, menu);
+        this.menu=menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getTitle().toString()) {
-            case "Settings":
+        MenuItem myitem;
+        switch (item.getItemId()) {
+            case R.id.settings:
 //                dialog.show();
 //                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
 //                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
@@ -261,9 +255,27 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 //                    }
 //                });
                 break;
-            case "Edit":
-                setting.setVisibility(View.GONE);
-                save.setVisibility(View.VISIBLE);
+            case R.id.edit:
+
+                myitem=menu.findItem(R.id.logout);
+                myitem.setVisible(false);
+                myitem.setEnabled(false);
+
+                myitem=menu.findItem(R.id.edit);
+                myitem.setVisible(false);
+                myitem.setEnabled(false);
+
+                myitem=menu.findItem(R.id.settings);
+                myitem.setVisible(false);
+                myitem.setEnabled(false);
+
+                myitem=menu.findItem(R.id.save);
+                myitem.setVisible(true);
+                myitem.setEnabled(true);
+
+                myitem=menu.findItem(R.id.cancel);
+                myitem.setEnabled(true);
+                myitem.setVisible(true);
 
                 abtU.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 abtU.setLines(4);
@@ -273,15 +285,11 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 abtU.setSingleLine(false);
 
                 college.setInputType(InputType.TYPE_CLASS_TEXT);
-
-                cancel.setVisibility(View.VISIBLE);
-
                 edit_image.setVisibility(View.VISIBLE);
-
                 SelectRadioForSetting(true);
 
                 break;
-            case "Log Out":
+            case R.id.logout:
                 newRef.child("device_token").setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -293,12 +301,98 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+            case R.id.save:
+                if (abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty()) {
+                    if (abtU.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "ABOUT YOU CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
+                    } else if (college.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "COLLEGE CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("about", abtU.getText().toString());
+                    user.put("college", college.getText().toString());
+                    String s = ((RadioButton) getView().findViewById(gender.getCheckedRadioButtonId())).getText().toString();
+
+                    user.put("gender", s);
+
+
+                    newRef.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getActivity(), "updated", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    myitem=menu.findItem(R.id.save);
+                    myitem.setVisible(false);
+                    myitem.setEnabled(false);
+
+                    myitem=menu.findItem(R.id.cancel);
+                    myitem.setEnabled(false);
+                    myitem.setVisible(false);
+
+                    myitem=menu.findItem(R.id.logout);
+                    myitem.setVisible(true);
+                    myitem.setEnabled(true);
+
+                    myitem=menu.findItem(R.id.edit);
+                    myitem.setVisible(true);
+                    myitem.setEnabled(true);
+
+                    myitem=menu.findItem(R.id.settings);
+                    myitem.setVisible(true);
+                    myitem.setEnabled(true);
+
+
+
+
+                    edit_image.setVisibility(View.GONE);
+                    abtU.setInputType(InputType.TYPE_NULL);
+                    college.setInputType(InputType.TYPE_NULL);
+                    SelectRadioForSetting(false);
+                }
+                break;
+            case R.id.cancel:
+                myitem=menu.findItem(R.id.save);
+                myitem.setVisible(false);
+                myitem.setEnabled(false);
+
+                myitem=menu.findItem(R.id.cancel);
+                myitem.setEnabled(false);
+                myitem.setVisible(false);
+
+                myitem=menu.findItem(R.id.logout);
+                myitem.setVisible(true);
+                myitem.setEnabled(true);
+
+                myitem=menu.findItem(R.id.edit);
+                myitem.setVisible(true);
+                myitem.setEnabled(true);
+
+                myitem=menu.findItem(R.id.settings);
+                myitem.setVisible(true);
+                myitem.setEnabled(true);
+
+
+
+                edit_image.setVisibility(View.GONE);
+                abtU.setInputType(InputType.TYPE_NULL);
+                college.setInputType(InputType.TYPE_NULL);
+                SelectRadioForSetting(false);
+
                 break;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
+
+    }
 
     public void SelectRadioForSetting(boolean y) {
         if (!y) {
@@ -433,55 +527,6 @@ public class My_Profile extends Fragment implements View.OnClickListener {
             case R.id.my_questions:
                 Intent i = new Intent(getActivity(), Friendsquestions.class);
                 startActivity(i);
-                break;
-            case R.id.cancel:
-                save.setVisibility(View.GONE);
-                cancel.setVisibility(View.GONE);
-
-                setting.setVisibility(View.VISIBLE);
-
-                edit_image.setVisibility(View.GONE);
-
-
-                abtU.setInputType(InputType.TYPE_NULL);
-                college.setInputType(InputType.TYPE_NULL);
-
-                SelectRadioForSetting(false);
-                break;
-            case R.id.save:
-                if (abtU.getText().toString().isEmpty() || college.getText().toString().isEmpty()) {
-                    if (abtU.getText().toString().isEmpty()) {
-                        Toast.makeText(getActivity(), "ABOUT YOU CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
-                    } else if (college.getText().toString().isEmpty()) {
-                        Toast.makeText(getActivity(), "COLLEGE CAN'T BE EMPTY", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("about", abtU.getText().toString());
-                    user.put("college", college.getText().toString());
-                    String s = ((RadioButton) getView().findViewById(gender.getCheckedRadioButtonId())).getText().toString();
-
-                    user.put("gender", s);
-
-                    newRef.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getActivity(), "updated", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    cancel.setVisibility(View.GONE);
-                    save.setVisibility(View.GONE);
-
-                    setting.setVisibility(View.VISIBLE);
-
-                    edit_image.setVisibility(View.GONE);
-
-                    abtU.setInputType(InputType.TYPE_NULL);
-                    college.setInputType(InputType.TYPE_NULL);
-
-                    SelectRadioForSetting(false);
-                }
                 break;
             case R.id.settings_edit:
                 // start picker to get image for cropping and then use the image in cropping activity
