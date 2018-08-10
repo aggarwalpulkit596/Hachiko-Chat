@@ -20,9 +20,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notificationlist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_notifications"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:padding="5dp" />
 
 </RelativeLayout>

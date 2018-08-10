@@ -47,6 +47,8 @@ public class NotificationsActivity extends AppCompatActivity {
     @BindView(R.id.rootlayout_notifications)
     RelativeLayout rootlayout;
 
+
+
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
     @Override
@@ -74,9 +76,7 @@ public class NotificationsActivity extends AppCompatActivity {
         int spacingInPixels = 10;
 
         mNotificationlist.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
         mNotificationlist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
         final FirebaseRecyclerOptions<notifications> options =
                 new FirebaseRecyclerOptions.Builder<notifications>()
                         .setQuery(query, notifications.class)
@@ -120,6 +120,7 @@ public class NotificationsActivity extends AppCompatActivity {
                 return new NotificationsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification, parent, false));
             }
         };
+
         mNotificationlist.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
     }
