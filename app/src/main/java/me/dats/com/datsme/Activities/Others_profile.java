@@ -1,21 +1,31 @@
 package me.dats.com.datsme.Activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +46,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Models.Users;
+import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity implements View.OnClickListener {
@@ -46,7 +59,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.Other_compatibility)
     TextView compatibility;
 
-
+    RecyclerView friendQuestionsList;
     String user_id, userName;
 
     @BindViews({R.id.Other_firstButton, R.id.Other_secondButton})
@@ -72,7 +85,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private HashMap<String, String> culist = new HashMap<>();
     private HashMap<String, String> oulist = new HashMap<>();
     float count = 0;
-
+    FirebaseRecyclerAdapter adapter;
 
     private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
     private FirebaseUser mCurrentUser;
@@ -255,6 +268,44 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mLoadProcess.setCanceledOnTouchOutside(false);
         mLoadProcess.show();
         findCompatibility();
+
+        setQuestions();
+    }
+
+    private void setQuestions() {
+
+
+        Query query = mOtherUserDatabase.child("Questions");
+        FirebaseRecyclerOptions<String> options =
+                new FirebaseRecyclerOptions.Builder<String>()
+                        .setQuery(query, String.class)
+                        .build();
+
+        adapter = new FirebaseRecyclerAdapter<String, questionsViewHolder>(options) {
+            @Override
+            public questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.otherprofilequestion, parent, false);
+                return new questionsViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(final questionsViewHolder holder, int position, String model) {
+                holder.question.setText(model.toString());
+                holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(holder.AnswerQuestion.getText().toString().trim().length()>0)
+                        {
+                            Toast.makeText(Others_profile.this, ""+holder.AnswerQuestion.getText().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        };
+
+        adapter.startListening();
     }
 
     private void findCompatibility() {
@@ -486,4 +537,42 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void openbox(View view)
+    {
+        LayoutInflater inflater = (LayoutInflater)this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View promptsView = inflater.inflate(R.layout.friendquestionsdialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Others_profile.this);
+        alertDialogBuilder.setCancelable(true);
+        alertDialogBuilder.setView(promptsView);
+
+        friendQuestionsList=promptsView
+                .findViewById(R.id.friendQuestionlist_otherprofile);
+        //friendQuestionsList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        friendQuestionsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        friendQuestionsList.setAdapter(adapter);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+}
+class questionsViewHolder extends RecyclerView.ViewHolder {
+
+    View mView;
+    TextView question;
+    EditText AnswerQuestion;
+    Button sendAnswer;
+
+
+    questionsViewHolder(View itemView) {
+        super(itemView);
+        mView = itemView;
+        question = mView.findViewById(R.id.textQuestion);
+        AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
+        sendAnswer=mView.findViewById(R.id.sendAnswer);
+    }
+
 }
