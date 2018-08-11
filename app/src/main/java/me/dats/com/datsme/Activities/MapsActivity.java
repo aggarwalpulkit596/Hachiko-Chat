@@ -44,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -72,7 +71,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     Toolbar toolbar;
 
     @BindView(R.id.map_view_pager)
-   public ViewPager viewPager;
+    public ViewPager viewPager;
 
     public PagerViewAdapter mPagerViewdapter;
     private boolean doubleBackToExitPressedOnce = false;
@@ -92,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        actionBar=getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -172,56 +171,51 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, final float positionOffset, int positionOffsetPixels) {
-                Log.d("TAG", "onPageScrolled: "+position+" position offset "+positionOffset);
+                Log.d("TAG", "onPageScrolled: " + position + " position offset " + positionOffset);
 
             }
 
             @Override
             public void onPageSelected(int position) {
                 View decorView = getWindow().getDecorView();
-                if(position==0 && toolbar.getVisibility()!=View.VISIBLE)
-                {
+                if (position == 0 && toolbar.getVisibility() != View.VISIBLE) {
                     actionBar.show();
 //                    toolbar.setVisibility(View.VISIBLE);
 //                    toolbar.startAnimation(animShow);
-                    showSystemUI();
-//                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-//                    decorView.setSystemUiVisibility(uiOptions);
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
-//                    }
+//                    showSystemUI();
+                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+                    decorView.setSystemUiVisibility(uiOptions);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
+                    }
 
-                }
-                else if(position==1 && toolbar.getVisibility()!=View.GONE)
-                {
+                } else if (position == 1 && toolbar.getVisibility() != View.GONE) {
                     actionBar.hide();
 //                    toolbar.startAnimation(animHide);
 //                    toolbar.setVisibility(View.GONE);
-                    hideSystemUI();
-//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        getWindow().setStatusBarColor(Color.parseColor("#00ffffff"));
-//                    }
+//                    hideSystemUI();
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(Color.parseColor("#00ffffff"));
+                    }
 
 
-                }
-                else if(position==2  && toolbar.getVisibility()!=View.VISIBLE)
-                {
+                } else if (position == 2 && toolbar.getVisibility() != View.VISIBLE) {
                     actionBar.show();
 //                    toolbar.setVisibility(View.VISIBLE);
 //                    toolbar.startAnimation(animShow);
-                    showSystemUI();
-//                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-//                    decorView.setSystemUiVisibility(uiOptions);
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
-//                    }
+//                    showSystemUI();
+                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+                    decorView.setSystemUiVisibility(uiOptions);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
+                    }
                 }
             }
 
@@ -380,28 +374,40 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
     private void hideSystemUI() {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 //                         Set the content to appear under the system bars so that the
 //                         content doesn't resize when the system bars hide and show.
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 //                         Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        |View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
+
     private void showSystemUI() {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 }
