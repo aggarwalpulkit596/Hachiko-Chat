@@ -103,13 +103,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     HashMap<String, MyItem> ItemsMap = new HashMap<>();
     HashMap<String, LatLng> userMap = new HashMap<>();
     HashMap<String, Target> targets = new HashMap<>();
-    int[][] worldview = new int[][]{
-            {100, 50, 25, 50, 75},
-            {50, 100, 25, 50, 75},
-            {25, 25, 100, 50, 50},
-            {30, 50, 50, 100, 50},
-            {75, 75, 50, 50, 100}
-    };
+
     Users mUser;
     float MaxZoom = 19.05f;
     float zoomLevel = 15.0f; //This goes up to 21\
@@ -133,10 +127,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_discover_people, container, false);
         ButterKnife.bind(this, view);
-
         Log.d(Map, "onCreateView:123");
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -647,5 +641,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
         }
 
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("TAG", "onPause:discoverfragment ");
+        super.onPause();
     }
 }

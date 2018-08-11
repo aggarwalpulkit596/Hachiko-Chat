@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +45,8 @@ import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.NotificationsActivity;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.SpacesItemDecoration;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,27 +56,24 @@ public class Messages extends Fragment implements View.OnClickListener {
     @BindView(R.id.friends_list)
     RecyclerView mFriendlist;
 
-    @BindView(R.id.toolbar_messages)
-    android.support.v7.widget.Toolbar toolbar;
+//    @BindView(R.id.toolbar_messages_1)
+//    Toolbar toolbar;
 
     @BindView(R.id.no_friend_view)
     LinearLayout no_friend_view;
 
     @BindView(R.id.no_friends_button)
     Button no_friend_button;
-    @BindView(R.id.notification)
-    ImageView notification;
-
-    @BindView(R.id.inbox)
-    ImageView inbox;
 
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private FirebaseAuth mAuth;
     private DatabaseReference mUsersDatabase;
 
     private String current_uid;
+    private Menu menu;
 
     public Messages() {
+
         // Required empty public constructor
     }
 
@@ -80,11 +84,18 @@ public class Messages extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         ButterKnife.bind(this, view);
+
+        setHasOptionsMenu(true);
+
+
         mAuth = FirebaseAuth.getInstance();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
         current_uid = mAuth.getCurrentUser().getUid();
+
         mFriendlist.setLayoutManager(new LinearLayoutManager(getContext()));
+        int spacingInPixels = 10;
+        mFriendlist.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
         no_friend_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +103,6 @@ public class Messages extends Fragment implements View.OnClickListener {
                 ((MapsActivity) getActivity()).getDiscoverFragment();
             }
         });
-        notification.setOnClickListener(this);
-        inbox.setOnClickListener(this);
         return view;
     }
 
@@ -147,17 +156,17 @@ public class Messages extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
 
-                       if(documentSnapshot.exists())//added
-                       {
-                           name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
-                           image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
+                        if (documentSnapshot.exists())//added
+                        {
+                            name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
+                            image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
 
 //                        if (documentSnapshot.hasChild("online")) {
 //                            String userOnline = documentSnapshot.child("online").getValue().toString();
 //                            holder.setUserOnline(userOnline);
 //                        }
-                           holder.bind(name[0], image[0]);
-                       }
+                            holder.bind(name[0], image[0]);
+                        }
 
                     }
 
@@ -191,6 +200,25 @@ public class Messages extends Fragment implements View.OnClickListener {
             case R.id.no_friends_button:
 
                 break;
+        }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.friendsmenu,menu);
+        this.menu=menu;
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
             case R.id.notification:
                 Intent i = new Intent(getActivity(), NotificationsActivity.class);
                 startActivity(i);
@@ -199,8 +227,8 @@ public class Messages extends Fragment implements View.OnClickListener {
                 Intent q = new Intent(getActivity(), InboxActivity.class);
                 startActivity(q);
                 break;
-
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {

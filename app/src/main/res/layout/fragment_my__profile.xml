@@ -5,67 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context=".Fragments.My_Profile">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_myprofile"
+        android:id="@+id/toolbar_myprofile_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="My Profile"
+        app:title="  "
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:layout_gravity="center_vertical"
         android:background="@color/datsme_color"
         android:fitsSystemWindows="true"
         app:titleTextColor="#fff">
-
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<TextView-->
-                <!--style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:text="Profile"-->
-                <!--android:textColor="#fff" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/cancel"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="20dp"-->
-                <!--android:layout_toStartOf="@+id/save"-->
-                <!--android:text="Cancel"-->
-                <!--android:textSize="15dp"-->
-                <!--android:visibility="gone" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/save"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="20dp"-->
-                <!--android:text="Save"-->
-                <!--android:textSize="15dp"-->
-                <!--android:visibility="gone" />-->
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/setting"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="20dp"-->
-                <!--android:background="#00ffffff"-->
-                <!--android:src="@drawable/ic_settings_black_24dp" />-->
-        <!--</RelativeLayout>-->
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:fillViewport="true">
 
         <LinearLayout
