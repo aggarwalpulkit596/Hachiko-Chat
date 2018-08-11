@@ -67,7 +67,7 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/mytheme" />
+            android:theme="@style/mytheme"/>
         <activity
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.MapsActivity"

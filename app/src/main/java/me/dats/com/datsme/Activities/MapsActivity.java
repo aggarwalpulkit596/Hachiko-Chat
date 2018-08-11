@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
@@ -33,6 +34,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnPageChange;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -119,10 +121,8 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     private void SetmyviewPager() {
         String user_id = getIntent().getStringExtra("From");
-
         mPagerViewdapter = new PagerViewAdapter(getSupportFragmentManager(), user_id);
         Log.i("Notification", "PagerViewAdapter: " + user_id);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -130,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
+
             viewPager.setAdapter(mPagerViewdapter);
             viewPager.setOffscreenPageLimit(3);
             viewPager.setCurrentItem(1);
@@ -138,17 +139,31 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         messages.setOnClickListener(this);
         discover.setOnClickListener(this);
         myprofile.setOnClickListener(this);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.messages:
-                //setsize(1);
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.discover:
-                //setsize(2);
                 setAnimations();
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -161,7 +176,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.myprofile:
-                // setsize(3);
                 viewPager.setCurrentItem(2);
                 break;
 
@@ -231,21 +245,26 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            finishAffinity();
-            return;
+        if (viewPager.getCurrentItem() == 1) {
+
+            if (doubleBackToExitPressedOnce) {
+                finishAffinity();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        } else {
+            viewPager.setCurrentItem(1);
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
     }
 
     public void getProfileFragment() {

@@ -76,9 +76,9 @@ public class TagActivity extends AppCompatActivity {
                 .setDisplayViewCount(3)
                 .setSwipeDecor(new SwipeDecor()
                         .setPaddingTop(20)
-                        .setRelativeScale(0.01f)
-                        .setSwipeInMsgLayoutId(R.layout.msg_swipe_in)
-                        .setSwipeOutMsgLayoutId(R.layout.msg_swipe_out));
+                        .setRelativeScale(0.01f));
+//                        .setSwipeInMsgLayoutId(R.layout.msg_swipe_in)
+//                        .setSwipeOutMsgLayoutId(R.layout.msg_swipe_out));
 
         mQuestionDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,10 +121,17 @@ public class TagActivity extends AppCompatActivity {
     public class QuestionCard {
         @com.mindorks.placeholderview.annotations.View(R.id.questionView)
         TextView profileImageView;
+        @com.mindorks.placeholderview.annotations.View(R.id.neutralTextView)
+        TextView neutral;
+        @com.mindorks.placeholderview.annotations.View(R.id.yesTextView)
+        TextView yes;
+        @com.mindorks.placeholderview.annotations.View(R.id.noTextView)
+        TextView no;
 
         private String mProfile;
         private Context mContext;
         private SwipePlaceHolderView mSwipeView;
+
 
         public QuestionCard(Context context, String profile, SwipePlaceHolderView swipeView) {
             mContext = context;
@@ -142,6 +149,7 @@ public class TagActivity extends AppCompatActivity {
             Log.d("DEBUG", "SwipeOutDirectional " + direction.name());
             if (direction.getDirection() == SwipeDirection.TOP.getDirection()) {
 
+
 //                mCallback.onSwipeUp();
             }
         }
@@ -149,6 +157,9 @@ public class TagActivity extends AppCompatActivity {
         @SwipeCancelState
         public void onSwipeCancelState() {
             Log.d("DEBUG", "onSwipeCancelState");
+            no.setVisibility(View.INVISIBLE);
+            yes.setVisibility(View.INVISIBLE);
+            neutral.setVisibility(View.INVISIBLE);
             mSwipeView.setAlpha(1);
 
         }
@@ -161,7 +172,34 @@ public class TagActivity extends AppCompatActivity {
         @SwipingDirection
         public void onSwipingDirection(SwipeDirection direction) {
             Log.d("DEBUG", "SwipingDirection " + direction.name());
-
+            if(direction.getDirection()==SwipeDirection.RIGHT.getDirection() ||
+                    direction.getDirection()==SwipeDirection.RIGHT_TOP.getDirection()||
+                    direction.getDirection()==SwipeDirection.RIGHT_BOTTOM.getDirection()
+                    )
+            {
+                no.setVisibility(View.INVISIBLE);
+                yes.setVisibility(View.VISIBLE);
+                neutral.setVisibility(View.INVISIBLE);
+            }
+            else if(direction.getDirection()==SwipeDirection.LEFT.getDirection() ||
+                    direction.getDirection()==SwipeDirection.LEFT_TOP.getDirection()||
+                    direction.getDirection()==SwipeDirection.LEFT_BOTTOM.getDirection()){
+                no.setVisibility(View.VISIBLE);
+                yes.setVisibility(View.INVISIBLE);
+                neutral.setVisibility(View.INVISIBLE);
+            }
+            else if(direction.getDirection()==SwipeDirection.BOTTOM.getDirection()
+                    ||direction.getDirection()==SwipeDirection.TOP.getDirection())
+            {
+                no.setVisibility(View.INVISIBLE);
+                yes.setVisibility(View.INVISIBLE);
+                neutral.setVisibility(View.VISIBLE);
+            }
+            else{
+                no.setVisibility(View.INVISIBLE);
+                yes.setVisibility(View.INVISIBLE);
+                neutral.setVisibility(View.INVISIBLE);
+            }
         }
 
         @SwipeTouch
