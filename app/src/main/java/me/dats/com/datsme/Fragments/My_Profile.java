@@ -9,8 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -74,8 +73,8 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     MapsActivity mapsActivity;
     public ProgressDialog dialog;
     public DatabaseReference newRef;
-    @BindView(R.id.toolbar_myprofile)
-    Toolbar toolbar;
+//    @BindView(R.id.toolbar_myprofile_1)
+//    Toolbar toolbar;
     @BindView(R.id.backdrop)
     ImageView pic;
     @BindView(R.id.above_backdrop)
@@ -110,9 +109,6 @@ public class My_Profile extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_my__profile, container, false);
         ButterKnife.bind(this, view);
-
-        mapsActivity = (MapsActivity) getActivity();
-        mapsActivity.setSupportActionBar(toolbar);
 
         setHasOptionsMenu(true);
 
@@ -231,8 +227,11 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        MenuItem myitem;
+
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
             case R.id.settings:
 //                dialog.show();
 //                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
@@ -257,25 +256,12 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 break;
             case R.id.edit:
 
-                myitem=menu.findItem(R.id.logout);
-                myitem.setVisible(false);
-                myitem.setEnabled(false);
+                menu.setGroupEnabled(R.id.mainMenu,false);
+                menu.setGroupVisible(R.id.mainMenu,false);
 
-                myitem=menu.findItem(R.id.edit);
-                myitem.setVisible(false);
-                myitem.setEnabled(false);
+                menu.setGroupEnabled(R.id.savecancel,true);
+                menu.setGroupVisible(R.id.savecancel,true);
 
-                myitem=menu.findItem(R.id.settings);
-                myitem.setVisible(false);
-                myitem.setEnabled(false);
-
-                myitem=menu.findItem(R.id.save);
-                myitem.setVisible(true);
-                myitem.setEnabled(true);
-
-                myitem=menu.findItem(R.id.cancel);
-                myitem.setEnabled(true);
-                myitem.setVisible(true);
 
                 abtU.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 abtU.setLines(4);
@@ -324,27 +310,12 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                         }
                     });
 
-                    myitem=menu.findItem(R.id.save);
-                    myitem.setVisible(false);
-                    myitem.setEnabled(false);
 
-                    myitem=menu.findItem(R.id.cancel);
-                    myitem.setEnabled(false);
-                    myitem.setVisible(false);
+                    menu.setGroupEnabled(R.id.mainMenu,true);
+                    menu.setGroupVisible(R.id.mainMenu,true);
 
-                    myitem=menu.findItem(R.id.logout);
-                    myitem.setVisible(true);
-                    myitem.setEnabled(true);
-
-                    myitem=menu.findItem(R.id.edit);
-                    myitem.setVisible(true);
-                    myitem.setEnabled(true);
-
-                    myitem=menu.findItem(R.id.settings);
-                    myitem.setVisible(true);
-                    myitem.setEnabled(true);
-
-
+                    menu.setGroupEnabled(R.id.savecancel,false);
+                    menu.setGroupVisible(R.id.savecancel,false);
 
 
                     edit_image.setVisibility(View.GONE);
@@ -354,26 +325,11 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.cancel:
-                myitem=menu.findItem(R.id.save);
-                myitem.setVisible(false);
-                myitem.setEnabled(false);
+                menu.setGroupEnabled(R.id.mainMenu,true);
+                menu.setGroupVisible(R.id.mainMenu,true);
 
-                myitem=menu.findItem(R.id.cancel);
-                myitem.setEnabled(false);
-                myitem.setVisible(false);
-
-                myitem=menu.findItem(R.id.logout);
-                myitem.setVisible(true);
-                myitem.setEnabled(true);
-
-                myitem=menu.findItem(R.id.edit);
-                myitem.setVisible(true);
-                myitem.setEnabled(true);
-
-                myitem=menu.findItem(R.id.settings);
-                myitem.setVisible(true);
-                myitem.setEnabled(true);
-
+                menu.setGroupEnabled(R.id.savecancel,false);
+                menu.setGroupVisible(R.id.savecancel,false);
 
 
                 edit_image.setVisibility(View.GONE);
@@ -385,13 +341,6 @@ public class My_Profile extends Fragment implements View.OnClickListener {
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-
-        super.onPrepareOptionsMenu(menu);
-
     }
 
     public void SelectRadioForSetting(boolean y) {

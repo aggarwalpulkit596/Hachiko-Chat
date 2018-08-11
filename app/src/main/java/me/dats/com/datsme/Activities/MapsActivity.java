@@ -1,23 +1,34 @@
 package me.dats.com.datsme.Activities;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -32,9 +43,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnPageChange;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -55,6 +68,8 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.myprofile)
     ImageView myprofile;
+    @BindView(R.id.mapactivity_toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.map_view_pager)
    public ViewPager viewPager;
@@ -66,12 +81,25 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.rootlayout)
     public RelativeLayout relativeLayout;
+    ActionBar actionBar;
+    private Animation animShow;
+    private Animation animHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+
+        animShow = AnimationUtils.loadAnimation(this, R.anim.show_from_side);
+        animHide = AnimationUtils.loadAnimation(this, R.anim.hide_from_side);
         //        InternetOb
         // servingSettings settings = InternetObservingSettings
 //                .initialInterval(initialInterval)
@@ -134,6 +162,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
             viewPager.setAdapter(mPagerViewdapter);
             viewPager.setOffscreenPageLimit(3);
             viewPager.setCurrentItem(1);
+            toolbar.setVisibility(View.GONE);
         }
 
         messages.setOnClickListener(this);
@@ -142,12 +171,58 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, final float positionOffset, int positionOffsetPixels) {
+                Log.d("TAG", "onPageScrolled: "+position+" position offset "+positionOffset);
 
             }
 
             @Override
             public void onPageSelected(int position) {
+                View decorView = getWindow().getDecorView();
+                if(position==0 && toolbar.getVisibility()!=View.VISIBLE)
+                {
+                    actionBar.show();
+//                    toolbar.setVisibility(View.VISIBLE);
+//                    toolbar.startAnimation(animShow);
+                    showSystemUI();
+//                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+//                    decorView.setSystemUiVisibility(uiOptions);
+//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
+//                    }
+
+                }
+                else if(position==1 && toolbar.getVisibility()!=View.GONE)
+                {
+                    actionBar.hide();
+//                    toolbar.startAnimation(animHide);
+//                    toolbar.setVisibility(View.GONE);
+                    hideSystemUI();
+//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        getWindow().setStatusBarColor(Color.parseColor("#00ffffff"));
+//                    }
+
+
+                }
+                else if(position==2  && toolbar.getVisibility()!=View.VISIBLE)
+                {
+                    actionBar.show();
+//                    toolbar.setVisibility(View.VISIBLE);
+//                    toolbar.startAnimation(animShow);
+                    showSystemUI();
+//                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+//                    decorView.setSystemUiVisibility(uiOptions);
+//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        getWindow().setStatusBarColor(Color.parseColor("#67D0C5"));
+//                    }
+                }
             }
 
             @Override
@@ -233,9 +308,11 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             viewPager.setAdapter(mPagerViewdapter);
                             viewPager.setCurrentItem(0);
+                            toolbar.setVisibility(View.VISIBLE);
                         } else {
                             viewPager.setAdapter(mPagerViewdapter);
                             viewPager.setCurrentItem(1);
+                            toolbar.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -303,6 +380,28 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
-
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+//                         Set the content to appear under the system bars so that the
+//                         content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                         Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        |View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
 }
