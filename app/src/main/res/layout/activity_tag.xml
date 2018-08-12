@@ -18,6 +18,7 @@
            android:layout_marginTop="10dp"
            android:text="Continue"
            android:textSize="20dp"
+           android:id="@+id/sendButton"
            android:textColor="@color/colorPrimaryDark"
            android:textStyle="bold"
            android:background="@drawable/button_background_white"
