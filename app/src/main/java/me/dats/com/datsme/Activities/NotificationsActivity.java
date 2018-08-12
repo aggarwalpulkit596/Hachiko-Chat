@@ -69,11 +69,8 @@ public class NotificationsActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(true);
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("notifications").child(mUser.getUid().toString());
-
-
-        Query query = mRef.orderByKey();//not working
+        Query query=mRef;
         mNotificationlist.setHasFixedSize(true);
-        int spacingInPixels = 10;
 
         mNotificationlist.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mNotificationlist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -121,6 +118,10 @@ public class NotificationsActivity extends AppCompatActivity {
             }
         };
 
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        mNotificationlist.setLayoutManager(linearLayoutManager);
         mNotificationlist.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
     }
