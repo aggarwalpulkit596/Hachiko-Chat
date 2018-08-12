@@ -19,11 +19,13 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.LoginActivity" />
+        <activity
+            android:name=".Activities.LoginActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Activities.ProfileActivity" />
+        <activity
+            android:name=".Activities.ProfileActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,17 +59,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/mytheme"/>
+            android:theme="@style/mytheme" />
         <activity
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.MapsActivity"
@@ -80,6 +80,11 @@
         </activity>
         <activity android:name=".Activities.CompleteProfileActivity" />
         <activity android:name=".Activities.TagActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities.Setting"
@@ -96,17 +101,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SplashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".Activities.SplashScreen"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".Activities.PhoneAuthActivity" />
+        <activity
+            android:name=".Activities.PhoneAuthActivity" />
         <activity
             android:name=".Activities.NotificationsActivity"
-            android:theme="@style/mytheme"></activity>
+            android:theme="@style/mytheme"/>
         <activity
             android:name=".Activities.InboxActivity"
             android:theme="@style/mytheme" />
@@ -115,7 +117,7 @@
             android:theme="@style/mytheme" />
         <activity
             android:name=".Activities.generateQuestions"
-            android:theme="@style/mytheme"></activity>
+            android:theme="@style/mytheme"/>
     </application>
 
 </manifest>

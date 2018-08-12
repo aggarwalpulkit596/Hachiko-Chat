@@ -75,7 +75,7 @@ public class TagActivity extends AppCompatActivity {
         mSwipeView.getBuilder()
                 .setDisplayViewCount(3)
                 .setSwipeDecor(new SwipeDecor()
-                        .setPaddingTop(20)
+                        .setPaddingTop(0)
                         .setRelativeScale(0.01f));
 //                        .setSwipeInMsgLayoutId(R.layout.msg_swipe_in)
 //                        .setSwipeOutMsgLayoutId(R.layout.msg_swipe_out));
@@ -97,26 +97,25 @@ public class TagActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("TAG", "onClick: " + answers.size());
-                mDatabase.setValue(answers)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    startActivity(new Intent(TagActivity.this, MapsActivity.class));
-                                } else {
-                                    Log.i("TAG", "onComplete: " + task.getResult().toString());
-                                }
-                            }
-                        });
-
-            }
-        });
+//        findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("TAG", "onClick: " + answers.size());
+//                mDatabase.setValue(answers)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    startActivity(new Intent(TagActivity.this, MapsActivity.class));
+//                                } else {
+//                                    Log.i("TAG", "onComplete: " + task.getResult().toString());
+//                                }
+//                            }
+//                        });
+//
+//            }
+//        });
     }
-
     @Layout(R.layout.question_card_view)
     public class QuestionCard {
         @com.mindorks.placeholderview.annotations.View(R.id.questionView)
