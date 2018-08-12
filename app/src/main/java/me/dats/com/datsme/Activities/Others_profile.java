@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -86,6 +87,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private HashMap<String, String> oulist = new HashMap<>();
     float count = 0;
     FirebaseRecyclerAdapter adapter;
+    AlertDialog alertDialog;
 
     private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
     private FirebaseUser mCurrentUser;
@@ -293,6 +295,14 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
             @Override
             protected void onBindViewHolder(final questionsViewHolder holder, int position, String model) {
                 holder.question.setText(model.toString());
+                holder.AnswerQuestion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
+                    }
+                });
                 holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -553,7 +563,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         //friendQuestionsList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         friendQuestionsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         friendQuestionsList.setAdapter(adapter);
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
