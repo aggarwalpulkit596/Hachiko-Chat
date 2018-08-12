@@ -56,6 +56,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 final Users u = dataSnapshot.getValue(Users.class);
                 Picasso.get().load(u.getThumb_image()).centerCrop().fit().placeholder(R.drawable.defaultavatar).into(holder.imageView);
                 holder.name.setText(u.getName().toUpperCase());
+
                 String time = DateUtils.formatDateTime(mContext, m.getTime(), DateUtils.FORMAT_SHOW_TIME);
                 holder.time.setText(time);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +68,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                         mContext.startActivity(i);
                     }
                 });
+                if(m.getType().equals("text")||m.getType().equals("image"))
+                    holder.message.setText(m.getMessage());
+
             }
 
             @Override
@@ -74,7 +78,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
             }
         });
-        holder.message.setText(m.getMessage());
+
+
     }
 
     @Override

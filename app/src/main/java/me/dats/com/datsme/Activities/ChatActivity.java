@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
@@ -68,6 +69,10 @@ public class ChatActivity extends AppCompatActivity {
     private final List<Messages> MessageList = new ArrayList<>();
     @BindView(R.id.chatAppBar)
     Toolbar mToolbar;
+    @BindView(R.id.sendboxlinearLayout)
+    LinearLayout sendbox;
+    @BindView(R.id.notnowfriend)
+            TextView notnowfriend;
     TextView mUserName;
     TextView mUserSeen;
     CircleImageView mUserImage;
@@ -82,8 +87,8 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mMessagesList;
     @BindView(R.id.swipe_message_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.scroll)
-    ImageView scroll;
+//    @BindView(R.id.scroll)
+//    ImageView scroll;
     LinkedHashMap<String, Set<Messages>> groupedHashMap = new LinkedHashMap<>();
     Set<Messages> list = null;
     int i = 0;
@@ -129,6 +134,29 @@ public class ChatActivity extends AppCompatActivity {
 
         bindingViews();
 
+        //checking friend status
+        DatabaseReference friendsRef=FirebaseDatabase.getInstance().getReference().child("Friends").child(uid).child(chatUser);
+        friendsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                notnowfriend.setText("not friend with "+userName);
+                if(dataSnapshot.exists())
+                {
+                    sendbox.setVisibility(View.VISIBLE);
+                    notnowfriend.setVisibility(View.GONE);
+                }
+                else{
+                    notnowfriend.setVisibility(View.VISIBLE);
+                    sendbox.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         loadMessages();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -143,10 +171,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void bindingViews() {
+
         mAuth = FirebaseAuth.getInstance();
-
         currentUser = mAuth.getCurrentUser();
-
         uid = currentUser.getUid();
 
         mUserImage = findViewById(R.id.chatBarImageView);
@@ -271,6 +298,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 generateListFromMap(groupedHashMap);
+
                 mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -282,23 +310,23 @@ public class ChatActivity extends AppCompatActivity {
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
                         Log.e("DY", "" + dy);
-                        if (dy > 0) {
-                            scroll.setVisibility(View.INVISIBLE);
-                        } else {
-                            Log.i("TAG", "onScroll");
-                            scroll.setVisibility(View.VISIBLE);
-                        }
+//                        if (dy > 0) {
+//                            scroll.setVisibility(View.INVISIBLE);
+//                        } else {
+//                            Log.i("TAG", "onScroll");
+//                            scroll.setVisibility(View.VISIBLE);
+//                        }
                     }
                 });
 
-                scroll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("TAG", "scroll on click");
-                        scroll.setVisibility(View.GONE);
-                        mMessagesList.scrollToPosition(MessageList.size() + 1);
-                    }
-                });
+//                scroll.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Log.i("TAG", "scroll on click");
+//                        scroll.setVisibility(View.GONE);
+//                        mMessagesList.scrollToPosition(MessageList.size() + 1);
+//                    }
+//                });
             }
 
             @Override
