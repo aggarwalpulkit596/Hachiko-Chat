@@ -155,6 +155,15 @@
                 android:layout_height="wrap_content"
                 android:text="show"
                 android:onClick="openbox"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/rvOtherProfile_userQuestion"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never">
+
+            </android.support.v7.widget.RecyclerView>
             <LinearLayout
                 android:id="@+id/profile_hidden"
                 android:layout_width="match_parent"

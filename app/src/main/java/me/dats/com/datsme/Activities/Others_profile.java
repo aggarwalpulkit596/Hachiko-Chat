@@ -53,6 +53,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.dats.com.datsme.Adapters.QuestionAdapter;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.Models.notifications;
@@ -65,6 +66,9 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     TextView name;
     @BindView(R.id.Other_compatibility)
     TextView compatibility;
+    @BindView(R.id.rvOtherProfile_userQuestion)
+            RecyclerView rv_userQuestions;
+
 
     RecyclerView friendQuestionsList;
     String user_id, userName;
@@ -126,6 +130,40 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         unfriend.setOnClickListener(this);
         button[0].setOnClickListener(this);
         button[1].setOnClickListener(this);
+
+        setOtherQuestionsBlock();
+    }
+
+    private void setOtherQuestionsBlock() {
+
+        final Map<String,String> mykeyquestionpair=new HashMap<>();
+
+        final OtherProfileQuestionsListAdapter adapterquestionview=new OtherProfileQuestionsListAdapter(mykeyquestionpair);
+        rv_userQuestions.setLayoutManager(new LinearLayoutManager(this));
+        rv_userQuestions.setAdapter(adapterquestionview);
+
+        DatabaseReference dbref=FirebaseDatabase.getInstance().getReference().child("Answers").child(mOtherUserDatabase.getKey()).child("MyQuestionskey");
+        dbref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    Log.d("profilevalequestion", "onDataChange: "+dataSnapshot);
+                    for(DataSnapshot dsp:dataSnapshot.getChildren())
+                    {
+                        mykeyquestionpair.put(dsp.getKey().toString(),dsp.getValue().toString());
+                        Log.d("profilevalequestionas", "onDataChange: "+dsp.getValue().toString()+"   "+dsp.getKey().toString());
+                    }
+                    adapterquestionview.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -277,6 +315,11 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mLoadProcess.setCanceledOnTouchOutside(false);
         mLoadProcess.show();
         findCompatibility();
+
+        setAlertDailogeforQuestions();
+    }
+
+    private void setAlertDailogeforQuestions() {
 
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -546,12 +589,70 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     }
 
     public void openbox(View view) {
-        alertDialog.show();
+        mOtherUserDatabase.child("Questions").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(Others_profile.this, "no questions", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
 }
+class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfileQuestionsListAdapter.questionsViewHolder> {
 
+    private Map<String,String> map;
+    public OtherProfileQuestionsListAdapter(Map<String,String> map) {
+        this.map=map;
+    }
+
+    @Override
+    public OtherProfileQuestionsListAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.otherprofilequestionlist, parent, false);
+        return new OtherProfileQuestionsListAdapter.questionsViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+    class questionsViewHolder extends RecyclerView.ViewHolder {
+
+        View mView;
+        TextView question;
+        EditText AnswerQuestion;
+        Button sendAnswer;
+
+        questionsViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+            question = mView.findViewById(R.id.textQuestion);
+            AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
+            sendAnswer = mView.findViewById(R.id.sendAnswer);
+
+        }
+
+    }
+}
 class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfileShowQuestionsAdapter.questionsViewHolder> {
 
     private ArrayList<String> messages;
@@ -608,7 +709,6 @@ class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfile
 
                                     String s = dsp.getValue().toString();
                                     if (s.equals(messages.get(position))) {
-
                                         found = true;
                                         Log.d("questionkeyis", "onDataChange: " + dsp.getKey().toString());
                                         makeEntrytoDatabase(holder, position, dsp.getKey().toString());
