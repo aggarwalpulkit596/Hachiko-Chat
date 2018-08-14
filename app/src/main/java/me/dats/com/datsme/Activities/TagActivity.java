@@ -70,6 +70,7 @@ public class TagActivity extends AppCompatActivity {
         mContext = getApplicationContext();
         loadingBar = new ProgressDialog(this);
         loadingBar.setTitle("Loading");
+        loadingBar.setCancelable(false);
         loadingBar.setMessage("Please wait, while your question are coming ");
         loadingBar.show();
         mSwipeView.getBuilder()

@@ -34,40 +34,35 @@
             android:id="@+id/my_questions_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
             android:layout_marginTop="20dp"
+            android:layout_below="@+id/title"
             android:overScrollMode="never"
             android:paddingBottom="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="20dp" />
 
-        <TextView
-            android:id="@+id/customQuestiontitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/my_questions_list"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:text="Custom Question"
-            android:textAlignment="center"
-            android:textColor="@color/datsme_color" />
-
         <RelativeLayout
             android:id="@+id/customQuestionlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/customQuestiontitle"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="20dp"
             android:background="#FFF"
+            android:overScrollMode="never"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
             android:visibility="invisible">
 
             <EditText
                 android:id="@+id/CustomQuestionText"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
                 android:background="#fff"
                 android:gravity="top|left"
                 android:hint="Write Your Question"
@@ -84,5 +79,19 @@
                 android:text="save"
                 android:textColor="#FFF" />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/customQuestiontitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Custom Question"
+            android:textAlignment="center"
+            android:textColor="@color/datsme_color" />
+
+
     </RelativeLayout>
 </ScrollView>
