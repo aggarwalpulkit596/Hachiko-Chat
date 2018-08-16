@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,8 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +33,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -52,11 +47,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Adapters.QuestionAdapter;
-import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.Models.Users;
-import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity implements View.OnClickListener {
@@ -105,7 +96,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog mLoadProcess;
     private DatabaseReference mRootRef;
     private DatabaseReference mUserDatabase;
-    private OtherProfileShowQuestionsAdapter adapter;
+    private ShowQuestionsDialogeAdapter adapter;
     private ArrayList<String> myquestions = new ArrayList<>();
 
     @Override
@@ -333,7 +324,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
         friendQuestionsList = promptsView.findViewById(R.id.friendQuestionlist_otherprofile);
         friendQuestionsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new OtherProfileShowQuestionsAdapter(myquestions, this, alertDialog, user_id, current_uid);
+        adapter = new ShowQuestionsDialogeAdapter(myquestions, this, alertDialog, user_id, current_uid);
         friendQuestionsList.setAdapter(adapter);
         setQuestions();
     }
@@ -653,14 +644,14 @@ class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfile
 
     }
 }
-class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfileShowQuestionsAdapter.questionsViewHolder> {
+class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDialogeAdapter.questionsViewHolder> {
 
     private ArrayList<String> messages;
     private Context mContext;
     private AlertDialog alertDialog;
     private String OtherUserId, myuserId;
 
-    public OtherProfileShowQuestionsAdapter(ArrayList<String> messages, Context mContext, AlertDialog alertDialog, String OtherUserId, String myusedId) {
+    public ShowQuestionsDialogeAdapter(ArrayList<String> messages, Context mContext, AlertDialog alertDialog, String OtherUserId, String myusedId) {
         this.messages = messages;
         this.myuserId = myusedId;
         this.mContext = mContext;
@@ -670,10 +661,10 @@ class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfile
     }
 
     @Override
-    public OtherProfileShowQuestionsAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShowQuestionsDialogeAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.otherprofilequestion, parent, false);
-        return new OtherProfileShowQuestionsAdapter.questionsViewHolder(itemView);
+        return new ShowQuestionsDialogeAdapter.questionsViewHolder(itemView);
     }
 
     @Override
