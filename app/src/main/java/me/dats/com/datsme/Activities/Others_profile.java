@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,8 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +33,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -52,10 +47,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
-import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.Models.Users;
-import me.dats.com.datsme.Models.notifications;
 import me.dats.com.datsme.R;
 
 public class Others_profile extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +57,9 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     TextView name;
     @BindView(R.id.Other_compatibility)
     TextView compatibility;
+    @BindView(R.id.rvOtherProfile_userQuestion)
+            RecyclerView rv_userQuestions;
+
 
     RecyclerView friendQuestionsList;
     String user_id, userName;
@@ -101,7 +96,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog mLoadProcess;
     private DatabaseReference mRootRef;
     private DatabaseReference mUserDatabase;
-    private OtherProfileShowQuestionsAdapter adapter;
+    private ShowQuestionsDialogeAdapter adapter;
     private ArrayList<String> myquestions = new ArrayList<>();
 
     @Override
@@ -126,6 +121,40 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         unfriend.setOnClickListener(this);
         button[0].setOnClickListener(this);
         button[1].setOnClickListener(this);
+
+        setOtherQuestionsBlock();
+    }
+
+    private void setOtherQuestionsBlock() {
+
+        final Map<String,String> mykeyquestionpair=new HashMap<>();
+
+        final OtherProfileQuestionsListAdapter adapterquestionview=new OtherProfileQuestionsListAdapter(mykeyquestionpair);
+        rv_userQuestions.setLayoutManager(new LinearLayoutManager(this));
+        rv_userQuestions.setAdapter(adapterquestionview);
+
+        DatabaseReference dbref=FirebaseDatabase.getInstance().getReference().child("Answers").child(mOtherUserDatabase.getKey()).child("MyQuestionskey");
+        dbref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    Log.d("profilevalequestion", "onDataChange: "+dataSnapshot);
+                    for(DataSnapshot dsp:dataSnapshot.getChildren())
+                    {
+                        mykeyquestionpair.put(dsp.getKey().toString(),dsp.getValue().toString());
+                        Log.d("profilevalequestionas", "onDataChange: "+dsp.getValue().toString()+"   "+dsp.getKey().toString());
+                    }
+                    adapterquestionview.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -278,6 +307,11 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mLoadProcess.show();
         findCompatibility();
 
+        setAlertDailogeforQuestions();
+    }
+
+    private void setAlertDailogeforQuestions() {
+
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View promptsView = inflater.inflate(R.layout.friendquestionsdialog, null);
@@ -290,7 +324,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
         friendQuestionsList = promptsView.findViewById(R.id.friendQuestionlist_otherprofile);
         friendQuestionsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new OtherProfileShowQuestionsAdapter(myquestions, this, alertDialog, user_id, current_uid);
+        adapter = new ShowQuestionsDialogeAdapter(myquestions, this, alertDialog, user_id, current_uid);
         friendQuestionsList.setAdapter(adapter);
         setQuestions();
     }
@@ -546,20 +580,78 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     }
 
     public void openbox(View view) {
-        alertDialog.show();
+        mOtherUserDatabase.child("Questions").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(Others_profile.this, "no questions", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
 }
+class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfileQuestionsListAdapter.questionsViewHolder> {
 
-class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfileShowQuestionsAdapter.questionsViewHolder> {
+    private Map<String,String> map;
+    public OtherProfileQuestionsListAdapter(Map<String,String> map) {
+        this.map=map;
+    }
+
+    @Override
+    public OtherProfileQuestionsListAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.otherprofilequestionlist, parent, false);
+        return new OtherProfileQuestionsListAdapter.questionsViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+    class questionsViewHolder extends RecyclerView.ViewHolder {
+
+        View mView;
+        TextView question;
+        EditText AnswerQuestion;
+        Button sendAnswer;
+
+        questionsViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+            question = mView.findViewById(R.id.textQuestion);
+            AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
+            sendAnswer = mView.findViewById(R.id.sendAnswer);
+
+        }
+
+    }
+}
+class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDialogeAdapter.questionsViewHolder> {
 
     private ArrayList<String> messages;
     private Context mContext;
     private AlertDialog alertDialog;
     private String OtherUserId, myuserId;
 
-    public OtherProfileShowQuestionsAdapter(ArrayList<String> messages, Context mContext, AlertDialog alertDialog, String OtherUserId, String myusedId) {
+    public ShowQuestionsDialogeAdapter(ArrayList<String> messages, Context mContext, AlertDialog alertDialog, String OtherUserId, String myusedId) {
         this.messages = messages;
         this.myuserId = myusedId;
         this.mContext = mContext;
@@ -569,10 +661,10 @@ class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfile
     }
 
     @Override
-    public OtherProfileShowQuestionsAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShowQuestionsDialogeAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.otherprofilequestion, parent, false);
-        return new OtherProfileShowQuestionsAdapter.questionsViewHolder(itemView);
+        return new ShowQuestionsDialogeAdapter.questionsViewHolder(itemView);
     }
 
     @Override
@@ -608,7 +700,6 @@ class OtherProfileShowQuestionsAdapter extends RecyclerView.Adapter<OtherProfile
 
                                     String s = dsp.getValue().toString();
                                     if (s.equals(messages.get(position))) {
-
                                         found = true;
                                         Log.d("questionkeyis", "onDataChange: " + dsp.getKey().toString());
                                         makeEntrytoDatabase(holder, position, dsp.getKey().toString());

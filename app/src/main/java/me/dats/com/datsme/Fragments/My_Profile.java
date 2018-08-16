@@ -59,6 +59,7 @@ import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Activities.Friendsquestions;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.Activities.settingActivity;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.BlurImage;
@@ -233,6 +234,9 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 getActivity().onBackPressed();
                 return true;
             case R.id.settings:
+                Intent intent=new Intent(getActivity(),settingActivity.class);
+                startActivity(intent);
+
 //                dialog.show();
 //                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
 //                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
