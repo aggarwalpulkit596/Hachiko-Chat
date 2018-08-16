@@ -30,13 +30,8 @@ import com.mindorks.placeholderview.Utils;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
 import com.mindorks.placeholderview.annotations.swipe.SwipeInDirectional;
-import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutDirectional;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeTouch;
 import com.mindorks.placeholderview.annotations.swipe.SwipingDirection;
 import com.mindorks.placeholderview.listeners.ItemRemovedListener;
 
@@ -174,8 +169,11 @@ public class TagActivity extends AppCompatActivity {
         public void onSwipeOutDirectional(SwipeDirection direction) {
             Log.d("DEBUG", "SwipeOutDirectional " + direction.name());
             if (direction.getDirection() == SwipeDirection.TOP.getDirection()) {
-
-//                mCallback.onSwipeUp();
+                answers.put(list.get(i++), "Neutral");
+            } else if (direction.getDirection() == SwipeDirection.LEFT.getDirection() || direction.getDirection() == SwipeDirection.LEFT_TOP.getDirection()) {
+                answers.put(list.get(i++), "Yes");
+            } else if (direction.getDirection() == SwipeDirection.RIGHT.getDirection() || direction.getDirection() == SwipeDirection.RIGHT_TOP.getDirection()) {
+                answers.put(list.get(i++), "No");
             }
         }
 
@@ -197,56 +195,29 @@ public class TagActivity extends AppCompatActivity {
         @SwipingDirection
         public void onSwipingDirection(SwipeDirection direction) {
             Log.d("DEBUG", "SwipingDirection " + direction.name());
-            if(direction.getDirection()==SwipeDirection.RIGHT.getDirection() ||
-                    direction.getDirection()==SwipeDirection.RIGHT_TOP.getDirection()||
-                    direction.getDirection()==SwipeDirection.RIGHT_BOTTOM.getDirection()
-                    )
-            {
+            if (direction.getDirection() == SwipeDirection.RIGHT.getDirection() ||
+                    direction.getDirection() == SwipeDirection.RIGHT_TOP.getDirection() ||
+                    direction.getDirection() == SwipeDirection.RIGHT_BOTTOM.getDirection()
+                    ) {
                 no.setVisibility(View.INVISIBLE);
                 yes.setVisibility(View.VISIBLE);
                 neutral.setVisibility(View.INVISIBLE);
-            }
-            else if(direction.getDirection()==SwipeDirection.LEFT.getDirection() ||
-                    direction.getDirection()==SwipeDirection.LEFT_TOP.getDirection()||
-                    direction.getDirection()==SwipeDirection.LEFT_BOTTOM.getDirection()){
+            } else if (direction.getDirection() == SwipeDirection.LEFT.getDirection() ||
+                    direction.getDirection() == SwipeDirection.LEFT_TOP.getDirection() ||
+                    direction.getDirection() == SwipeDirection.LEFT_BOTTOM.getDirection()) {
                 no.setVisibility(View.VISIBLE);
                 yes.setVisibility(View.INVISIBLE);
                 neutral.setVisibility(View.INVISIBLE);
-            }
-            else if(direction.getDirection()==SwipeDirection.BOTTOM.getDirection()
-                    ||direction.getDirection()==SwipeDirection.TOP.getDirection())
-            {
+            } else if (direction.getDirection() == SwipeDirection.BOTTOM.getDirection()
+                    || direction.getDirection() == SwipeDirection.TOP.getDirection()) {
                 no.setVisibility(View.INVISIBLE);
                 yes.setVisibility(View.INVISIBLE);
                 neutral.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 no.setVisibility(View.INVISIBLE);
                 yes.setVisibility(View.INVISIBLE);
                 neutral.setVisibility(View.INVISIBLE);
             }
-        }
-
-        @SwipeTouch
-        public void onSwipeTouch(float xStart, float yStart, float xCurrent, float yCurrent) {
-//
-//            float cardHolderDiagonalLength =
-//                    (float) Math.sqrt(Math.pow(mCardViewHolderSize.x, 2) + (Math.pow(mCardViewHolderSize.y, 2)));
-//            float distance = (float) Math.sqrt(Math.pow(xCurrent - xStart, 2) + (Math.pow(yCurrent - yStart, 2)));
-//
-//            float alpha = 1 - distance / cardHolderDiagonalLength;
-
-//            Log.d("DEBUG", "onSwipeTouch "
-//                    + " xStart : " + xStart
-//                    + " yStart : " + yStart
-//                    + " xCurrent : " + xCurrent
-//                    + " yCurrent : " + yCurrent
-////                    + " distance : " + distance
-////                    + " TotalLength : " + cardHolderDiagonalLength
-////                    + " alpha : " + alpha
-//            );
-
-//            ((FrameLayout)mSwipeView).setAlpha(alpha);
         }
 
 
