@@ -79,9 +79,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.CompleteProfileActivity" />
-        <activity android:name=".Activities.TagActivity" >
-
-        </activity>
+        <activity android:name=".Activities.TagActivity"></activity>
         <activity
             android:name=".Activities.Setting"
             android:parentActivityName=".Activities.MapsActivity" />
@@ -117,8 +115,10 @@
         <activity
             android:name=".Activities.generateQuestions"
             android:theme="@style/mytheme" />
-        <activity android:name=".Activities.settingActivity"
-            android:theme="@style/mytheme"></activity>
+        <activity
+            android:name=".Activities.settingActivity"
+            android:theme="@style/mytheme" />
+        <activity android:name=".Activities.UserAnswer"></activity>
     </application>
 
 </manifest>
