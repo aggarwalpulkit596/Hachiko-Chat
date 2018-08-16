@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -671,6 +672,7 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
 
         holder.question.setText(messages.get(position).toString());
         holder.AnswerQuestion.setText("");
+        holder.sendPrivate.setChecked(false);
         holder.AnswerQuestion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -686,13 +688,19 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
             public void onClick(View view) {
                 if (holder.AnswerQuestion.getText().toString().trim().length() > 0) {
                     DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId);
-                    String key=query.push().getKey();
+                    String key = query.push().getKey();
                     Map<String, Object> Map = new HashMap<>();
                     Map.put("Sender", myuserId);
                     Map.put("question", holder.question.getText().toString());
                     Map.put("Answer", holder.AnswerQuestion.getText().toString());
                     Map.put("time", ServerValue.TIMESTAMP);
-                    Map.put("privacy", "public");
+                    if (holder.sendPrivate.isChecked()) {
+                        Map.put("privacy", "private");
+                    }
+                    else{
+                        Map.put("privacy", "public");
+                    }
+
                     Map.put("aprroval", false);
                     Map.put("seen", false);
                     query.child(key).updateChildren(Map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -796,10 +804,13 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
         TextView question;
         EditText AnswerQuestion;
         Button sendAnswer;
+        CheckBox sendPrivate;
 
         questionsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            sendPrivate = mView.findViewById(R.id.sendprivate);
+            sendPrivate.setChecked(false);
             question = mView.findViewById(R.id.textQuestion);
             AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
             sendAnswer = mView.findViewById(R.id.sendAnswer);
