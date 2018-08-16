@@ -2,22 +2,22 @@ package me.dats.com.datsme.Models;
 
 public class UserAnswers {
     private long time;
-    private String sender;
-    private String answer;
-    private boolean appoval;
+    private String Sender;
+    private String Answer;
+    private boolean aprroval;
     private boolean seen;
     private String question;
     private String privacy;
 
-    public UserAnswers(long time, String sender, String answer, boolean appoval, boolean seen, String question, String privacy) {
-        this.time = time;
-        this.sender = sender;
-        this.answer = answer;
-        this.appoval = appoval;
-        this.seen = seen;
-        this.question = question;
-        this.privacy = privacy;
-    }
+//    public UserAnswers(long time, String Sender, String Answer, boolean aprroval, boolean seen, String question, String privacy) {
+//        this.time = time;
+//        this.Sender = Sender;
+//        this.Answer = Answer;
+//        this.aprroval = aprroval;
+//        this.seen = seen;
+//        this.question = question;
+//        this.privacy = privacy;
+//    }
 
     public long getTime() {
         return time;
@@ -28,27 +28,27 @@ public class UserAnswers {
     }
 
     public String getSender() {
-        return sender;
+        return Sender;
     }
 
     public void setSender(String sender) {
-        this.sender = sender;
+        this.Sender = sender;
     }
 
     public String getAnswer() {
-        return answer;
+        return Answer;
     }
 
     public void setAnswer(String answer) {
-        this.answer = answer;
+        this.Answer = answer;
     }
 
-    public boolean isAppoval() {
-        return appoval;
+    public boolean isAprroval() {
+        return aprroval;
     }
 
-    public void setAppoval(boolean appoval) {
-        this.appoval = appoval;
+    public void setAprroval(boolean aprroval) {
+        this.aprroval = aprroval;
     }
 
     public boolean isSeen() {
