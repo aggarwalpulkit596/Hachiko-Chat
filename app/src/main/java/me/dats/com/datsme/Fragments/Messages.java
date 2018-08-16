@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,7 +40,7 @@ import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.InboxActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.NotificationsActivity;
-import me.dats.com.datsme.Activities.UserAnswer;
+import me.dats.com.datsme.Activities.UserAnswerActivity;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
@@ -230,7 +227,7 @@ public class Messages extends Fragment implements View.OnClickListener {
                 startActivity(q);
                 break;
             case R.id.show:
-                q=new Intent(getActivity(),UserAnswer.class);
+                q=new Intent(getActivity(),UserAnswerActivity.class);
                 startActivity(q);
                 break;
         }
