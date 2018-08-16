@@ -3,4 +3,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <item android:title="notifications" android:id="@+id/notification" android:visible="true" app:showAsAction="always" android:icon="@drawable/bell"></item>
     <item android:title="inbox" android:id="@+id/inbox" android:visible="true" app:showAsAction="always" android:icon="@drawable/inbox"></item>
+    <item android:title="show" android:id="@+id/show"></item>
 </menu>

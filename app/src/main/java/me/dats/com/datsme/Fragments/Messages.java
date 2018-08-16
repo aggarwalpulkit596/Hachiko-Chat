@@ -43,6 +43,7 @@ import me.dats.com.datsme.Activities.ChatActivity;
 import me.dats.com.datsme.Activities.InboxActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.NotificationsActivity;
+import me.dats.com.datsme.Activities.UserAnswer;
 import me.dats.com.datsme.Models.Friends;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
@@ -215,6 +216,7 @@ public class Messages extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        Intent q;
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
@@ -224,7 +226,11 @@ public class Messages extends Fragment implements View.OnClickListener {
                 startActivity(i);
                 break;
             case R.id.inbox:
-                Intent q = new Intent(getActivity(), InboxActivity.class);
+                q = new Intent(getActivity(), InboxActivity.class);
+                startActivity(q);
+                break;
+            case R.id.show:
+                q=new Intent(getActivity(),UserAnswer.class);
                 startActivity(q);
                 break;
         }
