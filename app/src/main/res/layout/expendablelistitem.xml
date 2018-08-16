@@ -1,88 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <RelativeLayout
-        android:id="@+id/button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center">
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="12dp" />
-    </RelativeLayout>
-
-    <include
-        android:id="@+id/textView"
-        layout="@layout/notification"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/button"
-        android:gravity="center"
         android:padding="8dp"
-        android:textSize="12sp" />
+        android:layout_height="wrap_content">
 
-    <com.github.aakira.expandablelayout.ExpandableLinearLayout
-        android:id="@+id/expandableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_below="@id/textView"
-        android:orientation="vertical"
-        app:ael_duration="400"
-        app:ael_expanded="false">
+        <RelativeLayout
+            android:id="@+id/button"
+            android:background="@drawable/bottomarrow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center">
+            <View
+                android:layout_width="9dp"
+                android:layout_height="12dp"/>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/expendablequestiontv"
+        <!--<include-->
+            <!--android:id="@+id/textView"-->
+            <!--layout="@layout/notification"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_toLeftOf="@id/button"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="8dp"-->
+            <!--android:textSize="12sp" />-->
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:id="@+id/textView"
             android:gravity="center"
-            android:text="
-    sample.sample.sample.sample.sample.sample.sample.sample.sample.sample.\n
-    "
-            android:textSize="16sp" />
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/expendableanswertv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="
-    sample.sample.sample.sample.sample.sample.sample.sample.sample.sample.\n
-    "
-            android:textSize="16sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:weightSum="10"
-            android:id="@+id/expandablebutton"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_weight="5"
-                android:text="Approve"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_notification"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:id="@+id/text_notification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/expendableapprovebt"/>
-
-            <Button
-                android:text="Reject"
-                android:visibility="gone"
-                android:layout_weight="5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expendablerejectbt"/>
+                android:layout_marginLeft="20dp"
+                android:textColor="#000" />
         </LinearLayout>
-        <TextView
+
+        <com.github.aakira.expandablelayout.ExpandableLinearLayout
+            android:id="@+id/expandableLayout"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:id="@+id/sendprivately"
-            android:layout_height="wrap_content" />
-    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-</RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView"
+            android:layout_marginLeft="90dp"
+            android:orientation="vertical"
+            app:ael_duration="600"
+            app:ael_expanded="false">
+
+            <TextView
+                android:id="@+id/expendablequestiontv"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/expendableanswertv"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:weightSum="10"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/expandablebutton"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_weight="5"
+                    android:text="Approve"
+                    android:background="@drawable/blackroundedborder"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/expendableapprovebt"/>
+
+                <Button
+                    android:text="Reject"
+                    android:background="@drawable/blackroundedborder"
+                    android:layout_weight="5"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:id="@+id/expendablerejectbt"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:text="Send Privately"
+                android:id="@+id/sendprivately"
+                android:layout_height="wrap_content" />
+        </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

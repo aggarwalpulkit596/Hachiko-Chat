@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,7 +59,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.Other_compatibility)
     TextView compatibility;
     @BindView(R.id.rvOtherProfile_userQuestion)
-            RecyclerView rv_userQuestions;
+    RecyclerView rv_userQuestions;
 
 
     RecyclerView friendQuestionsList;
@@ -127,23 +128,21 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
     private void setOtherQuestionsBlock() {
 
-        final Map<String,String> mykeyquestionpair=new HashMap<>();
+        final Map<String, String> mykeyquestionpair = new HashMap<>();
 
-        final OtherProfileQuestionsListAdapter adapterquestionview=new OtherProfileQuestionsListAdapter(mykeyquestionpair);
+        final OtherProfileQuestionsListAdapter adapterquestionview = new OtherProfileQuestionsListAdapter(mykeyquestionpair);
         rv_userQuestions.setLayoutManager(new LinearLayoutManager(this));
         rv_userQuestions.setAdapter(adapterquestionview);
 
-        DatabaseReference dbref=FirebaseDatabase.getInstance().getReference().child("Answers").child(mOtherUserDatabase.getKey()).child("MyQuestionskey");
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Answers").child(mOtherUserDatabase.getKey()).child("MyQuestionskey");
         dbref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
-                    Log.d("profilevalequestion", "onDataChange: "+dataSnapshot);
-                    for(DataSnapshot dsp:dataSnapshot.getChildren())
-                    {
-                        mykeyquestionpair.put(dsp.getKey().toString(),dsp.getValue().toString());
-                        Log.d("profilevalequestionas", "onDataChange: "+dsp.getValue().toString()+"   "+dsp.getKey().toString());
+                if (dataSnapshot.exists()) {
+                    Log.d("profilevalequestion", "onDataChange: " + dataSnapshot);
+                    for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        mykeyquestionpair.put(dsp.getKey().toString(), dsp.getValue().toString());
+                        Log.d("profilevalequestionas", "onDataChange: " + dsp.getValue().toString() + "   " + dsp.getKey().toString());
                     }
                     adapterquestionview.notifyDataSetChanged();
                 }
@@ -583,11 +582,9 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mOtherUserDatabase.child("Questions").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
+                if (dataSnapshot.exists()) {
                     alertDialog.show();
-                }
-                else{
+                } else {
                     Toast.makeText(Others_profile.this, "no questions", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -602,11 +599,13 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
 
 }
+
 class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfileQuestionsListAdapter.questionsViewHolder> {
 
-    private Map<String,String> map;
-    public OtherProfileQuestionsListAdapter(Map<String,String> map) {
-        this.map=map;
+    private Map<String, String> map;
+
+    public OtherProfileQuestionsListAdapter(Map<String, String> map) {
+        this.map = map;
     }
 
     @Override
@@ -644,6 +643,7 @@ class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfile
 
     }
 }
+
 class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDialogeAdapter.questionsViewHolder> {
 
     private ArrayList<String> messages;
@@ -672,6 +672,7 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
 
         holder.question.setText(messages.get(position).toString());
         holder.AnswerQuestion.setText("");
+        holder.sendPrivate.setChecked(false);
         holder.AnswerQuestion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -681,70 +682,103 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
                 }
             }
         });
+
         holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View view) {
                 if (holder.AnswerQuestion.getText().toString().trim().length() > 0) {
+                    DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId);
+                    String key = query.push().getKey();
+                    Map<String, Object> Map = new HashMap<>();
+                    Map.put("Sender", myuserId);
+                    Map.put("question", holder.question.getText().toString());
+                    Map.put("Answer", holder.AnswerQuestion.getText().toString());
+                    Map.put("time", ServerValue.TIMESTAMP);
+                    if (holder.sendPrivate.isChecked()) {
+                        Map.put("privacy", "private");
+                    }
+                    else{
+                        Map.put("privacy", "public");
+                    }
 
-
-                    DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    Map.put("aprroval", false);
+                    Map.put("seen", false);
+                    query.child(key).updateChildren(Map).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Boolean found=false;
-                            if (dataSnapshot.exists())
-                            {
-                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-
-                                    String s = dsp.getValue().toString();
-                                    if (s.equals(messages.get(position))) {
-                                        found = true;
-                                        Log.d("questionkeyis", "onDataChange: " + dsp.getKey().toString());
-                                        makeEntrytoDatabase(holder, position, dsp.getKey().toString());
-                                        break;
-                                    }
-                                }
-                            }
-                            if(!found)
-                            {
-                                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
-                                final String questionkey = db.push().getKey();
-                                db.child(questionkey).setValue(messages.get(position)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        makeEntrytoDatabase(holder,position,questionkey);
-                                    }
-                                });
-                            }
-
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        public void onComplete(@NonNull Task<Void> task) {
+                            messages.remove(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
                         }
                     });
-
-
                 }
             }
         });
+//        holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
+//
+//
+//            @Override
+//            public void onClick(View view) {
+//                if (holder.AnswerQuestion.getText().toString().trim().length() > 0) {
+//
+//
+//                    DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
+//                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            Boolean found=false;
+//                            if (dataSnapshot.exists())
+//                            {
+//                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+//
+//                                    String s = dsp.getValue().toString();
+//                                    if (s.equals(messages.get(position))) {
+//                                        found = true;
+//                                        Log.d("questionkeyis", "onDataChange: " + dsp.getKey().toString());
+//                                        makeEntrytoDatabase(holder, position, dsp.getKey().toString());
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                            if(!found)
+//                            {
+//                                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
+//                                final String questionkey = db.push().getKey();
+//                                db.child(questionkey).setValue(messages.get(position)).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        makeEntrytoDatabase(holder,position,questionkey);
+//                                    }
+//                                });
+//                            }
+//
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//
+//
+//                }
+//            }
+//        });
     }
 
-    public void makeEntrytoDatabase(final questionsViewHolder holder, final int position, String key){
+    public void makeEntrytoDatabase(final questionsViewHolder holder, final int position, String key) {
         String privacy = "public";
         DatabaseReference query2 = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsAnswers").child(key);
-        String newkey=query2.push().getKey();
+        String newkey = query2.push().getKey();
 
         Map<String, Object> Map = new HashMap<>();
         Map.put("Sender", myuserId);
+        Map.put("question", holder.question.getText().toString());
         Map.put("Answer", holder.AnswerQuestion.getText().toString());
         Map.put("time", ServerValue.TIMESTAMP);
         Map.put("privacy", privacy);
-        Map.put("aprroval",false);
+        Map.put("aprroval", false);
         Map.put("seen", false);
 
         query2.child(newkey).updateChildren(Map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -758,6 +792,7 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return messages.size();
@@ -769,10 +804,13 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
         TextView question;
         EditText AnswerQuestion;
         Button sendAnswer;
+        CheckBox sendPrivate;
 
         questionsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            sendPrivate = mView.findViewById(R.id.sendprivate);
+            sendPrivate.setChecked(false);
             question = mView.findViewById(R.id.textQuestion);
             AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
             sendAnswer = mView.findViewById(R.id.sendAnswer);

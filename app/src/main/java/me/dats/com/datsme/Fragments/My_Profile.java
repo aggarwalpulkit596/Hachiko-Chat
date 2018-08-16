@@ -164,7 +164,8 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 abtU.setInputType(InputType.TYPE_NULL);
                 abtU.setLines(4);
                 abtU.setMaxLines(4);
-                abtU.setScroller(new Scroller(getActivity()));
+//                if(getActivity()!=null)
+//                abtU.setScroller(new Scroller(getActivity()));
                 abtU.setVerticalScrollBarEnabled(true);
                 abtU.setSingleLine(false);
 
