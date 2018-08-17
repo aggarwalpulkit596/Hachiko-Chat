@@ -23,10 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -64,13 +61,14 @@ import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.LoginActivity;
+import me.dats.com.datsme.Adapters.UsersViewAdapter;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.Models.MyItem;
 import me.dats.com.datsme.Models.Users;
@@ -462,40 +460,61 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setItemViewCacheSize(10);
-
+        final UsersViewAdapter usersViewAdapter;
+        final List<String> mUserKey = new ArrayList<>();
+        final List<Users> mUsersList = new ArrayList<>();
+        usersViewAdapter = new UsersViewAdapter(mUsersList, mUserKey, getActivity());
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Users");
-        final FirebaseRecyclerOptions<Users> options =
-                new FirebaseRecyclerOptions.Builder<Users>()
-                        .setQuery(query, Users.class)
-                        .build();
-
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
-            @NonNull
+        query.addChildEventListener(new ChildEventListener() {
             @Override
-            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.i("TAG", "onChildAdded: " + dataSnapshot.toString());
+                mUser = dataSnapshot.getValue(Users.class);
+                final String user_id = dataSnapshot.getKey();
 
-                return new UsersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false));
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull final UsersViewHolder holder, final int position, @NonNull final Users model) {
-                holder.bind(model);
-                holder.mView.setOnClickListener(new View.OnClickListener() {
+                mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(View view) {
-                        BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
-                        BottomSheetProfileFragment.newInstance(getRef(position).getKey()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            mUsersList.add(mUser);
+                            mUserKey.add(user_id);
+                            usersViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
 
             }
-        };
-        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mRecyclerView.setAdapter(usersViewAdapter);
+
 
     }
 
@@ -614,44 +633,8 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 
-    public static class UsersViewHolder extends RecyclerView.ViewHolder {
-
-        View mView;
-
-        UsersViewHolder(final View itemView) {
-            super(itemView);
-            mView = itemView;
-
-        }
-
-        public void setName(String name) {
-            TextView userNameView = mView.findViewById(R.id.name);
-            userNameView.setText(name);
-        }
-
-        void bind(Users model) {
-            String name1 = model.getName();
-            String[] arr = name1.split(" ");
-            String fname = arr[0];
-            setName(fname);
-            setThumbImage(model.getThumb_image());
-        }
-
-        void setThumbImage(String thumbImage) {
-            CircleImageView userImageView = mView.findViewById(R.id.image);
-            if (!thumbImage.equals("default"))
-                Picasso.get()
-                        .load(thumbImage)
-                        .placeholder(R.drawable.default_avatar)
-                        .into(userImageView);
-
-        }
-
-    }
-
     @Override
     public void onPause() {
-        Log.d("TAG", "onPause:discoverfragment ");
         super.onPause();
     }
 }
