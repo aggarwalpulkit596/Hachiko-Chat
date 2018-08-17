@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -99,6 +103,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private DatabaseReference mUserDatabase;
     private ShowQuestionsDialogeAdapter adapter;
     private ArrayList<String> myquestions = new ArrayList<>();
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -374,6 +379,39 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                         } finally {
                             int size = oulist.size() > culist.size() ? culist.size() : oulist.size();
                             int comp = (int) (count / size * 100);
+
+                            int min;
+                            int max;
+                            if (comp <= 20 && comp >= 0)
+                            {
+                                min=50;
+                                max=60;
+                                comp= new Random().nextInt((max - min) + 1) + min;
+                            }
+                            else if (comp <= 40 && comp > 20)
+                            {
+                                min=60;
+                                max=70;
+                                comp= new Random().nextInt((max - min) + 1) + min;
+                            }
+                            else if (comp <= 60 && comp > 40)
+                            {
+                                min=70;
+                                max=80;
+                                comp= new Random().nextInt((max - min) + 1) + min;
+                            }
+                            else if (comp <= 80 && comp > 60)
+                            {
+                                min=80;
+                                max=90;
+                                comp= new Random().nextInt((max - min) + 1) + min;
+                            }
+                            else if (comp <= 100 && comp > 80)
+                            {
+                                min=90;
+                                max=98;
+                                comp= new Random().nextInt((max - min) + 1) + min;
+                            }
                             compatibility.setText(comp + "%");
                         }
                     }
@@ -570,12 +608,24 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.report:
+                break;
+            case R.id.block:
+                break;
             case android.R.id.home:
                 onBackPressed();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menuotherprofile, menu);
+        this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void openbox(View view) {
@@ -696,8 +746,7 @@ class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDial
                     Map.put("time", ServerValue.TIMESTAMP);
                     if (holder.sendPrivate.isChecked()) {
                         Map.put("privacy", "private");
-                    }
-                    else{
+                    } else {
                         Map.put("privacy", "public");
                     }
 

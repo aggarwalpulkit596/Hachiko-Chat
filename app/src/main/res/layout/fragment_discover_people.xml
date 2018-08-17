@@ -24,10 +24,10 @@
 
         <ImageButton
             android:id="@+id/toggle_profile_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:background="#00ffffff"
             app:srcCompat="@drawable/ic_expand_more_black_24dp" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:text="Top Profiles"
                 android:textColor="#000"
                 android:textSize="20dp" />

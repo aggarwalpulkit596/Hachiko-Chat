@@ -3,6 +3,7 @@ package me.dats.com.datsme.Activities;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -69,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.myprofile)
     ImageView myprofile;
+
     @BindView(R.id.mapactivity_toolbar)
     Toolbar toolbar;
 
@@ -86,18 +88,28 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
     private Animation animShow;
     private Animation animHide;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        View decorView = getWindow().getDecorView();
+        int uiOption=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        decorView.setSystemUiVisibility(uiOption);
+
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(20);
+        actionBar.setShowHideAnimationEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
-
+        actionBar.hide();
 
         animShow = AnimationUtils.loadAnimation(this, R.anim.show_from_side);
         animHide = AnimationUtils.loadAnimation(this, R.anim.hide_from_side);
@@ -164,7 +176,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
             viewPager.setOffscreenPageLimit(3);
             viewPager.setCurrentItem(1);
             hideShowToolbar(1);
-            toolbar.setVisibility(View.GONE);
         }
 
         messages.setOnClickListener(this);
@@ -174,8 +185,6 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, final float positionOffset, int positionOffsetPixels) {
-                Log.d("TAG", "onPageScrolled: " + position + " position offset " + positionOffset);
-
             }
 
             @Override
@@ -271,12 +280,10 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
                             viewPager.setAdapter(mPagerViewdapter);
                             viewPager.setCurrentItem(0);
                             hideShowToolbar(0);
-                            toolbar.setVisibility(View.VISIBLE);
                         } else {
                             viewPager.setAdapter(mPagerViewdapter);
                             viewPager.setCurrentItem(1);
                             hideShowToolbar(1);
-                            toolbar.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -382,26 +389,29 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().clearFlags(FLAG_TRANSLUCENT_STATUS);
     }
+
+
     public void hideShowToolbar(int position)
     {
         View decorView = getWindow().getDecorView();
-        if (position == 0 && toolbar.getVisibility() != View.VISIBLE) {
-            actionBar.show();
 
+        if (position == 0 && toolbar.getVisibility() != View.VISIBLE) {
+
+            actionBar.show();
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             decorView.setSystemUiVisibility(uiOptions);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
-
-        } else if (position == 1) {
+        }
+        else if (position == 1) {
+            int uiOption=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
-
-
-        } else if (position == 2 && toolbar.getVisibility() != View.VISIBLE) {
+            decorView.setSystemUiVisibility(uiOption);
+            actionBar.hide();
+        }
+        else if (position == 2 && toolbar.getVisibility() != View.VISIBLE) {
             actionBar.show();
-
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             decorView.setSystemUiVisibility(uiOptions);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
