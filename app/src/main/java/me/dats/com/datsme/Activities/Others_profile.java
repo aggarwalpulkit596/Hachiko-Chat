@@ -1,11 +1,18 @@
 package me.dats.com.datsme.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -382,35 +389,26 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
                             int min;
                             int max;
-                            if (comp <= 20 && comp >= 0)
-                            {
-                                min=50;
-                                max=60;
-                                comp= new Random().nextInt((max - min) + 1) + min;
-                            }
-                            else if (comp <= 40 && comp > 20)
-                            {
-                                min=60;
-                                max=70;
-                                comp= new Random().nextInt((max - min) + 1) + min;
-                            }
-                            else if (comp <= 60 && comp > 40)
-                            {
-                                min=70;
-                                max=80;
-                                comp= new Random().nextInt((max - min) + 1) + min;
-                            }
-                            else if (comp <= 80 && comp > 60)
-                            {
-                                min=80;
-                                max=90;
-                                comp= new Random().nextInt((max - min) + 1) + min;
-                            }
-                            else if (comp <= 100 && comp > 80)
-                            {
-                                min=90;
-                                max=98;
-                                comp= new Random().nextInt((max - min) + 1) + min;
+                            if (comp <= 20 && comp >= 0) {
+                                min = 50;
+                                max = 60;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 40 && comp > 20) {
+                                min = 60;
+                                max = 70;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 60 && comp > 40) {
+                                min = 70;
+                                max = 80;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 80 && comp > 60) {
+                                min = 80;
+                                max = 90;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 100 && comp > 80) {
+                                min = 90;
+                                max = 98;
+                                comp = new Random().nextInt((max - min) + 1) + min;
                             }
                             compatibility.setText(comp + "%");
                         }
@@ -606,10 +604,87 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.report:
-                break;
+                AlertDialog.Builder reportalertbuilder = new AlertDialog.Builder(Others_profile.this);
+                reportalertbuilder.setCancelable(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    reportalertbuilder.setView(R.layout.reportdialouge);
+                }
+                final AlertDialog alert = reportalertbuilder.create();
+                alert.show();
+                final String[] message = new String[1];
+
+                final TextView tv[] = new TextView[6];
+                tv[1] = alert.findViewById(R.id.text1);
+                tv[2] = alert.findViewById(R.id.text2);
+                tv[3] = alert.findViewById(R.id.text3);
+                tv[4] = alert.findViewById(R.id.text4);
+                tv[5] = alert.findViewById(R.id.text5);
+
+            for (int i = 1; i <= 5; i++) {
+                final int finalI = i;
+                tv[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getMessage(finalI);
+                        message[0] =tv[finalI].getText().toString();
+                    }
+                    private void getMessage(int finalI) {
+                        for (int i = 1; i <= 5; i++) {
+                            if (i == finalI) {
+                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackgroundblue));
+                            } else {
+                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackground));
+                            }
+                        }
+                    }
+                });
+            }
+
+            final Button sendReport = alert.findViewById(R.id.sendReport);
+            sendReport.setEnabled(true);
+            ImageView cross = alert.findViewById(R.id.cross);
+            cross.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alert.cancel();
+                }
+            });
+            sendReport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sendReport.setEnabled(false);
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Report");
+                    String k = db.push().getKey();
+
+                    Map<String, Object> reportmap = new HashMap<>();
+                    reportmap.put("to", user_id);
+                    reportmap.put("from", current_uid);
+                    db.child(k).updateChildren(reportmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(Others_profile.this, "SEND", Toast.LENGTH_SHORT).show();
+                            alert.cancel();
+                            final AlertDialog.Builder BlockAlertBuilder = new AlertDialog.Builder(Others_profile.this);
+                            BlockAlertBuilder.setMessage("Do you want to Block " + userName + " ?");
+                            BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // do block stuff
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            }).create().show();
+
+                        }
+                    });
+                }
+            });
+            break;
             case R.id.block:
                 break;
             case android.R.id.home:
