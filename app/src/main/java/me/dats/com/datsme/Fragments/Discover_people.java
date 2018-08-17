@@ -471,14 +471,14 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.i("TAG", "onChildAdded: " + dataSnapshot.toString());
-                mUser = dataSnapshot.getValue(Users.class);
+                final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
-
+                Log.i("TAG", "onChildAdded: "+mUser.getName());
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
+                            Log.i("TAG", "onDataChange: "+mUser.getName());
                             mUsersList.add(mUser);
                             mUserKey.add(user_id);
                             usersViewAdapter.notifyDataSetChanged();
