@@ -651,6 +651,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                         BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 //block stuff
+                                blockUser();
                             }
                         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -703,6 +704,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 sendReport.setOnClickListener(this);
                 break;
             case R.id.block:
+                blockUser();
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -712,6 +714,32 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         return super.onOptionsItemSelected(item);
     }
 
+    private void blockUser() {
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        Map<String, Object> friendsMap = new HashMap<>();
+        friendsMap.put("Blocklist/" + current_uid + "/" + user_id + "/blocked", currentDate);
+        friendsMap.put("Blocklist/" + user_id + "/" + current_uid + "/blockedby", currentDate);
+        if (mCurrent_State.equals("req_recieved")) {
+            friendsMap.put("Friend_req/" + current_uid + "/" + user_id, null);
+            friendsMap.put("Friend_req/" + user_id + "/" + current_uid, null);
+        }
+        if (mCurrent_State.equals("friends")) {
+            friendsMap.put("Friends/" + current_uid + "/" + user_id, null);
+            friendsMap.put("Friends/" + user_id + "/" + current_uid, null);
+        }
+
+        mRootRef.updateChildren(friendsMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    finish();
+                } else {
+                    String error = databaseError.getMessage();
+                    Toast.makeText(Others_profile.this, error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
