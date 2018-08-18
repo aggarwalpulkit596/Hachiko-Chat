@@ -56,7 +56,7 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
 
         final UserAnswers userAnswer = data.get(position);
         holder.setIsRecyclable(false);
-        holder.expandableLayout.setInRecyclerView(false);
+        holder.expandableLayout.setInRecyclerView(true);
         DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("Users").child(data.get(position).getSender().toString());
         user.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -145,7 +145,7 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
             question.setText(userAnswer.getQuestion().toString());
             answer.setText(userAnswer.getAnswer().toString());
             if (userAnswer.getPrivacy().equals("public")) {
-                sendprivately.setVisibility(View.GONE);
+                sendprivately.setVisibility(View.INVISIBLE);
                 buttoncontainer.setVisibility(View.VISIBLE);
             } else {
                 sendprivately.setVisibility(View.VISIBLE);
@@ -158,7 +158,7 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
 
     private ObjectAnimator createRotateAnimator(final View target, final float from, final float to) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(target, "rotation", from, to);
-        animator.setDuration(400);
+        animator.setDuration(300);
         animator.setInterpolator(Utils.createInterpolator(Utils.LINEAR_INTERPOLATOR));
         return animator;
     }

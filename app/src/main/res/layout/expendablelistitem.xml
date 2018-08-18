@@ -12,8 +12,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="0dp">
+        android:layout_margin="10dp"
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/button"
@@ -28,17 +28,6 @@
                 android:layout_width="9dp"
                 android:layout_height="12dp" />
         </RelativeLayout>
-
-        <!--<include-->
-        <!--android:id="@+id/textView"-->
-        <!--layout="@layout/notification"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_toLeftOf="@id/button"-->
-        <!--android:gravity="center"-->
-        <!--android:padding="8dp"-->
-        <!--android:textSize="12sp" />-->
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/textView"
@@ -66,9 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textView"
             android:orientation="vertical"
-            android:padding="20dp"
-            android:layout_marginBottom="20dp"
-            app:ael_duration="600"
+            app:ael_interpolator="decelerate"
+            app:ael_duration="300"
             app:ael_expanded="true">
 
             <TextView
@@ -76,15 +64,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
+                android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:textStyle="bold" />
 
             <TextView
+                android:textAlignment="center"
                 android:id="@+id/expendableanswertv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:text=""
                 android:textSize="16sp" />
@@ -96,6 +89,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:layout_marginBottom="10dp"
                 android:weightSum="10">
 
                 <Button
@@ -121,8 +115,11 @@
                 android:id="@+id/sendprivately"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/datsme_color"
+                android:layout_marginTop="10dp"
                 android:text="Send Privately"
-                android:visibility="gone" />
+                android:visibility="invisible" />
         </com.github.aakira.expandablelayout.ExpandableLinearLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

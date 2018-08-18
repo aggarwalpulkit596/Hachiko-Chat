@@ -29,7 +29,7 @@ public class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<Other
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final OtherProfileQuestionsListAdapter.questionsViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
 
     }
 

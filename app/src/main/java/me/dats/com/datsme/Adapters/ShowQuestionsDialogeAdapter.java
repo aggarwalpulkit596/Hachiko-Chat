@@ -50,7 +50,7 @@ public class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuesti
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ShowQuestionsDialogeAdapter.questionsViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
 
         holder.question.setText(messages.get(position).toString());
         holder.AnswerQuestion.setText("");
@@ -148,7 +148,7 @@ public class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuesti
 //        });
     }
 
-    public void makeEntrytoDatabase(final ShowQuestionsDialogeAdapter.questionsViewHolder holder, final int position, String key) {
+    public void makeEntrytoDatabase(final questionsViewHolder holder, final int position, String key) {
         String privacy = "public";
         DatabaseReference query2 = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsAnswers").child(key);
         String newkey = query2.push().getKey();
@@ -200,3 +200,5 @@ public class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuesti
 
     }
 }
+
+
