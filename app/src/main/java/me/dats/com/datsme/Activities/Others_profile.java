@@ -112,6 +112,14 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private ArrayList<String> myquestions = new ArrayList<>();
     private Menu menu;
 
+    private TextView tv[] = new TextView[6];
+    private AlertDialog.Builder reportalertbuilder;
+    private AlertDialog ReportAlert, BlockAlert;
+    private String report_message="";
+    private Button sendReport;
+    private ImageView cross;
+    private AlertDialog.Builder BlockAlertBuilder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -601,90 +609,95 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 }
 
                 break;
+            case R.id.text1:
+                getMessage(1);
+                report_message = tv[1].getText().toString();
+                break;
+            case R.id.text2:
+                getMessage(2);
+                report_message = tv[2].getText().toString();
+                break;
+            case R.id.text3:
+                getMessage(3);
+                report_message = tv[3].getText().toString();
+                break;
+            case R.id.text4:
+                getMessage(4);
+                report_message = tv[4].getText().toString();
+                break;
+            case R.id.text5:
+                getMessage(5);
+                report_message = tv[5].getText().toString();
+                break;
+            case R.id.cross:
+                ReportAlert.dismiss();
+                break;
+            case R.id.sendReport:
+                sendReport.setEnabled(false);
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Report");
+                String k = db.push().getKey();
+
+                Map<String, Object> reportmap = new HashMap<>();
+                reportmap.put("to", user_id);
+                reportmap.put("from", current_uid);
+                reportmap.put("message",report_message);
+                db.child(k).updateChildren(reportmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(Others_profile.this, "SEND", Toast.LENGTH_SHORT).show();
+                        ReportAlert.dismiss();
+                        BlockAlertBuilder = new AlertDialog.Builder(Others_profile.this);
+                        BlockAlertBuilder.setMessage("Do you want to Block " + userName + " ?");
+                        BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //block stuff
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                BlockAlert.dismiss();
+                            }
+                        });
+                        BlockAlert = BlockAlertBuilder.create();
+                        BlockAlert.show();
+
+                    }
+                });
+                break;
         }
     }
 
+    private void getMessage(int finalI) {
+        for (int i = 1; i <= 5; i++) {
+            if (i == finalI) {
+                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackgroundblue));
+            } else {
+                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackground));
+            }
+        }
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.report:
-                AlertDialog.Builder reportalertbuilder = new AlertDialog.Builder(Others_profile.this);
+                reportalertbuilder = new AlertDialog.Builder(Others_profile.this);
                 reportalertbuilder.setCancelable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     reportalertbuilder.setView(R.layout.reportdialouge);
                 }
-                final AlertDialog alert = reportalertbuilder.create();
-                alert.show();
-                final String[] message = new String[1];
+                ReportAlert = reportalertbuilder.create();
+                ReportAlert.show();
+                tv[1] = ReportAlert.findViewById(R.id.text1);
+                tv[2] = ReportAlert.findViewById(R.id.text2);
+                tv[3] = ReportAlert.findViewById(R.id.text3);
+                tv[4] = ReportAlert.findViewById(R.id.text4);
+                tv[5] = ReportAlert.findViewById(R.id.text5);
 
-                final TextView tv[] = new TextView[6];
-                tv[1] = alert.findViewById(R.id.text1);
-                tv[2] = alert.findViewById(R.id.text2);
-                tv[3] = alert.findViewById(R.id.text3);
-                tv[4] = alert.findViewById(R.id.text4);
-                tv[5] = alert.findViewById(R.id.text5);
-
-            for (int i = 1; i <= 5; i++) {
-                final int finalI = i;
-                tv[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getMessage(finalI);
-                        message[0] =tv[finalI].getText().toString();
-                    }
-                    private void getMessage(int finalI) {
-                        for (int i = 1; i <= 5; i++) {
-                            if (i == finalI) {
-                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackgroundblue));
-                            } else {
-                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackground));
-                            }
-                        }
-                    }
-                });
-            }
-
-            final Button sendReport = alert.findViewById(R.id.sendReport);
-            sendReport.setEnabled(true);
-            ImageView cross = alert.findViewById(R.id.cross);
-            cross.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alert.cancel();
-                }
-            });
-            sendReport.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    sendReport.setEnabled(false);
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Report");
-                    String k = db.push().getKey();
-
-                    Map<String, Object> reportmap = new HashMap<>();
-                    reportmap.put("to", user_id);
-                    reportmap.put("from", current_uid);
-                    db.child(k).updateChildren(reportmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(Others_profile.this, "SEND", Toast.LENGTH_SHORT).show();
-                            alert.cancel();
-                            final AlertDialog.Builder BlockAlertBuilder = new AlertDialog.Builder(Others_profile.this);
-                            BlockAlertBuilder.setMessage("Do you want to Block " + userName + " ?");
-                            BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // do block stuff
-                                }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            }).create().show();
-
-                        }
-                    });
-                }
-            });
-            break;
+                sendReport = ReportAlert.findViewById(R.id.sendReport);
+                sendReport.setEnabled(true);
+                cross = ReportAlert.findViewById(R.id.cross);
+                cross.setOnClickListener(this);
+                sendReport.setOnClickListener(this);
+                break;
             case R.id.block:
                 break;
             case android.R.id.home:
