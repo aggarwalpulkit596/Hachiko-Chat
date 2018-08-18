@@ -23,11 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,7 +39,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -54,11 +49,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import me.dats.com.datsme.Adapters.OtherProfileQuestionsListAdapter;
+import me.dats.com.datsme.Adapters.ShowQuestionsDialogeAdapter;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
@@ -101,7 +97,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     float count = 0;
     AlertDialog alertDialog;
 
-    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
+    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase, mBlockDatabase;
     private FirebaseUser mCurrentUser;
     private String mCurrent_State;
     private String current_uid;
@@ -159,10 +155,8 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Log.d("profilevalequestion", "onDataChange: " + dataSnapshot);
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                         mykeyquestionpair.put(dsp.getKey().toString(), dsp.getValue().toString());
-                        Log.d("profilevalequestionas", "onDataChange: " + dsp.getValue().toString() + "   " + dsp.getKey().toString());
                     }
                     adapterquestionview.notifyDataSetChanged();
                 }
@@ -317,6 +311,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mFriendReqDatabse = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
+        mBlockDatabase = FirebaseDatabase.getInstance().getReference().child("Blocklist");
 
 
         mLoadProcess = new ProgressDialog(this);
@@ -699,6 +694,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 sendReport.setOnClickListener(this);
                 break;
             case R.id.block:
+                blockUser();
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -707,6 +703,34 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void blockUser() {
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        Map<String, Object> friendsMap = new HashMap<>();
+        friendsMap.put("Blocklist/" + current_uid + "/" + user_id + "/blocked", currentDate);
+        friendsMap.put("Blocklist/" + user_id + "/" + current_uid + "/blockedby", currentDate);
+        if (mCurrent_State.equals("req_recieved")) {
+            friendsMap.put("Friend_req/" + current_uid + "/" + user_id, null);
+            friendsMap.put("Friend_req/" + user_id + "/" + current_uid, null);
+        }
+        if (mCurrent_State.equals("friends")) {
+            friendsMap.put("Friends/" + current_uid + "/" + user_id, null);
+            friendsMap.put("Friends/" + user_id + "/" + current_uid, null);
+        }
+
+        mRootRef.updateChildren(friendsMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    finish();
+                } else {
+                    String error = databaseError.getMessage();
+                    Toast.makeText(Others_profile.this, error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -736,225 +760,6 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     }
 
 
-}
-
-class OtherProfileQuestionsListAdapter extends RecyclerView.Adapter<OtherProfileQuestionsListAdapter.questionsViewHolder> {
-
-    private Map<String, String> map;
-
-    public OtherProfileQuestionsListAdapter(Map<String, String> map) {
-        this.map = map;
-    }
-
-    @Override
-    public OtherProfileQuestionsListAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.otherprofilequestionlist, parent, false);
-        return new OtherProfileQuestionsListAdapter.questionsViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-
-    class questionsViewHolder extends RecyclerView.ViewHolder {
-
-        View mView;
-        TextView question;
-        EditText AnswerQuestion;
-        Button sendAnswer;
-
-        questionsViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-            question = mView.findViewById(R.id.textQuestion);
-            AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
-            sendAnswer = mView.findViewById(R.id.sendAnswer);
-
-        }
-
-    }
-}
-
-class ShowQuestionsDialogeAdapter extends RecyclerView.Adapter<ShowQuestionsDialogeAdapter.questionsViewHolder> {
-
-    private ArrayList<String> messages;
-    private Context mContext;
-    private AlertDialog alertDialog;
-    private String OtherUserId, myuserId;
-
-    public ShowQuestionsDialogeAdapter(ArrayList<String> messages, Context mContext, AlertDialog alertDialog, String OtherUserId, String myusedId) {
-        this.messages = messages;
-        this.myuserId = myusedId;
-        this.mContext = mContext;
-        this.OtherUserId = OtherUserId;
-        this.alertDialog = alertDialog;
-
-    }
-
-    @Override
-    public ShowQuestionsDialogeAdapter.questionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.otherprofilequestion, parent, false);
-        return new ShowQuestionsDialogeAdapter.questionsViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull final questionsViewHolder holder, final int position) {
-
-        holder.question.setText(messages.get(position).toString());
-        holder.AnswerQuestion.setText("");
-        holder.sendPrivate.setChecked(false);
-        holder.AnswerQuestion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                }
-            }
-        });
-
-        holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (holder.AnswerQuestion.getText().toString().trim().length() > 0) {
-                    DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId);
-                    String key = query.push().getKey();
-                    Map<String, Object> Map = new HashMap<>();
-                    Map.put("Sender", myuserId);
-                    Map.put("question", holder.question.getText().toString());
-                    Map.put("Answer", holder.AnswerQuestion.getText().toString());
-                    Map.put("time", ServerValue.TIMESTAMP);
-                    if (holder.sendPrivate.isChecked()) {
-                        Map.put("privacy", "private");
-                    } else {
-                        Map.put("privacy", "public");
-                    }
-
-                    Map.put("aprroval", false);
-                    Map.put("seen", false);
-                    query.child(key).updateChildren(Map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            messages.remove(position);
-                            notifyItemRemoved(position);
-                            notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-        });
-//        holder.sendAnswer.setOnClickListener(new View.OnClickListener() {
-//
-//
-//            @Override
-//            public void onClick(View view) {
-//                if (holder.AnswerQuestion.getText().toString().trim().length() > 0) {
-//
-//
-//                    DatabaseReference query = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
-//                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            Boolean found=false;
-//                            if (dataSnapshot.exists())
-//                            {
-//                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-//
-//                                    String s = dsp.getValue().toString();
-//                                    if (s.equals(messages.get(position))) {
-//                                        found = true;
-//                                        Log.d("questionkeyis", "onDataChange: " + dsp.getKey().toString());
-//                                        makeEntrytoDatabase(holder, position, dsp.getKey().toString());
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                            if(!found)
-//                            {
-//                                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsKey");
-//                                final String questionkey = db.push().getKey();
-//                                db.child(questionkey).setValue(messages.get(position)).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        makeEntrytoDatabase(holder,position,questionkey);
-//                                    }
-//                                });
-//                            }
-//
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//
-//
-//                }
-//            }
-//        });
-    }
-
-    public void makeEntrytoDatabase(final questionsViewHolder holder, final int position, String key) {
-        String privacy = "public";
-        DatabaseReference query2 = FirebaseDatabase.getInstance().getReference().child("Answers").child(OtherUserId).child("MyQuestionsAnswers").child(key);
-        String newkey = query2.push().getKey();
-
-        Map<String, Object> Map = new HashMap<>();
-        Map.put("Sender", myuserId);
-        Map.put("question", holder.question.getText().toString());
-        Map.put("Answer", holder.AnswerQuestion.getText().toString());
-        Map.put("time", ServerValue.TIMESTAMP);
-        Map.put("privacy", privacy);
-        Map.put("aprroval", false);
-        Map.put("seen", false);
-
-        query2.child(newkey).updateChildren(Map).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                messages.remove(position);
-                notifyItemRemoved(position);
-                notifyDataSetChanged();
-                Toast.makeText(mContext, "" + holder.AnswerQuestion.getText().toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(mContext, "send", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return messages.size();
-    }
-
-    class questionsViewHolder extends RecyclerView.ViewHolder {
-
-        View mView;
-        TextView question;
-        EditText AnswerQuestion;
-        Button sendAnswer;
-        CheckBox sendPrivate;
-
-        questionsViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-            sendPrivate = mView.findViewById(R.id.sendprivate);
-            sendPrivate.setChecked(false);
-            question = mView.findViewById(R.id.textQuestion);
-            AnswerQuestion = mView.findViewById(R.id.AnswerQuestion);
-            sendAnswer = mView.findViewById(R.id.sendAnswer);
-
-        }
-
-    }
 }
 
 

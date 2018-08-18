@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,28 +55,21 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final UserAnswers userAnswer = data.get(position);
-        Log.d("TAG", "onBindViewHolder: "+position+""+data.get(position).getAnswer());
         holder.setIsRecyclable(false);
+        holder.expandableLayout.setInRecyclerView(false);
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("Users").child(data.get(position).getSender().toString());
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users otherUser = dataSnapshot.getValue(Users.class);
+                holder.bind(userAnswer, otherUser);
+            }
 
-            DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("Users").child(data.get(position).getSender().toString());
-            user.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Users otherUser = dataSnapshot.getValue(Users.class);
-                    holder.bind(userAnswer, otherUser);
-                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-//        holder.textView.setText(userAnswer.getSender());
-////            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, item.colorId1));
-            holder.expandableLayout.setInRecyclerView(true);
-////            holder.expandableLayout.setBackgroundColor(ContextCompat.getColor(context, item.colorId2));
-////            holder.expandableLayout.setInterpolator(item.interpolator);
+            }
+        });
         holder.expandableLayout.setExpanded(expandState.get(position));
         holder.expandableLayout.setListener(new ExpandableLayoutListenerAdapter() {
             @Override
@@ -114,9 +106,9 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout textView;
         public RelativeLayout buttonLayout;
-        public TextView textnotification,question,answer,sendprivately;
+        public TextView textnotification, question, answer, sendprivately;
         public CircleImageView image;
-        public Button approve,reject;
+        public Button approve, reject;
         public LinearLayout buttoncontainer;
         /**
          * You must use the ExpandableLinearLayout in the recycler view.
@@ -131,12 +123,13 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
             expandableLayout = v.findViewById(R.id.expandableLayout);
             textnotification = v.findViewById(R.id.text_notification);
             image = v.findViewById(R.id.image_notification);
-            question=v.findViewById(R.id.expendablequestiontv);
-            answer=v.findViewById(R.id.expendableanswertv);
-            approve=v.findViewById(R.id.expendableapprovebt);
-            reject=v.findViewById(R.id.expendablerejectbt);
-            sendprivately=v.findViewById(R.id.sendprivately);
-            buttoncontainer=v.findViewById(R.id.expandablebutton);
+            question = v.findViewById(R.id.expendablequestiontv);
+            answer = v.findViewById(R.id.expendableanswertv);
+            approve = v.findViewById(R.id.expendableapprovebt);
+            reject = v.findViewById(R.id.expendablerejectbt);
+            sendprivately = v.findViewById(R.id.sendprivately);
+            buttoncontainer = v.findViewById(R.id.expandablebutton);
+
 
         }
 
@@ -151,12 +144,10 @@ public class ExpendableRecyclerViewAdapter extends RecyclerView.Adapter<Expendab
 
             question.setText(userAnswer.getQuestion().toString());
             answer.setText(userAnswer.getAnswer().toString());
-            if(userAnswer.getPrivacy().equals("public"))
-            {
+            if (userAnswer.getPrivacy().equals("public")) {
                 sendprivately.setVisibility(View.GONE);
                 buttoncontainer.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 sendprivately.setVisibility(View.VISIBLE);
                 buttoncontainer.setVisibility(View.GONE);
             }
