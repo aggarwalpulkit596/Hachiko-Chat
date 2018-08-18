@@ -67,7 +67,7 @@
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="#fff"
-                        android:textSize="28dp"
+                        android:textSize="25dp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -75,6 +75,7 @@
                     android:id="@+id/Other_firstButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
+                    android:visibility="invisible"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="275dp"
                     android:background="@drawable/button_datsme_color"
@@ -104,6 +105,7 @@
                     android:id="@+id/Other_secondButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
+                    android:visibility="invisible"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="335dp"
                     android:background="@drawable/button_datsme_color"

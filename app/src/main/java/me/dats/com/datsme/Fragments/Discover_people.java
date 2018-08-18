@@ -104,7 +104,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     float zoomLevel = 15.0f; //This goes up to 21\
     boolean firstlauch = true;
     View view;
-    String Map = "Map";
     private ClusterManager<MyItem> mClusterManager;
     private ClusterRender clusterRender;
     private Animation animShow, animHide;
@@ -241,7 +240,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         mFusedLocationProviderClient
                 .requestLocationUpdates(mLocationRequest,
                         mLocationCallback, null);
-
         mRequestingLocationUpdates = true;
 
         MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mymapstyle);
@@ -314,7 +312,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
 
                 final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
@@ -612,12 +609,13 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Discover_people.super.onDestroy();
+            }
+        });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }

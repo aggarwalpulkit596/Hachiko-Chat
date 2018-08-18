@@ -1,18 +1,15 @@
 package me.dats.com.datsme.Activities;
 
-import android.annotation.SuppressLint;
+
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -97,7 +94,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     float count = 0;
     AlertDialog alertDialog;
 
-    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase, mBlockDatabase;
+    private DatabaseReference mOtherUserDatabase, mFriendReqDatabse, mFriendsDatabase, mCurrentUserDatabase;
     private FirebaseUser mCurrentUser;
     private String mCurrent_State;
     private String current_uid;
@@ -108,6 +105,14 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
     private ArrayList<String> myquestions = new ArrayList<>();
     private Menu menu;
 
+    private TextView tv[] = new TextView[6];
+    private AlertDialog.Builder reportalertbuilder;
+    private AlertDialog ReportAlert, BlockAlert;
+    private String report_message = "";
+    private Button sendReport;
+    private ImageView cross;
+    private AlertDialog.Builder BlockAlertBuilder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -147,8 +152,10 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    Log.d("profilevalequestion", "onDataChange: " + dataSnapshot);
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                         mykeyquestionpair.put(dsp.getKey().toString(), dsp.getValue().toString());
+                        Log.d("profilevalequestionas", "onDataChange: " + dsp.getValue().toString() + "   " + dsp.getKey().toString());
                     }
                     adapterquestionview.notifyDataSetChanged();
                 }
@@ -303,7 +310,6 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mFriendReqDatabse = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
-        mBlockDatabase = FirebaseDatabase.getInstance().getReference().child("Blocklist");
 
 
         mLoadProcess = new ProgressDialog(this);
@@ -312,7 +318,6 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         mLoadProcess.setCanceledOnTouchOutside(false);
         mLoadProcess.show();
         findCompatibility();
-
         setAlertDailogeforQuestions();
     }
 
@@ -426,11 +431,17 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
     public void setvisibility(int i, boolean t) {
         if (!t) {
-            button[i].setVisibility(View.INVISIBLE);
+            if (button[i].getVisibility() == View.VISIBLE) {
+                button[i].setVisibility(View.INVISIBLE);
+            }
             button[i].setOnClickListener(null);
+
         } else {
-            button[i].setVisibility(View.VISIBLE);
+            if (button[i].getVisibility() == View.INVISIBLE) {
+                button[i].setVisibility(View.VISIBLE);
+            }
             button[i].setOnClickListener(this);
+
         }
     }
 
@@ -596,90 +607,99 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
                 }
 
                 break;
+            case R.id.text1:
+                getMessage(1);
+                report_message = tv[1].getText().toString();
+                break;
+            case R.id.text2:
+                getMessage(2);
+                report_message = tv[2].getText().toString();
+                break;
+            case R.id.text3:
+                getMessage(3);
+                report_message = tv[3].getText().toString();
+                break;
+            case R.id.text4:
+                getMessage(4);
+                report_message = tv[4].getText().toString();
+                break;
+            case R.id.text5:
+                getMessage(5);
+                report_message = tv[5].getText().toString();
+                break;
+            case R.id.cross:
+                ReportAlert.dismiss();
+                break;
+            case R.id.sendReport:
+                sendReport.setEnabled(false);
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Report");
+                String k = db.push().getKey();
+
+                Map<String, Object> reportmap = new HashMap<>();
+                reportmap.put("to", user_id);
+                reportmap.put("from", current_uid);
+                reportmap.put("message", report_message);
+                db.child(k).updateChildren(reportmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(Others_profile.this, "SEND", Toast.LENGTH_SHORT).show();
+                        ReportAlert.dismiss();
+                        BlockAlertBuilder = new AlertDialog.Builder(Others_profile.this);
+                        BlockAlertBuilder.setMessage("Do you want to Block " + userName + " ?");
+                        BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //block stuff
+                                blockUser();
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                BlockAlert.dismiss();
+                            }
+                        });
+                        BlockAlert = BlockAlertBuilder.create();
+                        BlockAlert.show();
+
+                    }
+                });
+                break;
         }
     }
 
+    private void getMessage(int finalI) {
+        for (int i = 1; i <= 5; i++) {
+            if (i == finalI) {
+                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackgroundblue));
+            } else {
+                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackground));
+            }
+        }
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.report:
-                AlertDialog.Builder reportalertbuilder = new AlertDialog.Builder(Others_profile.this);
+                reportalertbuilder = new AlertDialog.Builder(Others_profile.this);
                 reportalertbuilder.setCancelable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     reportalertbuilder.setView(R.layout.reportdialouge);
                 }
-                final AlertDialog alert = reportalertbuilder.create();
-                alert.show();
-                final String[] message = new String[1];
+                ReportAlert = reportalertbuilder.create();
+                ReportAlert.show();
+                tv[1] = ReportAlert.findViewById(R.id.text1);
+                tv[2] = ReportAlert.findViewById(R.id.text2);
+                tv[3] = ReportAlert.findViewById(R.id.text3);
+                tv[4] = ReportAlert.findViewById(R.id.text4);
+                tv[5] = ReportAlert.findViewById(R.id.text5);
 
-                final TextView tv[] = new TextView[6];
-                tv[1] = alert.findViewById(R.id.text1);
-                tv[2] = alert.findViewById(R.id.text2);
-                tv[3] = alert.findViewById(R.id.text3);
-                tv[4] = alert.findViewById(R.id.text4);
-                tv[5] = alert.findViewById(R.id.text5);
-
-            for (int i = 1; i <= 5; i++) {
-                final int finalI = i;
-                tv[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getMessage(finalI);
-                        message[0] =tv[finalI].getText().toString();
-                    }
-                    private void getMessage(int finalI) {
-                        for (int i = 1; i <= 5; i++) {
-                            if (i == finalI) {
-                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackgroundblue));
-                            } else {
-                                tv[i].setBackground(getResources().getDrawable(R.drawable.feedbacktextbackground));
-                            }
-                        }
-                    }
-                });
-            }
-
-            final Button sendReport = alert.findViewById(R.id.sendReport);
-            sendReport.setEnabled(true);
-            ImageView cross = alert.findViewById(R.id.cross);
-            cross.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alert.cancel();
+                for (int i = 1; i <= 5; i++) {
+                    tv[i].setOnClickListener(this);
                 }
-            });
-            sendReport.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    sendReport.setEnabled(false);
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Report");
-                    String k = db.push().getKey();
-
-                    Map<String, Object> reportmap = new HashMap<>();
-                    reportmap.put("to", user_id);
-                    reportmap.put("from", current_uid);
-                    db.child(k).updateChildren(reportmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(Others_profile.this, "SEND", Toast.LENGTH_SHORT).show();
-                            alert.cancel();
-                            final AlertDialog.Builder BlockAlertBuilder = new AlertDialog.Builder(Others_profile.this);
-                            BlockAlertBuilder.setMessage("Do you want to Block " + userName + " ?");
-                            BlockAlertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // do block stuff
-                                }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            }).create().show();
-
-                        }
-                    });
-                }
-            });
-            break;
+                sendReport = ReportAlert.findViewById(R.id.sendReport);
+                sendReport.setEnabled(true);
+                cross = ReportAlert.findViewById(R.id.cross);
+                cross.setOnClickListener(this);
+                sendReport.setOnClickListener(this);
+                break;
             case R.id.block:
                 blockUser();
                 break;
@@ -718,7 +738,6 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -748,5 +767,3 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
 
 }
-
-
