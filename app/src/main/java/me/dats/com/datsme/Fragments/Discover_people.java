@@ -100,8 +100,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     HashMap<String, MyItem> ItemsMap = new HashMap<>();
     HashMap<String, LatLng> userMap = new HashMap<>();
     HashMap<String, Target> targets = new HashMap<>();
-
-    Users mUser;
     float MaxZoom = 19.05f;
     float zoomLevel = 15.0f; //This goes up to 21\
     boolean firstlauch = true;
@@ -112,6 +110,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     private Animation animShow, animHide;
     private DatabaseReference mUserRef, mBlocklist;
     private GoogleMap mMap;
+    private String TAG = "MapsActivity";
 
     public Discover_people() {
         // Required empty public constructor
@@ -124,7 +123,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_discover_people, container, false);
         ButterKnife.bind(this, view);
-        Log.d(Map, "onCreateView:123");
         return view;
     }
 
@@ -135,7 +133,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        Log.d(Map, "onCreateView:1");
 
 
         toggle_profile_button.setOnClickListener(new View.OnClickListener() {
@@ -177,13 +174,12 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 r.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.d("TAGhasklhksdkjfhlsa", "onLocationResult: " + dataSnapshot.getRef().getKey());
                         if (dataSnapshot.exists()) {
                             mUserRef.updateChildren(locationMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d("locationupdate", "onComplete: " + location);
+                                        Log.d(TAG, "onComplete: " + location);
                                     }
                                 }
                             });
@@ -229,10 +225,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-        int i = 1;
         mMap = googleMap;
-
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveStartedListener(this);
         mMap.setOnCameraMoveListener(this);
@@ -258,7 +251,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     private void setMarkers() {
 
-        int i = 1;
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Users");
@@ -266,7 +258,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                mUser = dataSnapshot.getValue(Users.class);
+                final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -281,8 +273,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                 targets.put(user_id, new Target() {
                                     @Override
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                                        Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
 
                                         myItem.setBitmap(bitmap);
 
@@ -325,14 +315,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                mUser = dataSnapshot.getValue(Users.class);
+
+                final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
                             if (userMap.get(user_id).equals(null) || ItemsMap.get(user_id).equals(null)) {
-                                Log.d("usernptexists", "onChildChanged: not exists");
+                                Log.d(TAG, "onChildChanged: not exists");
                             } else {
 
                                 MyItem item = ItemsMap.get(user_id);
@@ -354,7 +345,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                 targets.put(user_id, new Target() {
                                     @Override
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        Log.d("TAG", "onBitmapLoaded: " + "enter in on Bitmap laoded" + bitmap + mUser.getName());
                                         myItem.setBitmap(bitmap);
                                         mClusterManager.addItem(myItem);
                                         mClusterManager.cluster();
@@ -473,12 +463,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
-                Log.i("TAG", "onChildAdded: "+mUser.getName());
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
-                            Log.i("TAG", "onDataChange: "+mUser.getName());
                             mUsersList.add(mUser);
                             mUserKey.add(user_id);
                             usersViewAdapter.notifyDataSetChanged();
@@ -520,13 +508,10 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     private void setUpClusterer() {
 
-        int i = 1;
-        Log.d(Map, "onCreateView:setCluster" + i++);
         mClusterManager = new ClusterManager(getActivity(), mMap);
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
             @Override
             public boolean onClusterItemClick(MyItem myItem) {
-                Log.d("TAG", "onClusterItemClick: " + myItem.getTitle() + myItem.getSnippet());
                 BottomSheetProfileFragment bottomSheetFragment = new BottomSheetProfileFragment();
                 BottomSheetProfileFragment.newInstance(myItem.getSnippet()).show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
                 return true;
@@ -572,13 +557,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
         }
         if (Timer > 0) {
             countDownTimer.cancel();
-            Log.d("TAG", "onCameraIdle: timer>0");
         }
         countDownTimer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long l) {
                 Timer = l / 1000;
-                Log.d("TAG", "onCameraIdle: timer" + Timer);
 
             }
 
