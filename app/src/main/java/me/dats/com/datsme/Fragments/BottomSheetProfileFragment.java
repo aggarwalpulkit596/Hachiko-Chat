@@ -155,7 +155,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels - 150;
+        int width = metrics.widthPixels;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);

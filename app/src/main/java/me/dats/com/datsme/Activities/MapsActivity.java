@@ -173,7 +173,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         } else {
 
             viewPager.setAdapter(mPagerViewdapter);
-            viewPager.setOffscreenPageLimit(3);
+//            viewPager.setOffscreenPageLimit(3);
             viewPager.setCurrentItem(1);
             hideShowToolbar(1);
         }
