@@ -9,7 +9,7 @@
         <item android:title="Settings" android:id="@+id/settings"></item>
         <item android:title="Edit" android:id="@+id/edit"></item>
         <item android:title="Log Out" android:id="@+id/logout"></item>
-
+        <item android:title="Block List" android:id="@+id/blocklist"></item>
     </group>
 
 </menu>

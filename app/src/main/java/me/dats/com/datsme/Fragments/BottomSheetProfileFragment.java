@@ -144,6 +144,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         i.putExtra("from_user_id", user_id);
         i.putExtra("userName", user.getName());
         startActivity(i);
+        this.dismiss();
     }
 
     @Override
@@ -155,7 +156,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels;
+        int width = metrics.widthPixels-100;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);

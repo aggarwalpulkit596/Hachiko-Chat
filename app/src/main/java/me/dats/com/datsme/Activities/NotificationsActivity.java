@@ -8,12 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,7 +40,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     @BindView(R.id.toolbar_notifications)
-    android.support.v7.widget.Toolbar toolbar;
+    Toolbar toolbar;
     FirebaseUser mUser;
     @BindView(R.id.notificationlist)
     RecyclerView mNotificationlist;
@@ -71,9 +71,6 @@ public class NotificationsActivity extends AppCompatActivity {
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("notifications").child(mUser.getUid().toString());
         Query query=mRef;
         mNotificationlist.setHasFixedSize(true);
-
-        mNotificationlist.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mNotificationlist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         final FirebaseRecyclerOptions<notifications> options =
                 new FirebaseRecyclerOptions.Builder<notifications>()
                         .setQuery(query, notifications.class)
