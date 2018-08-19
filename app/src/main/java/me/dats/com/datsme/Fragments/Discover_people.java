@@ -258,12 +258,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                 final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
+
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         if (!dataSnapshot.exists()) {
                             if (userMap.get(user_id) == null && ItemsMap.get(user_id) == null) {
 
+                                Log.d(TAG, "onDataChange:1 "+mUser.getName().toString());
                                 userMap.put(user_id, new LatLng(mUser.getLattitude(), mUser.getLongitude()));
                                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
                                 ItemsMap.put(user_id, myItem);
@@ -273,14 +276,9 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
                                         myItem.setBitmap(bitmap);
-
                                         mClusterManager.addItem(myItem);
-
                                         mClusterManager.cluster();
-                                        //clusterRender.onAdd();//added
 
-//                            if (getActivity() != null)//removed
-//                                mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
                                     }
 
                                     @Override
@@ -299,6 +297,18 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                         .into(targets.get(user_id));
                             }
 
+                        } else {
+                            if (userMap.get(user_id) != null && ItemsMap.get(user_id) != null) {
+
+                                MyItem item = ItemsMap.get(user_id);
+                                Marker marker = item.getMyItemMarker();
+                                mClusterManager.getMarkerManager().remove(marker);
+                                mClusterManager.removeItem(item);
+                                mClusterManager.cluster();
+                                userMap.remove(user_id);
+                                ItemsMap.remove(user_id);
+
+                            }
                         }
                     }
 
@@ -315,24 +325,22 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
                 final Users mUser = dataSnapshot.getValue(Users.class);
                 final String user_id = dataSnapshot.getKey();
+
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists()) {
-                            if (userMap.get(user_id).equals(null) || ItemsMap.get(user_id).equals(null)) {
+
+                        if(!dataSnapshot.exists())
+                        {
+                            if (userMap.get(user_id)==null && ItemsMap.get(user_id)==null) {
                                 Log.d(TAG, "onChildChanged: not exists");
                             } else {
-
+                                Log.d(TAG, "onDataChange:2 "+mUser.getName().toString());
                                 MyItem item = ItemsMap.get(user_id);
                                 Marker marker = item.getMyItemMarker();
                                 mClusterManager.getMarkerManager().remove(marker);
                                 mClusterManager.removeItem(item);
                                 mClusterManager.cluster();
-
-                                //clusterRender.onRemove();//added
-
-//                    if (getActivity() != null)//removed
-//                        mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
 
                                 final MyItem myItem = new MyItem(mUser.getLattitude(), mUser.getLongitude(), mUser.getName(), dataSnapshot.getKey(), mUser.thumb_image);
 
@@ -345,10 +353,6 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                         myItem.setBitmap(bitmap);
                                         mClusterManager.addItem(myItem);
                                         mClusterManager.cluster();
-                                        //  clusterRender.onAdd();//added
-
-                                        //if (getActivity() != null)//removed
-                                        //  mClusterManager.setRenderer(new ClusterRender(getActivity(), mMap, mClusterManager));//removed
                                     }
 
                                     @Override
@@ -366,6 +370,7 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                                         .transform(new BubbleTransformation(10))
                                         .into(targets.get(user_id));
                             }
+
                         }
                     }
 
@@ -373,9 +378,11 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
+
                 });
 
             }
+
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
@@ -463,9 +470,15 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
                 mBlocklist.child(user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         if (!dataSnapshot.exists()) {
                             mUsersList.add(mUser);
                             mUserKey.add(user_id);
+                            usersViewAdapter.notifyDataSetChanged();
+                        } else {
+
+                            mUsersList.remove(mUser);
+                            mUserKey.remove(user_id);
                             usersViewAdapter.notifyDataSetChanged();
                         }
                     }

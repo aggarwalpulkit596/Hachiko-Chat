@@ -50,13 +50,13 @@
 
             <ImageView
                 android:id="@+id/messages"
+                android:background="#2c000000"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
-                android:background="#a6ecdddd"
                 android:layout_gravity="bottom"
                 android:contentDescription="message"
                 android:padding="5dp"
-                android:src="@drawable/ic_message_black_24dp" />
+                android:src="@drawable/messages" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +70,6 @@
                 android:id="@+id/discover"
                 android:layout_width="100dp"
                 android:layout_height="80dp"
-                android:background="#00ffffff"
                 android:contentDescription="discover"
                 android:padding="5dp"
                 android:src="@drawable/icons8compass96" />
@@ -87,10 +86,10 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
-                android:background="#a6ecdddd"
+                android:background="#2c000000"
                 android:contentDescription="myprofile"
                 android:padding="5dp"
-                android:src="@drawable/ic_person_black_24dp" />
+                android:src="@drawable/person" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

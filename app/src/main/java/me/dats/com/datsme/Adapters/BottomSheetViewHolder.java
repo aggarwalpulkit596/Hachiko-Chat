@@ -58,6 +58,7 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
                     i.putExtra("from_user_id", model.getSnippet());
                     i.putExtra("userName", model.getTitle());
                     view.getContext().startActivity(i);
+                    bottomSheetListFragment.dismiss();
                 }
 
             }

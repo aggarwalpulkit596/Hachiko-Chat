@@ -59,6 +59,7 @@ import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Activities.Friendsquestions;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.Activities.blockList_Activity;
 import me.dats.com.datsme.Activities.settingActivity;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
@@ -231,6 +232,10 @@ public class My_Profile extends Fragment implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.blocklist:
+                Intent i=new Intent(getActivity(),blockList_Activity.class);
+                startActivity(i);
+                break;
             case android.R.id.home:
                 getActivity().onBackPressed();
                 return true;
