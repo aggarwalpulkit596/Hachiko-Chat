@@ -50,7 +50,6 @@
 
             <ImageView
                 android:id="@+id/messages"
-                android:background="#2c000000"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
@@ -86,7 +85,6 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
-                android:background="#2c000000"
                 android:contentDescription="myprofile"
                 android:padding="5dp"
                 android:src="@drawable/person" />

@@ -407,4 +407,9 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
