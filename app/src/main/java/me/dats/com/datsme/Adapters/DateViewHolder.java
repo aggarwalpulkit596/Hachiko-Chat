@@ -10,8 +10,7 @@ import java.util.Date;
 import me.dats.com.datsme.R;
 
 public class DateViewHolder extends RecyclerView.ViewHolder {
-    TextView messageText;
-    //        public CircleImageView profileImage
+    private TextView messageText;
 
     DateViewHolder(View itemView) {
         super(itemView);
@@ -29,7 +28,6 @@ public class DateViewHolder extends RecyclerView.ViewHolder {
         else if (date.equals(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000)))
             messageText.setText("Yesterday");
         else {
-//            formatter = new SimpleDateFormat("dd/MMM/yy");
             messageText.setText(date);
         }
     }

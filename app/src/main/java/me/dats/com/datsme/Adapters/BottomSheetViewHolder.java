@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,12 +20,12 @@ import me.dats.com.datsme.R;
 
 public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
 
-    TextView name;
-    RelativeLayout name_parent;
-    CircleImageView circleImageView;
-    CardView cardView;
+    private TextView name;
+    private RelativeLayout name_parent;
+    private CircleImageView circleImageView;
+    private CardView cardView;
 
-    public BottomSheetViewHolder(View itemView) {
+    BottomSheetViewHolder(View itemView) {
         super(itemView);
         name = itemView.findViewById(R.id.user_name);
         circleImageView = itemView.findViewById(R.id.listImage_view);
@@ -45,11 +44,9 @@ public class BottomSheetViewHolder extends RecyclerView.ViewHolder {
 
         name.setText(model.getTitle());
         circleImageView.setImageBitmap(model.getBitmap());
-        Log.i("TAG", "" + model.getTitle());
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAGmarkerclick", "onClick: "+model.getSnippet()+"   "+FirebaseAuth.getInstance().getCurrentUser().getUid());
                 if (model.getSnippet().equals(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())) {
                     bottomSheetListFragment.dismiss();
                     ((MapsActivity) mContext).getProfileFragment();

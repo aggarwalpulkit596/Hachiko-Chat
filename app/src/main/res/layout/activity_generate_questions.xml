@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".Activities.generateQuestions">
+    tools:context=".Activities.QuestionsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

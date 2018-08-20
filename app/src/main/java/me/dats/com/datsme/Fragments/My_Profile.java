@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -59,8 +56,8 @@ import id.zelory.compressor.Compressor;
 import me.dats.com.datsme.Activities.Friendsquestions;
 import me.dats.com.datsme.Activities.LoginActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
+import me.dats.com.datsme.Activities.SettingActivity;
 import me.dats.com.datsme.Activities.blockList_Activity;
-import me.dats.com.datsme.Activities.settingActivity;
 import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.BlurImage;
@@ -240,29 +237,8 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 getActivity().onBackPressed();
                 return true;
             case R.id.settings:
-                Intent intent=new Intent(getActivity(),settingActivity.class);
+                Intent intent=new Intent(getActivity(),SettingActivity.class);
                 startActivity(intent);
-
-//                dialog.show();
-//                Toast.makeText(getActivity(), "aslkfnlsanfas", Toast.LENGTH_SHORT).show();
-//                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-//                if(user==null)
-//                {
-//                    Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-//                }
-//                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            dialog.dismiss();
-//                            Toast.makeText(getActivity(), "succefully deleted", Toast.LENGTH_SHORT).show();
-//                        }
-//                        else {
-//                            dialog.dismiss();
-//                            Toast.makeText(getActivity(), "aslndfklahlf", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
                 break;
             case R.id.edit:
 

@@ -77,22 +77,7 @@ public class UserAnswerActivity extends AppCompatActivity {
 
             }
         });
-//        db.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                for(DataSnapshot dsp:dataSnapshot.getChildren())
-//                {
-//                    Log.d("TAGrahhul", "onDataChange: "+dsp.getValue());
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+
     }
 
     private void checkRecyclerView() {
@@ -101,14 +86,7 @@ public class UserAnswerActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(false);
-
-
-        final List<UserAnswers> data = new ArrayList<>();
-
-        for (int i = 0; i < 5; i++)
-            // data.add(new UserAnswers(120, "LjmmrgMi7hRaaYrga2R6DpPM0BB3", "fjkjh6", false, false, "Do you smoke ?", "public"));
-
-            adapter = new ExpendableRecyclerViewAdapter(userAnswers);
+        adapter = new ExpendableRecyclerViewAdapter(userAnswers);
         recyclerView.setAdapter(adapter);
     }
 

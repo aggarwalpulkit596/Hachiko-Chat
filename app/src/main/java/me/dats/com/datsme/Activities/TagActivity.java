@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.net.wifi.hotspot2.ConfigParser;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,9 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,9 +43,7 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.dats.com.datsme.Datsme;
 import me.dats.com.datsme.R;
-import me.dats.com.datsme.Utils.MyPreference;
 
 
 public class TagActivity extends AppCompatActivity {

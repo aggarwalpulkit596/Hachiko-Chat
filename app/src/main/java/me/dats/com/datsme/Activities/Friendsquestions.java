@@ -124,7 +124,7 @@ public class Friendsquestions extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addButton:
-                Intent i = new Intent(Friendsquestions.this, generateQuestions.class);
+                Intent i = new Intent(Friendsquestions.this, QuestionsActivity.class);
                 startActivity(i);
                 break;
         }

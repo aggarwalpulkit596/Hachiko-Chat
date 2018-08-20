@@ -13,8 +13,6 @@ public class Users implements Comparable<Users> {
     private String about;
     private String place;
     private String college;
-    private String Worldview;
-    private Integer Compatibility;
     private String gender;
 
     public Users() {

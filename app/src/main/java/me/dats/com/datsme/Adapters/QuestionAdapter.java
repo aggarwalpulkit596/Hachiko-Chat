@@ -4,12 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import me.dats.com.datsme.Activities.generateQuestions;
+import me.dats.com.datsme.Activities.QuestionsActivity;
 import me.dats.com.datsme.R;
 
 
@@ -32,10 +29,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     private List<String> questionsList;
     private List<String> saveList;
     private Context mContext;
-    private generateQuestions activity;
+    private QuestionsActivity activity;
     private boolean onlyShow;
 
-    public QuestionAdapter(List<String> questionsList, List<String> s, Context mContext,generateQuestions Activity) {
+    public QuestionAdapter(List<String> questionsList, List<String> s, Context mContext,QuestionsActivity Activity) {
         this.questionsList = questionsList;
         this.mContext = mContext;
         this.onlyShow = false;

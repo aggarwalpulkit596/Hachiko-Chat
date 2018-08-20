@@ -1,7 +1,6 @@
 package me.dats.com.datsme.Activities;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,7 +42,7 @@ import me.dats.com.datsme.Adapters.QuestionAdapter;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
-public class generateQuestions extends AppCompatActivity implements View.OnClickListener {
+public class QuestionsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.generate_questionToolbar)
     Toolbar toolbar;
@@ -135,7 +134,7 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.savequestion:
                 List<String> list = QuestionAdapter.getSaveList();
-                saveItems(list,true);
+                saveItems(list, true);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -151,9 +150,8 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "onComplete: " + task.isSuccessful());
-                if(finish)
-                {
-                    generateQuestions.super.onBackPressed();
+                if (finish) {
+                    QuestionsActivity.super.onBackPressed();
                 }
             }
         });
@@ -168,9 +166,8 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
                     if (saveList.size() < 5) {
                         saveList.add(question);
                         customQuestionText.setText("");
-                        saveItems(saveList,true);
-                    }
-                    else{
+                        saveItems(saveList, true);
+                    } else {
                         Toast.makeText(this, "Max 5 questions", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -178,47 +175,46 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
                 }
                 break;
             case R.id.customQuestiontitle:
-                    if (oldSaveListSize < QuestionAdapter.getSaveList().size()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage("Do you want to discard changes ?");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("save", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                if (oldSaveListSize < QuestionAdapter.getSaveList().size()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Do you want to discard changes ?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("save", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                                saveItems(QuestionAdapter.getSaveList(),false);
+                            saveItems(QuestionAdapter.getSaveList(), false);
 
-                                menuItem.setVisible(false);
-                                customQuestionLayoutIsVisible = true;
-                                customQuestionText.setText("");
-                                customQuestionTitle.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.GONE);
-                                customQuestionLayout.setVisibility(View.VISIBLE);
+                            menuItem.setVisible(false);
+                            customQuestionLayoutIsVisible = true;
+                            customQuestionText.setText("");
+                            customQuestionTitle.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                            customQuestionLayout.setVisibility(View.VISIBLE);
 
-                            }
-                        });
-                        builder.setNegativeButton("discard", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+                    builder.setNegativeButton("discard", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                                customQuestionLayoutIsVisible = true;
-                                menuItem.setVisible(false);
-                                customQuestionTitle.setVisibility(View.GONE);
-                                customQuestionText.setText("");
-                                recyclerView.setVisibility(View.GONE);
-                                customQuestionLayout.setVisibility(View.VISIBLE);
-                            }
-                        });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                            customQuestionLayoutIsVisible = true;
+                            menuItem.setVisible(false);
+                            customQuestionTitle.setVisibility(View.GONE);
+                            customQuestionText.setText("");
+                            recyclerView.setVisibility(View.GONE);
+                            customQuestionLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                    }
-                    else{
-                        customQuestionLayoutIsVisible = true;
-                        customQuestionText.setText("");
-                        menuItem.setVisible(false);
-                        customQuestionTitle.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.GONE);
-                        customQuestionLayout.setVisibility(View.VISIBLE);
-                    }
+                } else {
+                    customQuestionLayoutIsVisible = true;
+                    customQuestionText.setText("");
+                    menuItem.setVisible(false);
+                    customQuestionTitle.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    customQuestionLayout.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }
@@ -240,22 +236,21 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
                         if (saveList.size() < 5) {
                             saveList.add(customQuestionText.getText().toString());
                             customQuestionText.setText("");
-                            saveItems(saveList,true);
-                            generateQuestions.super.onBackPressed();
+                            saveItems(saveList, true);
+                            QuestionsActivity.super.onBackPressed();
                         }
                     }
                 });
                 builder.setNegativeButton("discard", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         customQuestionText.setText("");
-                        generateQuestions.super.onBackPressed();
+                        QuestionsActivity.super.onBackPressed();
                     }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-            }
-            else{
-                generateQuestions.super.onBackPressed();
+            } else {
+                QuestionsActivity.super.onBackPressed();
             }
         } else {
             if (oldSaveListSize < QuestionAdapter.getSaveList().size()) {
@@ -265,22 +260,21 @@ public class generateQuestions extends AppCompatActivity implements View.OnClick
                 builder.setCancelable(false);
                 builder.setPositiveButton("save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        saveItems(QuestionAdapter.getSaveList(),true);
-                        generateQuestions.super.onBackPressed();
+                        saveItems(QuestionAdapter.getSaveList(), true);
+                        QuestionsActivity.super.onBackPressed();
 
                     }
                 });
                 builder.setNegativeButton("discard", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        generateQuestions.super.onBackPressed();
+                        QuestionsActivity.super.onBackPressed();
                     }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
-            }
-            else{
-                generateQuestions.super.onBackPressed();
+            } else {
+                QuestionsActivity.super.onBackPressed();
             }
         }
 

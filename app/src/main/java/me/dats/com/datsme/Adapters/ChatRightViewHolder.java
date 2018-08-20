@@ -7,7 +7,6 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -19,13 +18,11 @@ import me.dats.com.datsme.R;
 
 
 public class ChatRightViewHolder extends RecyclerView.ViewHolder {
-    private final String TAG = ChatRightViewHolder.class.getSimpleName();
-    TextView messageText;
-    //        public CircleImageView profileImage;
-    TextView time1;
-    LinearLayout msg;
-    ImageView img;
-    RelativeLayout lay;
+    private TextView messageText;
+    private TextView time1;
+    private LinearLayout msg;
+    private ImageView img;
+
 
     ChatRightViewHolder(View itemView) {
         super(itemView);
@@ -34,7 +31,6 @@ public class ChatRightViewHolder extends RecyclerView.ViewHolder {
         time1 = itemView.findViewById(R.id.text_message_time);
         msg = itemView.findViewById(R.id.message_layout);
         img = itemView.findViewById(R.id.img);
-        lay = itemView.findViewById(R.id.message_root_layout);
     }
 
     public void bind(final Messages chatModel, Context mContext) {

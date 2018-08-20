@@ -10,24 +10,12 @@ import com.google.maps.android.clustering.ClusterItem;
 import java.io.Serializable;
 
 public class MyItem implements ClusterItem, Serializable {
-    public String URL;
+    private String URL;
     private transient LatLng mPosition;
     private String mTitle;
     private String mSnippet;
     private transient Marker marker;
     private transient Bitmap bitmap;
-
-    public MyItem(double lat, double lng) {
-        mPosition = new LatLng(lat, lng);
-    }
-    public MyItem(double lat, double lng, String title, String mSnippet, String s, Bitmap bitmap) {
-        Log.d("TAG", "item: " + title);
-        mPosition = new LatLng(lat, lng);
-        mTitle = title;
-        URL = s;
-        this.bitmap = bitmap;
-        this.mSnippet = mSnippet;
-    }
 
     public MyItem(double lat, double lng, String title, String mSnippet, String s) {
         Log.d("TAG", "item: " + title);

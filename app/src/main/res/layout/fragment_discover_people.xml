@@ -93,7 +93,6 @@
         </com.github.clans.fab.FloatingActionMenu>
 
         <me.dats.com.datsme.Widgets.VerticalSeekBar
-            android:id="@+id/vertical_seekbar"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_alignParentRight="true"

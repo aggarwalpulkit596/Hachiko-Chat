@@ -61,11 +61,4 @@ public class Messages implements Serializable {
         this.from = from;
     }
 
-
-//    @Override
-//    public int compareTo(@NonNull Object o) {
-//
-//        long comparetime = ((Messages) o).getTime();
-//            return 1;
-//    }
 }

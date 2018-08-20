@@ -81,9 +81,6 @@
         <activity android:name=".Activities.CompleteProfileActivity" />
         <activity android:name=".Activities.TagActivity" />
         <activity
-            android:name=".Activities.Setting"
-            android:parentActivityName=".Activities.MapsActivity" />
-        <activity
             android:name=".Activities.FriendsAcitivity"
             android:parentActivityName=".Activities.MapsActivity" />
         <activity
@@ -113,10 +110,10 @@
             android:name=".Activities.Friendsquestions"
             android:theme="@style/mytheme" />
         <activity
-            android:name=".Activities.generateQuestions"
+            android:name=".Activities.QuestionsActivity"
             android:theme="@style/mytheme" />
         <activity
-            android:name=".Activities.settingActivity"
+            android:name=".Activities.SettingActivity"
             android:theme="@style/mytheme" />
         <activity
             android:name=".Activities.UserAnswerActivity"

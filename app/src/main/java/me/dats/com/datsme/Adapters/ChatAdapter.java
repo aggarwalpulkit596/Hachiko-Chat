@@ -22,14 +22,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<ListObject> listObjects;
     private Context mContext;
     private FirebaseAuth mAuth;
-//    final int width = getScreensWidh();
-//    public int getScreensWidh() {
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        return size.x;
-//
-//    }
+
 
     public ChatAdapter(List<ListObject> listObjects, Context mContext) {
         this.listObjects = listObjects;
@@ -40,7 +33,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setDataChange(List<ListObject> asList) {
         this.listObjects = asList;
-        //now, tell the adapter about the update
         notifyDataSetChanged();
     }
 
@@ -103,9 +95,5 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return listObjects.get(position).getType(mAuth.getCurrentUser().getUid());
-    }
-
-    public ListObject getItem(int position) {
-        return listObjects.get(position);
     }
 }

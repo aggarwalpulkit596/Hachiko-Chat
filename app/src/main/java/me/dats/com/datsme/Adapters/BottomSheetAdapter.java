@@ -16,10 +16,10 @@ import me.dats.com.datsme.R;
 
 public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<? extends MyItem> item;
+    private ArrayList<? extends MyItem> item;
 
-    Context mContext;
-    BottomSheetListFragment bottomSheetListFragment;
+    private Context mContext;
+    private BottomSheetListFragment bottomSheetListFragment;
 
     public BottomSheetAdapter(ArrayList<? extends MyItem> item, Context context, BottomSheetListFragment bottomSheetListFragment) {
         this.item = item;
@@ -28,11 +28,11 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Log.i("TAG", "sheetConstructor");
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View currentUserView = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_layout, parent, false);
-        RecyclerView.ViewHolder viewHolder = new BottomSheetViewHolder(currentUserView);
-        return viewHolder;
+        return new BottomSheetViewHolder(currentUserView);
     }
 
     @Override

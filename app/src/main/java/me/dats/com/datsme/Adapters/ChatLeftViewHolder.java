@@ -17,14 +17,12 @@ import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
 public class ChatLeftViewHolder extends RecyclerView.ViewHolder {
-    private final String TAG = ChatRightViewHolder.class.getSimpleName();
-    TextView messageText;
-    //        public CircleImageView profileImage;
-    TextView time1;
-    LinearLayout msg;
-    ImageView img;
+    private TextView messageText;
+    private TextView time1;
+    private LinearLayout msg;
+    private ImageView img;
 
-    public ChatLeftViewHolder(View itemView) {
+    ChatLeftViewHolder(View itemView) {
         super(itemView);
         //TODO initialize your xml views
         messageText = itemView.findViewById(R.id.message_text);
