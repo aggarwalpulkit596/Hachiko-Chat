@@ -147,7 +147,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
         rv_userQuestions.setLayoutManager(new LinearLayoutManager(this));
         rv_userQuestions.setAdapter(adapterquestionview);
 
-        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Answers").child(mOtherUserDatabase.getKey()).child("MyQuestionskey");
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Answers").child(user_id).child("MyQuestionskey");
         dbref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -360,7 +360,7 @@ public class Others_profile extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void findCompatibility() {
+    public void findCompatibility() {
         mCurrentUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

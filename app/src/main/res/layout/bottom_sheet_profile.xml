@@ -54,6 +54,18 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/Other_compatibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/usercollege"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="#000"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/usercollege"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,7 +78,7 @@
         android:id="@+id/aboutyoutextview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/usercollege"
+        android:layout_below="@+id/Other_compatibility"
         android:layout_marginStart="40dp"
         android:layout_marginTop="8dp"
         android:textSize="18sp" />

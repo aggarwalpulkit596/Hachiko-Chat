@@ -43,7 +43,7 @@ import me.dats.com.datsme.Models.BlockUsers;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 
-public class blockList_Activity extends AppCompatActivity {
+public class BlocklistActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar_blocklist)
     Toolbar toolbar;

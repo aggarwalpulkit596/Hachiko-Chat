@@ -81,7 +81,7 @@ public class UsersViewAdapter extends RecyclerView.Adapter<UsersViewAdapter.User
             String name1 = model.getName();
             String[] arr = name1.split(" ");
             String fname = arr[0];
-            setName(name1);
+            setName(fname);
             setThumbImage(model.getThumb_image());
         }
 

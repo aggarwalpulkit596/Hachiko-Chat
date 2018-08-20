@@ -3,6 +3,7 @@ package me.dats.com.datsme.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,16 +49,21 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
     TextView mProfilePlace;
     @BindView(R.id.usercollege)
     TextView mProfileCollege;
-
-    Users user;
-
+    @BindView(R.id.Other_compatibility)
+    TextView compatibility;
     @BindView(R.id.user_age)
     TextView mProfileAge;
-
     @BindView(R.id.view_Other_profile)
     Button view_Other_Profile;
 
+    Users user;
     private String user_id;
+    private HashMap<String, String> culist = new HashMap<>();
+    private HashMap<String, String> oulist = new HashMap<>();
+    float count = 0;
+    private DatabaseReference mCurrentUserDatabase;
+    DatabaseReference mOtherUserDatabase;
+
 
     public BottomSheetProfileFragment() {
         // Required empty public constructor
@@ -84,8 +92,8 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         View root = inflater.inflate(R.layout.bottom_sheet_profile, container, false);
         user_id = getArguments().getString("user_id");
         ButterKnife.bind(this, root);
-        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
+        mOtherUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        mOtherUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
@@ -100,8 +108,9 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
             }
         });
-
-
+        mCurrentUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).child("Tags");
+        if (!user_id.equals(FirebaseAuth.getInstance().getUid()))
+            findCompatibility();
         return root;
     }
 
@@ -109,7 +118,7 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
 
         user = documentSnapshot.getValue(Users.class);
 
-        Log.d("TAGonbottomsheet page", "bindData: "+user_id+"  "+FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        Log.d("TAGonbottomsheet page", "bindData: " + user_id + "  " + FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
         if (user_id.equals(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())) {
             view_Other_Profile.setEnabled(false);
             view_Other_Profile.setVisibility(View.GONE);
@@ -156,9 +165,78 @@ public class BottomSheetProfileFragment extends BottomSheetDialogFragment {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels-100;
+        int width = metrics.widthPixels - 100;
         int height = -1; // MATCH_PARENT
 
         getDialog().getWindow().setLayout(width, height);
+    }
+
+    public void findCompatibility() {
+        mCurrentUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+
+                    culist.put(dsp.getKey(), dsp.getValue().toString());
+
+                }
+                mOtherUserDatabase.child("Tags").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            oulist.put(dsp.getKey(), dsp.getValue().toString());
+                        }
+                        try {
+                            for (String k : oulist.keySet()) {
+                                if (culist.get(k).equals(oulist.get(k))) {
+                                    ++count;
+                                }
+                            }
+                        } catch (NullPointerException np) {
+                            Log.i("TAG", "findCompatibility: " + np.getLocalizedMessage());
+                        } finally {
+                            int size = oulist.size() > culist.size() ? culist.size() : oulist.size();
+                            int comp = (int) (count / size * 100);
+
+                            int min;
+                            int max;
+                            if (comp <= 20 && comp >= 0) {
+                                min = 50;
+                                max = 60;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 40 && comp > 20) {
+                                min = 60;
+                                max = 70;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 60 && comp > 40) {
+                                min = 70;
+                                max = 80;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 80 && comp > 60) {
+                                min = 80;
+                                max = 90;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            } else if (comp <= 100 && comp > 80) {
+                                min = 90;
+                                max = 98;
+                                comp = new Random().nextInt((max - min) + 1) + min;
+                            }
+                            compatibility.setText(comp + "%");
+                            compatibility.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

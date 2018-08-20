@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
     android:orientation="vertical"
     tools:context="me.dats.com.datsme.Activities.Others_profile">
@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/datsme_color"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:fitsSystemWindows="true" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -52,18 +52,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="200dp"
-                        android:text="Rahul Gupta"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="#fff"
                         android:textSize="28dp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/Other_compatibility"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/Other_name"
-                        android:text="68%"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="#fff"
@@ -75,11 +74,11 @@
                     android:id="@+id/Other_firstButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
-                    android:visibility="invisible"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="275dp"
                     android:background="@drawable/button_datsme_color"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="invisible">
 
                     <ImageView
                         android:id="@+id/Other_firstIcon"
@@ -105,11 +104,11 @@
                     android:id="@+id/Other_secondButton"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
-                    android:visibility="invisible"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="335dp"
                     android:background="@drawable/button_datsme_color"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="invisible">
 
                     <ImageView
                         android:id="@+id/Other_secondIcon"
@@ -154,27 +153,30 @@
                     android:layout_height="wrap_content"
                     android:text="chat" />
             </LinearLayout>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="show"
-                android:onClick="openbox"/>
+                android:onClick="openbox"
+                android:text="show" />
+
             <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
                 android:id="@+id/rvOtherProfile_userQuestion"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:overScrollMode="never">
 
             </android.support.v7.widget.RecyclerView>
+
             <LinearLayout
                 android:id="@+id/profile_hidden"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
