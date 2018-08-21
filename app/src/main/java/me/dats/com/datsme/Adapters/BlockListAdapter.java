@@ -1,7 +1,5 @@
 package me.dats.com.datsme.Adapters;
 
-
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Models.BlockUsers;
-import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
 public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.MyViewHolder> {
