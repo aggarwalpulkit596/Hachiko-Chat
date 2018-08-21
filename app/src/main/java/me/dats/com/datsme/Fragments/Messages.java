@@ -1,10 +1,15 @@
 package me.dats.com.datsme.Fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.Objects;
 
@@ -37,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
+import me.dats.com.datsme.Activities.ImageActivity;
 import me.dats.com.datsme.Activities.InboxActivity;
 import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.NotificationsActivity;
@@ -148,6 +155,7 @@ public class Messages extends Fragment implements View.OnClickListener {
                 final String uid = getRef(position).getKey();
                 final String[] name = new String[1];
                 final String[] image = new String[1];
+                final String[] image_main=new String[1];
 
                 assert uid != null;
                 mUsersDatabase.child(uid).addValueEventListener(new ValueEventListener() {
@@ -158,12 +166,12 @@ public class Messages extends Fragment implements View.OnClickListener {
                         {
                             name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
                             image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
-
+                            image_main[0]=Objects.requireNonNull(documentSnapshot.child("image").getValue()).toString();
 //                        if (documentSnapshot.hasChild("online")) {
 //                            String userOnline = documentSnapshot.child("online").getValue().toString();
 //                            holder.setUserOnline(userOnline);
 //                        }
-                            holder.bind(name[0], image[0]);
+                            holder.bind(name[0], image[0],image_main[0],getActivity());
                         }
 
                     }
@@ -237,6 +245,9 @@ public class Messages extends Fragment implements View.OnClickListener {
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
+        Bitmap mybigimage;
+        private Activity mContext;
+
 
         FriendsViewHolder(View itemView) {
             super(itemView);
@@ -251,12 +262,39 @@ public class Messages extends Fragment implements View.OnClickListener {
 
         }
 
-        public void bind(String name, final String image) {
+        public void bind(String name, final String image, String image_main, FragmentActivity activity) {
             TextView userNameTextView = mView.findViewById(R.id.user_single_name);
 
+            mContext=activity;
             final CircleImageView userImageView = mView.findViewById(R.id.user_image);
 
+            Target target=new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    mybigimage=bitmap;
+                }
 
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            };
+            Picasso.get().load(image_main)
+                    .into(target);
+
+            userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(mContext, ImageActivity.class);
+                    i.putExtra("image",image);
+                    ActivityOptionsCompat compat=ActivityOptionsCompat.makeSceneTransitionAnimation(mContext,userImageView,"trans1");
+                    mContext.startActivity(i,compat.toBundle());
+                }
+            });
             userNameTextView.setText(name);
             if (!image.equals("default"))
                 Picasso.get()

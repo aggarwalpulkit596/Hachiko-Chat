@@ -341,7 +341,10 @@ public class My_Profile extends Fragment implements View.OnClickListener {
             }
         }
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -473,4 +476,5 @@ public class My_Profile extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
 }
