@@ -1,5 +1,7 @@
 package me.dats.com.datsme.Adapters;
 
+
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Models.BlockUsers;
+import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
 public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.MyViewHolder> {
@@ -68,23 +71,21 @@ public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.MyVi
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                       if(task.isSuccessful())
-                                       {
-                                           FirebaseDatabase.getInstance().getReference().child("Blocklist").child(Blockeduserslist.get(position).getUserId())
-                                                   .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("blockedby").setValue(null)
-                                                   .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                       @Override
-                                                       public void onComplete(@NonNull Task<Void> task1) {
-                                                          if(task1.isSuccessful())
-                                                          {
-                                                              Toast.makeText(mContext, "" + Blockeduserslist.get(position).getName() + " is Unblocked", Toast.LENGTH_SHORT).show();
-                                                              Blockeduserslist.remove(position);
-                                                              notifyItemRemoved(position);
-                                                              notifyDataSetChanged();
-                                                          }
-                                                       }
-                                                   });
-                                       }
+                                        if (task.isSuccessful()) {
+                                            FirebaseDatabase.getInstance().getReference().child("Blocklist").child(Blockeduserslist.get(position).getUserId())
+                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("blockedby").setValue(null)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task1) {
+                                                            if (task1.isSuccessful()) {
+                                                                Toast.makeText(mContext, "" + Blockeduserslist.get(position).getName() + " is Unblocked", Toast.LENGTH_SHORT).show();
+                                                                Blockeduserslist.remove(position);
+                                                                notifyItemRemoved(position);
+                                                                notifyDataSetChanged();
+                                                            }
+                                                        }
+                                                    });
+                                        }
                                     }
                                 });
 
