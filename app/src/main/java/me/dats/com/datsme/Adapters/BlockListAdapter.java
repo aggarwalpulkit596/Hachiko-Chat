@@ -1,11 +1,13 @@
 package me.dats.com.datsme.Adapters;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Models.BlockUsers;
+import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.R;
 
 public class BlockListAdapter extends RecyclerView.Adapter<BlockListAdapter.MyViewHolder> {

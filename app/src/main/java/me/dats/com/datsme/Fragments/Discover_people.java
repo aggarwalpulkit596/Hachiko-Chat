@@ -622,13 +622,14 @@ public class Discover_people extends Fragment implements OnMapReadyCallback, Clu
 
     @Override
     public void onDestroy() {
-
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Discover_people.super.onDestroy();
+                mRequestingLocationUpdates=false;
             }
         });
+        if(mRequestingLocationUpdates)
+        super.onDestroy();
     }
 
 }

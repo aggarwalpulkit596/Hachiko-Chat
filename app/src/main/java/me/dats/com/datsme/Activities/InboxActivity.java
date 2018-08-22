@@ -55,7 +55,7 @@ public class InboxActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
 
-        inboxAdapter = new InboxAdapter(inboxList, getApplicationContext());
+        inboxAdapter = new InboxAdapter(inboxList,InboxActivity.this);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

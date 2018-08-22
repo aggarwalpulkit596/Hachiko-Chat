@@ -2,7 +2,10 @@ package me.dats.com.datsme.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -16,21 +19,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.dats.com.datsme.Activities.ChatActivity;
+import me.dats.com.datsme.Activities.ImageActivity;
+import me.dats.com.datsme.Activities.InboxActivity;
 import me.dats.com.datsme.Models.Messages;
 import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
+import me.dats.com.datsme.Utils.BubbleTransformation;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder> {
 
     private ArrayList<Messages> messages;
-    private Context mContext;
+    private InboxActivity mContext;
+    private Bitmap image;
 
-    public InboxAdapter(ArrayList<Messages> messages, Context mContext) {
+    public InboxAdapter(ArrayList<Messages> messages, InboxActivity mContext) {
         this.messages = messages;
         this.mContext = mContext;
 
@@ -55,6 +63,34 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
                 final Users u = dataSnapshot.getValue(Users.class);
                 Picasso.get().load(u.getThumb_image()).centerCrop().fit().placeholder(R.drawable.defaultavatar).into(holder.imageView);
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Target target=new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                image=bitmap;
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                            }
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        };
+                        Picasso.get().load(u.getImage())
+                                .into(target);
+
+                        Intent i = new Intent(mContext, ImageActivity.class);
+                        i.putExtra("image",image);
+                        ActivityOptionsCompat compat=ActivityOptionsCompat.makeSceneTransitionAnimation(mContext,holder.imageView,"trans1");
+                        mContext.startActivity(i,compat.toBundle());
+                    }
+                });
                 holder.name.setText(u.getName().toUpperCase());
 
                 String time = DateUtils.formatDateTime(mContext, m.getTime(), DateUtils.FORMAT_SHOW_TIME);

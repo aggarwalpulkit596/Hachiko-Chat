@@ -11,6 +11,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
@@ -24,8 +25,22 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:statusBarColor">@color/datsmedark</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+    <style name="transparentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">#000</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
