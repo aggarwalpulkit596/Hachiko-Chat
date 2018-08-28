@@ -86,6 +86,7 @@ public class MapsActivity extends AppCompatActivity implements View.OnClickListe
         int uiOption=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         decorView.setSystemUiVisibility(uiOption);
 
         setContentView(R.layout.activity_maps);
