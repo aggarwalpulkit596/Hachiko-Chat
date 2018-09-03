@@ -1,21 +1,29 @@
 {
   "project_info": {
-    "project_number": "586307073271",
-    "firebase_url": "https://datsme-5fd50.firebaseio.com",
-    "project_id": "datsme-5fd50",
-    "storage_bucket": "datsme-5fd50.appspot.com"
+    "project_number": "846873662235",
+    "firebase_url": "https://datsme-4d1a6.firebaseio.com",
+    "project_id": "datsme-4d1a6",
+    "storage_bucket": "datsme-4d1a6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:586307073271:android:3bfc37276634e6c4",
+        "mobilesdk_app_id": "1:846873662235:android:3bfc37276634e6c4",
         "android_client_info": {
           "package_name": "me.dats.com.datsme"
         }
       },
       "oauth_client": [
         {
-          "client_id": "586307073271-17s76jbdda5h8eta0a1v5fammsp13l6k.apps.googleusercontent.com",
+          "client_id": "846873662235-erd5dn73494vbk58raag05ipdcf9sepr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.dats.com.datsme",
+            "certificate_hash": "34eee3247563b8a58d68e132130eb3010529e531"
+          }
+        },
+        {
+          "client_id": "846873662235-1b7dbvogtadmb6koibb8plukpe822dhr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "me.dats.com.datsme",
@@ -23,21 +31,13 @@
           }
         },
         {
-          "client_id": "586307073271-21b6sn6rmkodh3s6l6fel48p70nnk697.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "me.dats.com.datsme",
-            "certificate_hash": "761c07b98cb111fe0a51a809b995ede67bcf22bc"
-          }
-        },
-        {
-          "client_id": "586307073271-p006t6lpqdo03uu73shv9ds5d85asblv.apps.googleusercontent.com",
+          "client_id": "846873662235-b7epq0rccdkumfdpprjcai6ig8pj598a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGF0lqu7CJrVeBZBePFKI9ic1zZBu6CT0"
+          "current_key": "AIzaSyAuCo2a_eMMHAAnI-mZcwK_8Bl77RnZLJs"
         }
       ],
       "services": {
@@ -48,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "586307073271-p006t6lpqdo03uu73shv9ds5d85asblv.apps.googleusercontent.com",
+              "client_id": "846873662235-b7epq0rccdkumfdpprjcai6ig8pj598a.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -2,11 +2,14 @@ package me.dats.com.datsme.Fragments;
 
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -49,6 +52,7 @@ import me.dats.com.datsme.Activities.MapsActivity;
 import me.dats.com.datsme.Activities.NotificationsActivity;
 import me.dats.com.datsme.Activities.UserAnswerActivity;
 import me.dats.com.datsme.Models.Friends;
+import me.dats.com.datsme.Models.Users;
 import me.dats.com.datsme.R;
 import me.dats.com.datsme.Utils.SpacesItemDecoration;
 
@@ -77,6 +81,7 @@ public class Messages extends Fragment implements View.OnClickListener {
     private String current_uid;
     private Menu menu;
 
+
     public Messages() {
 
         // Required empty public constructor
@@ -91,8 +96,6 @@ public class Messages extends Fragment implements View.OnClickListener {
         ButterKnife.bind(this, view);
 
         setHasOptionsMenu(true);
-
-
         mAuth = FirebaseAuth.getInstance();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
@@ -112,8 +115,14 @@ public class Messages extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Friends")
@@ -142,6 +151,7 @@ public class Messages extends Fragment implements View.OnClickListener {
             }
         });
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(options) {
+
             @NonNull
             @Override
             public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -150,29 +160,87 @@ public class Messages extends Fragment implements View.OnClickListener {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final FriendsViewHolder holder, int position, @NonNull Friends model) {
-                holder.setDate(model.getDate());
+            protected void onBindViewHolder(@NonNull final FriendsViewHolder holder, int position, @NonNull final Friends model) {
+
                 final String uid = getRef(position).getKey();
-                final String[] name = new String[1];
-                final String[] image = new String[1];
-                final String[] image_main=new String[1];
 
                 assert uid != null;
                 mUsersDatabase.child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot documentSnapshot) {
 
-                        if (documentSnapshot.exists())//added
+                        if (documentSnapshot.exists())
                         {
-                            name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
-                            image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
-                            image_main[0]=Objects.requireNonNull(documentSnapshot.child("image").getValue()).toString();
-//                        if (documentSnapshot.hasChild("online")) {
-//                            String userOnline = documentSnapshot.child("online").getValue().toString();
-//                            holder.setUserOnline(userOnline);
-//                        }
-                            holder.bind(name[0], image[0],image_main[0],getActivity());
+                            final Users u = documentSnapshot.getValue(Users.class);
+                            if (!u.getThumb_image().equals("default")) {
+                                Picasso.get()
+                                        .load(u.getThumb_image())
+                                        .networkPolicy(NetworkPolicy.OFFLINE)
+                                        .placeholder(R.drawable.default_avatar)
+                                        .into(holder.userImageView, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                            }
+                                            @Override
+                                            public void onError(Exception e) {
+                                                if (!u.getThumb_image().equals("default"))
+                                                    Picasso.get()
+                                                            .load(u.getThumb_image())
+                                                            .placeholder(R.drawable.default_avatar)
+                                                            .into(holder.userImageView);
+                                            }
+                                        });
+                            }
+                            holder.userNameTextView.setText(u.getName());
+                            holder.userstatusTextView.setText(model.getDate());
+                            holder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent chatintent = new Intent(getActivity(), ChatActivity.class);
+                                    chatintent.putExtra("from_user_id", uid);
+                                    chatintent.putExtra("userName", u.getName());
+                                    chatintent.putExtra("image", u.getThumb_image());
+                                    startActivity(chatintent);
+                                }
+                            });
+
+                            holder.userImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    Target target = new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                                            Intent i = new Intent(getActivity(), ImageActivity.class);
+                                            i.putExtra("image", bitmap);
+                                            ActivityOptionsCompat compat =
+                                                    ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),holder.userImageView, "trans1");
+                                            startActivity(i, compat.toBundle());
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                        }
+                                    };
+                                    Picasso.get().load(u.getImage()).into(target);
+
+                                }
+                            });
+
+
                         }
+//                            name[0] = Objects.requireNonNull(documentSnapshot.child("name").getValue()).toString();
+//                            image[0] = Objects.requireNonNull(documentSnapshot.child("thumb_image").getValue()).toString();
+//                            image_main[0]=Objects.requireNonNull(documentSnapshot.child("image").getValue()).toString();
+//
+//                            holder.bind(name[0], image[0],image_main[0]);                       }
 
                     }
 
@@ -181,19 +249,6 @@ public class Messages extends Fragment implements View.OnClickListener {
 
                     }
                 });
-
-                holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent chatintent = new Intent(getActivity(), ChatActivity.class);
-                        chatintent.putExtra("from_user_id", uid);
-                        chatintent.putExtra("userName", name[0]);
-                        chatintent.putExtra("image", image[0]);
-                        startActivity(chatintent);
-                    }
-                });
-
-
             }
         };
         mFriendlist.setAdapter(firebaseRecyclerAdapter);
@@ -212,8 +267,8 @@ public class Messages extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.friendsmenu,menu);
-        this.menu=menu;
+        inflater.inflate(R.menu.friendsmenu, menu);
+        this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -235,99 +290,28 @@ public class Messages extends Fragment implements View.OnClickListener {
                 startActivity(q);
                 break;
             case R.id.show:
-                q=new Intent(getActivity(),UserAnswerActivity.class);
+                q = new Intent(getActivity(), UserAnswerActivity.class);
                 startActivity(q);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
+
+    public class FriendsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
-        Bitmap mybigimage;
-        private Activity mContext;
-
+        TextView userstatusTextView;
+        TextView userNameTextView;
+        CircleImageView userImageView;
 
         FriendsViewHolder(View itemView) {
             super(itemView);
-
             mView = itemView;
+            userstatusTextView = itemView.findViewById(R.id.user_single_status);
+            userNameTextView = itemView.findViewById(R.id.user_single_name);
+            userImageView = itemView.findViewById(R.id.user_image);
         }
 
-        public void setDate(String date) {
-
-            TextView userstatusTextView = mView.findViewById(R.id.user_single_status);
-            userstatusTextView.setText(date);
-
-        }
-
-        public void bind(String name, final String image, String image_main, FragmentActivity activity) {
-            TextView userNameTextView = mView.findViewById(R.id.user_single_name);
-
-            mContext=activity;
-            final CircleImageView userImageView = mView.findViewById(R.id.user_image);
-
-            Target target=new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    mybigimage=bitmap;
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            };
-            Picasso.get().load(image_main)
-                    .into(target);
-
-            userImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(mContext, ImageActivity.class);
-                    i.putExtra("image",image);
-                    ActivityOptionsCompat compat=ActivityOptionsCompat.makeSceneTransitionAnimation(mContext,userImageView,"trans1");
-                    mContext.startActivity(i,compat.toBundle());
-                }
-            });
-            userNameTextView.setText(name);
-            if (!image.equals("default"))
-                Picasso.get()
-                        .load(image)
-                        .networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.default_avatar)
-                        .into(userImageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                if (!image.equals("default"))
-                                    Picasso.get()
-                                            .load(image)
-                                            .placeholder(R.drawable.default_avatar)
-                                            .into(userImageView);
-                            }
-                        });
-
-        }
-
-//        public void setUserOnline(String userOnline) {
-//
-//            CircleImageView userOnlineView = mView.findViewById(R.id.user_single_online);
-//            if (userOnline.equals("true")) {
-//                userOnlineView.setVisibility(View.VISIBLE);
-//            } else {
-//                userOnlineView.setVisibility(View.INVISIBLE);
-//            }
-//        }
     }
-
 }
