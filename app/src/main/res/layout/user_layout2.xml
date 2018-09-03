@@ -10,6 +10,7 @@
         android:layout_height="64dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
+        android:transitionName="trans1"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/default_avatar" />

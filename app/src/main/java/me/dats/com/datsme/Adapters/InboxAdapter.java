@@ -8,10 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -107,6 +109,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 if(m.getType().equals("text")||m.getType().equals("image"))
                     holder.message.setText(m.getMessage());
 
+                holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        return false;
+                    }
+                });
+
             }
 
             @Override
@@ -124,11 +133,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        private final View view;
         public TextView message, name, time;
         public CircleImageView imageView;
 
         public MyViewHolder(View view) {
             super(view);
+            this.view=view;
             message = view.findViewById(R.id.user_single_status);
             name = view.findViewById(R.id.user_single_name);
             imageView = view.findViewById(R.id.user_image);
